@@ -1,0 +1,16 @@
+<div class="login-container">
+
+    <div class="login-card">
+
+        <h1>Gaming Console</h1>
+        <p class="subtitle">Sign in to continue</p>
+        <label for="email">Email or Username</label>
+        <input type="text" id="email" [(ngModel)]="email" placeholder="Enter your email or username">
+        <br><br>
+        <label for="password">Password</label>
+        <input type="password" id="password" [(ngModel)]="password" placeholder="Enter your password">
+        <br><br>
+        <button type="submit" (click)="login()">Login</button>
+        <p class="register-text">Don't have an account? <a routerLink="/register">Register</a></p>
+    </div>
+
