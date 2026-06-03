@@ -1,0 +1,178 @@
+/* Remove white space around page */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.registration-container {
+    width: 100vw;
+    min-height: 100vh;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background:
+        linear-gradient(
+            rgba(0, 0, 0, 0.75),
+            rgba(0, 0, 0, 0.85)
+        ),
+        url("https://images.unsplash.com/photo-1542751371-adc38448a05e");
+
+    background-size: cover;
+    background-position: center;
+
+    position: relative;
+    overflow: hidden;
+}
+
+/* Golden glow */
+.registration-container::before {
+    content: "";
+
+    position: absolute;
+
+    width: 700px;
+    height: 700px;
+
+    top: -200px;
+    right: -200px;
+
+    background: radial-gradient(
+        circle,
+        rgba(216, 162, 58, 0.18),
+        transparent 70%
+    );
+
+    filter: blur(60px);
+}
+
+/* Registration Card */
+.registration-card {
+    width: 460px;
+    padding: 40px;
+
+    background: rgba(10, 10, 10, 0.92);
+    backdrop-filter: blur(12px);
+
+    border: 1px solid #d8a23a;
+    border-radius: 20px;
+
+    box-shadow:
+        0 0 15px rgba(216, 162, 58, 0.4),
+        0 0 40px rgba(216, 162, 58, 0.2),
+        0 10px 30px rgba(0,0,0,0.6);
+
+    color: white;
+    z-index: 1;
+}
+
+/* Heading */
+.registration-card h1 {
+    text-align: center;
+    color: #d8a23a;
+    font-size: 2.2rem;
+    margin-bottom: 10px;
+}
+
+.subtitle {
+    text-align: center;
+    color: #b8b8b8;
+    margin-bottom: 30px;
+}
+
+/* Labels */
+.registration-card label {
+    display: block;
+
+    margin-top: 15px;
+    margin-bottom: 8px;
+
+    color: #d8a23a;
+    font-weight: 600;
+}
+
+/* Inputs */
+.registration-card input {
+    width: 100%;
+    padding: 14px;
+
+    background: rgba(255,255,255,0.05);
+
+    border: 1px solid rgba(216, 162, 58, 0.35);
+    border-radius: 10px;
+
+    color: white;
+
+    outline: none;
+    transition: 0.3s;
+}
+
+.registration-card input::placeholder {
+    color: #888;
+}
+
+.registration-card input:focus {
+    border-color: #d8a23a;
+
+    box-shadow:
+        0 0 15px rgba(216, 162, 58, 0.5);
+}
+
+/* Register Button */
+.registration-card button {
+    width: 100%;
+    padding: 14px;
+    margin-top: 25px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: #d8a23a;
+    color: black;
+
+    font-size: 1rem;
+    font-weight: bold;
+
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.registration-card button:hover {
+    background: #f0b847;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 0 20px rgba(216, 162, 58, 0.5);
+}
+
+.registration-card button:active {
+    transform: scale(0.98);
+}
+
+/* Login Link */
+.login-text {
+    text-align: center;
+    margin-top: 20px;
+    color: #aaa;
+}
+
+.login-text a {
+    color: #d8a23a;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.login-text a:hover {
+    color: #f0b847;
+}
