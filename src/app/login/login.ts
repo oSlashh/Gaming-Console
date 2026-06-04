@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
+
 
 
 @Component({
@@ -15,8 +16,22 @@ export class Login {
   password= '';
 
   login(){
+    if (!this.email || !this.password) {
+      alert('Please fill in all fields!');
+      return;
+    }
+    else {
+      alert('Login Successful!');
+    }
     console.log(this.email + " Pressed me");
     console.log(this.email);
     console.log(this.password);
+
+    
   }
+  constructor(private router: Router) {}
+
+    goHome() {
+      this.router.navigate(['/']);
+    }
 }

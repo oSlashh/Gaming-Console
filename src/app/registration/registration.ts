@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-registration',
@@ -21,8 +21,13 @@ export class Registration {
       alert('Passwords do not match!');
       return;
     }
-
-    alert('Registration Successful!');
+    else if (!this.name || !this.email || !this.password) {
+      alert('Please fill in all fields!');
+      return;
+    }
+    else {
+      alert('Registration Successful!');
+    }
 
     console.log({
       name: this.name,
@@ -30,4 +35,9 @@ export class Registration {
       password: this.password
     });
   }
+  constructor(private router: Router) {}
+
+  goHome() {
+    this.router.navigate(['/']);
+}
 }

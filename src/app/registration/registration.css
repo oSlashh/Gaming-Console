@@ -61,7 +61,7 @@ body {
     width: 460px;
     padding: 40px;
 
-    background: rgba(10, 10, 10, 0.92);
+    background: rgba(15, 15, 15, 0.9);
     backdrop-filter: blur(12px);
 
     border: 1px solid #d8a23a;
@@ -129,7 +129,7 @@ body {
 }
 
 /* Register Button */
-.registration-card button {
+.registration-btn {
     width: 100%;
     padding: 14px;
     margin-top: 25px;
@@ -147,7 +147,7 @@ body {
     transition: 0.3s;
 }
 
-.registration-card button:hover {
+.registration-btn:hover {
     background: #f0b847;
 
     transform: translateY(-2px);
@@ -156,7 +156,7 @@ body {
         0 0 20px rgba(216, 162, 58, 0.5);
 }
 
-.registration-card button:active {
+.registration-btn:active {
     transform: scale(0.98);
 }
 
@@ -175,4 +175,34 @@ body {
 
 .login-text a:hover {
     color: #f0b847;
+}
+.back-btn{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 40%;
+
+    background: rgba(15,15,15,0.9);
+    color: #d8a53f;
+
+    font-size: 1.3rem;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover{
+    transform: translateX(-3px);
+    background: rgba(255,255,255,0.15);
 }
