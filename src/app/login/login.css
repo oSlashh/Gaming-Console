@@ -106,7 +106,7 @@ body {
     box-shadow: 0 0 15px rgba(216, 162, 58, 0.4);
 }
 
-.login-card button {
+.login-btn {
     width: 100%;
     padding: 14px;
     margin-top: 15px;
@@ -123,7 +123,7 @@ body {
     transition: 0.3s;
 }
 
-.login-card button:hover {
+.login-btn:hover {
     background: #f0b847;
     transform: translateY(-2px);
 
@@ -144,4 +144,34 @@ body {
 
 .register-text a:hover {
     color: #f0b847;
+}
+.back-btn{
+    position: absolute;
+    top: 20px;
+    left: 20px;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 40%;
+
+    background: rgba(15,15,15,0.9);
+    color: #d8a53f;
+
+    font-size: 1.3rem;
+    font-weight: bold;
+
+    cursor: pointer;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    transition: all 0.3s ease;
+}
+
+.back-btn:hover{
+    transform: translateX(-3px);
+    background: rgba(255,255,255,0.15);
 }
