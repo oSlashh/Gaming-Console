@@ -1,0 +1,35 @@
+<section class="game-page-container">
+  <div class="game-page-shell">
+    <header class="hero-panel">
+      <p class="eyebrow">Prototype landing page</p>
+      <h1>{{ pageTitle }}</h1>
+      <p class="lead">{{ pageDescription }}</p>
+      <p class="status-pill">
+        Active selection: {{ selectedGame()?.name ?? 'Choose a game to begin' }}
+      </p>
+    </header>
+
+    <section class="games-section" aria-label="Available prototype games">
+      <div class="section-heading">
+        <h2>Pick a game</h2>
+        <p>Each card is ready to connect to its own route once the game flow is added.</p>
+      </div>
+
+      <div class="games-grid">
+        @for (game of games; track game.id) {
+          <button
+            type="button"
+            class="game-card"
+            (click)="onSelectGame(game)"
+            [attr.aria-label]="'Select ' + game.name"
+          >
+            <span class="game-badge">{{ game.id }}</span>
+            <strong>{{ game.name }}</strong>
+            <p>{{ game.description }}</p>
+            <span class="game-action">Open game</span>
+          </button>
+        }
+      </div>
+    </section>
+  </div>
+</section>
