@@ -35,8 +35,8 @@ export class Login {
       return;
     }
 
-    alert('Login successful — redirecting.');
-    this.router.navigate(['/']);
+    alert('Login successful — redirecting to the game-page.');
+    this.router.navigate(['/game-page']);
   }
 
   goHome() {
