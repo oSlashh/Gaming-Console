@@ -2,30 +2,40 @@
 
     <div class="registration-card">
 
-        <button class="back-btn" (click)="goHome()">
-        ←
-        </button>
+        <button class="back-btn" (click)="goHome()">←</button>
 
         <h1>Create Account</h1>
         <p class="subtitle">Join us today</p>
 
-        <label>Full Name</label>
-        <input type="text" [(ngModel)]="name" placeholder="Enter your full name">
+        <form [formGroup]="registrationForm" (ngSubmit)="submit()">
 
-        <label>Email Address</label>
-        <input
-            type="email"
-            [(ngModel)]="email"
-            placeholder="example@gmail.com"
-            pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$">
+            <label>Full Name</label>
+            <input type="text" formControlName="name" placeholder="Enter your full name">
+            <div *ngIf="registrationForm.get('name')?.touched && registrationForm.get('name')?.invalid" class="error">Name is required.</div>
 
-        <label>Password</label>
-        <input type="password" [(ngModel)]="password" placeholder="Create password">
+            <label>Email Address</label>
+            <input type="email" formControlName="email" placeholder="example@gmail.com">
+            <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.invalid" class="error">
+                <div *ngIf="registrationForm.get('email')?.errors?.['required']">Email is required.</div>
+                <div *ngIf="registrationForm.get('email')?.errors?.['email']">Enter a valid email.</div>
+            </div>
 
-        <label>Confirm Password</label>
-        <input type="password" [(ngModel)]="confirmPassword" placeholder="Confirm password">
+            <label>Password</label>
+            <input type="password" formControlName="password" placeholder="Create password">
+            <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid" class="error">
+                <div *ngIf="registrationForm.get('password')?.errors?.['required']">Password is required.</div>
+                <div *ngIf="registrationForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</div>
+            </div>
 
-        <button class="registration-btn" (click)="submit()">Register</button>
+            <label>Confirm Password</label>
+            <input type="password" formControlName="confirmPassword" placeholder="Confirm password">
+            <div *ngIf="registrationForm.errors?.['passwordMismatch'] && registrationForm.get('confirmPassword')?.touched" class="error">
+                Passwords do not match.
+            </div>
+
+            <button class="registration-btn" type="submit">Register</button>
+
+        </form>
 
         <p class="login-text">
             Already have an account?

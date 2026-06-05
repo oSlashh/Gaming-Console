@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { Userdetails } from '../userdetails';
+
 
 @Component({
   selector: 'app-home2',
@@ -9,7 +11,8 @@ import { Router } from '@angular/router';
   styleUrl: './home2.css',
 })
 export class Home2 {
-  constructor(private router: Router) {}
+
+  constructor(private router: Router, ) {}
   login(){
     console.log("Login clicked");
     this.router.navigate(['/login']);

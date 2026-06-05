@@ -1,20 +1,33 @@
 <div class="login-container">
 
-    <div class="login-card">
+  <div class="login-card">
 
-        <button class="back-btn" (click)="goHome()">
-        ←
-        </button>
+    <button class="back-btn" (click)="goHome()">←</button>
 
-        <h1>Gaming Console</h1>
-        <p class="subtitle">Sign in to continue</p>
-        <label for="email">Email or Username</label>
-        <input type="text" id="email" [(ngModel)]="email" placeholder="Enter your email or username">
-        <br><br>
-        <label for="password">Password</label>
-        <input type="password" id="password" [(ngModel)]="password" placeholder="Enter your password">
-        <br><br>
-        <button class="login-btn" type="submit" (click)="login()">Login</button>
-        <p class="register-text">Don't have an account? <a routerLink="/register">Register</a>
-    </div>
+    <h1>Gaming Console</h1>
+    <p class="subtitle">Sign in to continue</p>
+
+    <form [formGroup]="loginForm" (ngSubmit)="login()">
+
+      <label for="email">Email or Username</label>
+      <input type="text" id="email" formControlName="email" placeholder="Enter your email or username">
+      <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error">
+        <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
+        <div *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address.</div>
+      </div>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" formControlName="password" placeholder="Enter your password">
+      <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error">
+        <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
+        <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</div>
+      </div>
+
+      <button class="login-btn" type="submit">Login</button>
+    </form>
+
+    <p class="register-text">Don't have an account? <a routerLink="/register">Register</a></p>
+
+  </div>
+</div>
 
