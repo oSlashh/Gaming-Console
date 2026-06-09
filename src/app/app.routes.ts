@@ -5,8 +5,8 @@ import { Login } from './login/login';
 import { Registration } from './registration/registration';
 import { GamePage } from './game-page/game-page';
 import { FlappyBird } from './flappy-bird/flappy-bird';
-import { ImagePuzzleComponent } from './image-puzzle.component';
-import { ImagePuzzleInfoComponent } from './image-puzzle-info.component';
+import { ImagePuzzleComponent } from './puzzle-game/image-puzzle.component';
+import { ImagePuzzleInfoComponent } from './puzzle-game/image-puzzle-info.component';
 
 export const routes: Routes = [
   { path: '', component: Home2 },
