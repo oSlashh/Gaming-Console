@@ -1,0 +1,724 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  overflow-x: hidden;
+
+  font-family:
+    "Inter",
+    "Segoe UI",
+    sans-serif;
+
+  color: white;
+
+  background:
+    radial-gradient(circle at top left,
+      rgba(255, 180, 0, 0.15),
+      transparent 30%),
+
+    radial-gradient(circle at bottom right,
+      rgba(0, 180, 255, 0.12),
+      transparent 35%),
+
+    linear-gradient(
+      135deg,
+      #020617 0%,
+      #0f172a 50%,
+      #020617 100%
+    );
+}
+
+/* =====================================================
+   BACKGROUND
+===================================================== */
+
+.background-layer {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.glow {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+}
+
+.glow-1 {
+  width: 350px;
+  height: 350px;
+  top: -100px;
+  left: -80px;
+  background: rgba(255, 170, 0, 0.18);
+}
+
+.glow-2 {
+  width: 400px;
+  height: 400px;
+  right: -100px;
+  top: 120px;
+  background: rgba(0, 200, 255, 0.15);
+}
+
+.glow-3 {
+  width: 300px;
+  height: 300px;
+  bottom: -100px;
+  left: 40%;
+  background: rgba(150, 0, 255, 0.15);
+}
+
+/* =====================================================
+   MAIN CONTAINER
+===================================================== */
+
+.game-container {
+  position: relative;
+  z-index: 2;
+  padding: 24px;
+  max-width: 1800px;
+  margin: auto;
+}
+
+.game-layout {
+  display: grid;
+  grid-template-columns:
+    340px
+    minmax(0, 1fr)
+    340px;
+
+  gap: 24px;
+}
+
+/* =====================================================
+   HEADER
+===================================================== */
+
+.game-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 24px;
+}
+
+.logo-section h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+.logo-section p {
+  opacity: .7;
+}
+
+.header-actions {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+/* =====================================================
+   GLASS CARD
+===================================================== */
+
+.glass-card {
+  background: rgba(255,255,255,0.05);
+
+  backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255,255,255,0.08);
+
+  border-radius: 24px;
+
+  padding: 20px;
+
+  box-shadow:
+    0 15px 40px rgba(0,0,0,.35);
+
+  margin-bottom: 20px;
+}
+
+.glass-card h3 {
+  margin-top: 0;
+}
+
+/* =====================================================
+   HUD
+===================================================== */
+
+.hud-panel {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4,1fr);
+
+  gap: 16px;
+
+  margin-bottom: 24px;
+}
+
+.hud-item {
+  text-align: center;
+
+  background: rgba(255,255,255,0.05);
+
+  backdrop-filter: blur(16px);
+
+  border-radius: 20px;
+
+  padding: 18px;
+}
+
+.hud-item span {
+  display: block;
+  font-size: 2rem;
+}
+
+.hud-item strong {
+  display: block;
+  font-size: 1.6rem;
+  margin-top: 6px;
+}
+
+.hud-item small {
+  opacity: .7;
+}
+
+/* =====================================================
+   XP BAR
+===================================================== */
+
+.level-card,
+.xp-card {
+  min-width: 120px;
+}
+
+.xp-bar {
+  width: 160px;
+  height: 10px;
+
+  background: rgba(255,255,255,0.08);
+
+  border-radius: 999px;
+
+  overflow: hidden;
+
+  margin-top: 8px;
+}
+
+.xp-fill {
+  height: 100%;
+
+  background:
+    linear-gradient(
+      90deg,
+      #22c55e,
+      #facc15
+    );
+
+  border-radius: 999px;
+}
+
+/* =====================================================
+   BUTTONS
+===================================================== */
+
+button {
+  cursor: pointer;
+  transition: .3s;
+}
+
+.primary-btn {
+  border: none;
+
+  padding: 14px;
+
+  border-radius: 16px;
+
+  font-weight: 700;
+
+  background:
+    linear-gradient(
+      135deg,
+      #facc15,
+      #f59e0b
+    );
+
+  color: black;
+}
+
+.primary-btn:hover {
+  transform: translateY(-3px);
+}
+
+.secondary-btn,
+.menu-btn {
+  border: none;
+
+  padding: 14px;
+
+  border-radius: 16px;
+
+  background: rgba(255,255,255,.08);
+
+  color: white;
+}
+
+.secondary-btn:hover,
+.menu-btn:hover {
+  background: rgba(255,255,255,.15);
+}
+
+/* =====================================================
+   TIMER
+===================================================== */
+
+.timer-card {
+  text-align: center;
+}
+
+.timer-circle {
+  position: relative;
+
+  width: 220px;
+  height: 220px;
+
+  margin: auto;
+}
+
+.timer-circle svg {
+  width: 100%;
+  height: 100%;
+
+  transform: rotate(-90deg);
+}
+
+.timer-bg {
+  fill: none;
+  stroke: rgba(255,255,255,.08);
+  stroke-width: 10;
+}
+
+.timer-progress {
+  fill: none;
+
+  stroke: #22c55e;
+
+  stroke-width: 10;
+
+  stroke-linecap: round;
+
+  stroke-dasharray: 327;
+  stroke-dashoffset: 100;
+}
+
+.timer-content {
+  position: absolute;
+
+  inset: 0;
+
+  display: flex;
+
+  flex-direction: column;
+
+  justify-content: center;
+
+  align-items: center;
+}
+
+.timer-content strong {
+  font-size: 2rem;
+}
+
+.timer-content span {
+  opacity: .7;
+}
+
+/* =====================================================
+   DIFFICULTY
+===================================================== */
+
+.difficulty-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.difficulty-card {
+  border: none;
+
+  border-radius: 18px;
+
+  padding: 16px;
+
+  background: rgba(255,255,255,.06);
+
+  color: white;
+}
+
+.difficulty-card.active {
+  background:
+    linear-gradient(
+      135deg,
+      #facc15,
+      #f59e0b
+    );
+
+  color: black;
+}
+
+/* =====================================================
+   CONTROLS
+===================================================== */
+
+.control-grid {
+  display: grid;
+  gap: 12px;
+}
+
+/* =====================================================
+   BOARD
+===================================================== */
+
+.board-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.board-top {
+  margin-bottom: 20px;
+}
+
+.board-shell {
+  position: relative;
+
+  min-height: 760px;
+
+  padding: 24px;
+
+  border-radius: 32px;
+
+  background:
+    rgba(255,255,255,.04);
+
+  backdrop-filter: blur(20px);
+
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.empty-board {
+  height: 700px;
+
+  display: flex;
+
+  flex-direction: column;
+
+  align-items: center;
+
+  justify-content: center;
+}
+
+.empty-icon {
+  font-size: 5rem;
+}
+
+/* =====================================================
+   PREVIEW
+===================================================== */
+
+.preview-overlay {
+  position: absolute;
+  inset: 0;
+
+  border-radius: 32px;
+
+  background-size: cover;
+  background-position: center;
+
+  opacity: .08;
+
+  pointer-events: none;
+}
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.board-grid {
+  display: grid;
+  gap: 10px;
+
+  position: relative;
+  z-index: 2;
+}
+
+.tile {
+  border: none;
+
+  aspect-ratio: 1;
+
+  border-radius: 16px;
+
+  background-size: cover;
+
+  transition:
+    transform .25s,
+    box-shadow .25s;
+
+  box-shadow:
+    0 5px 20px rgba(0,0,0,.3);
+}
+
+.tile:hover {
+  transform:
+    translateY(-4px)
+    scale(1.02);
+
+  box-shadow:
+    0 12px 30px rgba(0,0,0,.4);
+}
+
+.tile.selected {
+  outline: 3px solid #facc15;
+}
+
+/* =====================================================
+   GALLERY
+===================================================== */
+
+.image-gallery {
+  display: grid;
+  gap: 16px;
+}
+
+.gallery-card {
+  border: none;
+
+  overflow: hidden;
+
+  border-radius: 20px;
+
+  background: rgba(255,255,255,.05);
+
+  color: white;
+}
+
+.gallery-card img {
+  width: 100%;
+  height: 160px;
+
+  object-fit: cover;
+
+  transition: .4s;
+}
+
+.gallery-card:hover img {
+  transform: scale(1.08);
+}
+
+.gallery-info {
+  padding: 12px;
+}
+
+.gallery-card.active {
+  outline: 3px solid #facc15;
+}
+
+/* =====================================================
+   UPLOAD
+===================================================== */
+
+input[type="file"] {
+  display: none;
+}
+
+.upload-btn {
+  display: block;
+
+  text-align: center;
+
+  padding: 14px;
+
+  border-radius: 16px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #3b82f6,
+      #06b6d4
+    );
+
+  cursor: pointer;
+}
+
+/* =====================================================
+   ACHIEVEMENTS
+===================================================== */
+
+.achievement-list {
+  display: grid;
+  gap: 10px;
+}
+
+.achievement {
+  padding: 12px;
+
+  border-radius: 14px;
+
+  background:
+    rgba(255,255,255,.05);
+}
+
+/* =====================================================
+   CHALLENGE
+===================================================== */
+
+.challenge-card .reward {
+  margin-top: 12px;
+
+  font-weight: bold;
+
+  color: #facc15;
+}
+
+/* =====================================================
+   VICTORY
+===================================================== */
+
+.victory-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  background:
+    rgba(0,0,0,.8);
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  z-index: 999;
+}
+
+.victory-card {
+  width: 650px;
+  max-width: 95%;
+
+  background:
+    linear-gradient(
+      180deg,
+      #111827,
+      #030712
+    );
+
+  border-radius: 30px;
+
+  padding: 30px;
+
+  text-align: center;
+
+  border: 1px solid rgba(255,255,255,.08);
+}
+
+.victory-badge {
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+.victory-image {
+  width: 100%;
+  height: 250px;
+
+  object-fit: cover;
+
+  border-radius: 20px;
+}
+
+.stars {
+  margin: 18px 0;
+
+  font-size: 2rem;
+
+  color: gold;
+}
+
+.victory-stats {
+  display: grid;
+
+  grid-template-columns:
+    repeat(2,1fr);
+
+  gap: 16px;
+
+  margin: 20px 0;
+}
+
+.victory-stats div {
+  padding: 16px;
+
+  border-radius: 16px;
+
+  background: rgba(255,255,255,.05);
+}
+
+.victory-stats span {
+  display: block;
+  opacity: .7;
+}
+
+.victory-stats strong {
+  font-size: 1.3rem;
+}
+
+.victory-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 1400px) {
+  .game-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .gallery-panel,
+  .sidebar {
+    order: 2;
+  }
+
+  .board-section {
+    order: 1;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .game-header {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .hud-panel {
+    grid-template-columns: repeat(2,1fr);
+  }
+
+  .timer-circle {
+    width: 180px;
+    height: 180px;
+  }
+
+  .board-shell {
+    min-height: auto;
+  }
+
+  .victory-actions {
+    flex-direction: column;
+  }
+
+}
