@@ -1,10 +1,4 @@
 <div class="rtg-wrapper">
-  <div class="session-status" aria-live="polite" aria-atomic="true">
-    <div class="session-pill">
-      <span class="session-pill__label">Session</span>
-      <span class="session-pill__value">{{ sessionTimeLabel() }}</span>
-    </div>
-  </div>
 
   <!-- ═══════════════════════════════ HOME ════════════════════════════════════ -->
   @if (phase() === 'home') {
@@ -48,6 +42,7 @@
       }
 
       <button class="btn-primary" (click)="startGame()">Start Game</button>
+      <button class="btn-quit" (click)="quitGame()">Quit Game</button>
     </div>
   }
 
@@ -70,6 +65,7 @@
         </div>
       }
     </div>
+    <button class="btn-quit btn-quit--arena" (click)="quitGame()">Quit</button>
   }
 
   <!-- ══════════════════════════ IMPOSSIBLE ARENA ════════════════════════════ -->
@@ -87,6 +83,7 @@
         </div>
       }
     </div>
+    <button class="btn-quit btn-quit--arena" (click)="quitGame()">Quit</button>
   }
 
   <!-- ════════════════════════════ TOO EARLY ═════════════════════════════════ -->
@@ -98,6 +95,7 @@
       <div class="result-actions">
         <button class="btn-primary" (click)="playAgain()">Try Again</button>
         <button class="btn-ghost" (click)="goHome()">Home</button>
+        <button class="btn-quit" (click)="quitGame()">Quit Game</button>
       </div>
     </div>
   }
@@ -111,6 +109,7 @@
       <div class="result-actions">
         <button class="btn-primary" (click)="playAgain()">Try Again</button>
         <button class="btn-ghost" (click)="goHome()">Home</button>
+        <button class="btn-quit" (click)="quitGame()">Quit Game</button>
       </div>
     </div>
   }
@@ -135,6 +134,7 @@
       <div class="result-actions">
         <button class="btn-primary" (click)="playAgain()">Play Again</button>
         <button class="btn-ghost" (click)="goHome()">Home</button>
+        <button class="btn-quit" (click)="quitGame()">Quit Game</button>
       </div>
     </div>
   }
