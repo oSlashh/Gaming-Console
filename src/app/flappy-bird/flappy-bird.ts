@@ -27,7 +27,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   height = 0;
 
   bird = { x: 0, y: 0, vy: 0, radius: 14 };
-  birdImage = new Image();
+  birdImage: HTMLImageElement | null = typeof Image !== 'undefined' ? new Image() : null;
 
   gravity = 0.42;
   flapImpulse = -8;
@@ -52,14 +52,20 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   ) {}
 
   ngAfterViewInit(): void {
+    if (typeof window === 'undefined') {
+      return;
+    }
+
     const canvas = this.canvasRef.nativeElement;
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     canvas.width = this.width;
     canvas.height = this.height;
     this.ctx = canvas.getContext('2d');
-    this.birdImage.src = 'bird.png';
-    console.log(this.birdImage.src);
+    if (this.birdImage) {
+      this.birdImage.src = 'bird.png';
+      console.log(this.birdImage.src);
+    }
 
     this.initGame();
   }
