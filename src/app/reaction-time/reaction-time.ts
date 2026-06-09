@@ -1,14 +1,13 @@
 import {
   Component,
-  OnInit,
-  inject,
   signal,
   computed,
   OnDestroy,
   ChangeDetectionStrategy,
+  inject,
 } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
@@ -51,8 +50,6 @@ const SECTION_COUNT: Record<Exclude<Difficulty, 'impossible'>, number> = {
 
 const MIN_DELAY_MS = 2000;
 const MAX_DELAY_MS = 5000;
-const SESSION_DURATION_SECONDS = 10 * 60;
-const SESSION_DURATION_MS = SESSION_DURATION_SECONDS * 1000;
 
 /** Distraction colors — green is intentionally excluded */
 const IMP_DISTRACTION_COLORS: ImpossibleColor[] = ['blue', 'purple', 'orange', 'yellow', 'pink'];
@@ -61,9 +58,9 @@ const IMP_DISTRACTION_COLORS: ImpossibleColor[] = ['blue', 'purple', 'orange', '
 const IMP_RED_MIN  = 400;
 const IMP_RED_MAX  = 1600;
 
-/** How long a distraction flash is visible (ms) */
-const IMP_DIST_MIN = 150;
-const IMP_DIST_MAX = 800;
+/** How long distraction flashes stay visible (ms) */
+const IMP_DIST_MIN = 500;
+const IMP_DIST_MAX = 1000;
 
 /** Probability any given event fires the green signal (geometric distribution) */
 const IMP_GREEN_CHANCE = 0.22;
@@ -79,8 +76,7 @@ const IMP_GREEN_CHANCE = 0.22;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ReactionTimeGameComponent implements OnDestroy {
-  private readonly router = inject(Router);
-
+  private readonly _router = inject(Router);
   // ── State signals ──────────────────────────────────────────────────────────
   readonly phase = signal<GamePhase>('home');
   readonly difficulty = signal<Difficulty>('easy');
@@ -90,14 +86,11 @@ export class ReactionTimeGameComponent implements OnDestroy {
   readonly bestScores = signal<BestScores>({ easy: null, medium: null, hard: null, impossible: null });
   readonly tooEarlySection = signal<number | null>(null);
   readonly impossibleSections = signal<ImpossibleSection[]>([]);
-  readonly sessionRemainingSeconds = signal(SESSION_DURATION_SECONDS);
   /** The section id secretly chosen as the target for this round */
   private _targetSectionId: number = 0;
 
   // ── Derived ────────────────────────────────────────────────────────────────
   readonly currentBest = computed(() => this.bestScores()[this.difficulty()]);
-
-  readonly sessionTimeLabel = computed(() => this._formatSessionTime(this.sessionRemainingSeconds()));
 
   readonly resultMessage = computed(() => {
     const t = this.reactionTime();
@@ -124,32 +117,21 @@ export class ReactionTimeGameComponent implements OnDestroy {
   // ── Private fields ─────────────────────────────────────────────────────────
   private _delayTimer: ReturnType<typeof setTimeout> | null = null;
   private _impossibleFlashTimer: ReturnType<typeof setTimeout> | null = null;
-  private _sessionTickTimer: ReturnType<typeof setInterval> | null = null;
-  private _sessionExpiryTimer: ReturnType<typeof setTimeout> | null = null;
-  private _sessionEndsAt = 0;
-  private _sessionEnded = false;
   private _startTimestamp: number | null = null;
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
-  ngOnInit(): void {
-    this._startSessionTimer();
-  }
-
   ngOnDestroy(): void {
     this._clearTimer();
     this._clearImpossibleTimer();
-    this._clearSessionTimers();
   }
 
   // ── Public actions ─────────────────────────────────────────────────────────
 
   selectDifficulty(d: Difficulty): void {
-    if (this._sessionEnded) return;
     this.difficulty.set(d);
   }
 
   startGame(): void {
-    if (this._sessionEnded) return;
     this._clearTimer();
     this._clearImpossibleTimer();
     this.reactionTime.set(null);
@@ -168,7 +150,6 @@ export class ReactionTimeGameComponent implements OnDestroy {
   }
 
   handleSectionClick(sectionId: number): void {
-    if (this._sessionEnded) return;
     const p = this.phase();
 
     if (p === 'waiting') {
@@ -195,7 +176,6 @@ export class ReactionTimeGameComponent implements OnDestroy {
 
   /** Called when the user clicks a section in Impossible mode */
   handleImpossibleSectionClick(sectionId: number): void {
-    if (this._sessionEnded) return;
     const p = this.phase();
     if (p !== 'waiting' && p !== 'ready') return;
 
@@ -225,15 +205,22 @@ export class ReactionTimeGameComponent implements OnDestroy {
   }
 
   playAgain(): void {
-    if (this._sessionEnded) return;
     this.startGame();
   }
 
   goHome(): void {
-    if (this._sessionEnded) return;
     this._clearTimer();
     this._clearImpossibleTimer();
     this.phase.set('home');
+  }
+
+  /** Tear down all active timers and navigate back to the Game Page. */
+  quitGame(): void {
+    this._clearTimer();
+    this._clearImpossibleTimer();
+    this._startTimestamp = null;
+    this.phase.set('home');
+    this._router.navigate(['/game-page']);
   }
 
   // ── Private helpers ────────────────────────────────────────────────────────
@@ -303,22 +290,28 @@ export class ReactionTimeGameComponent implements OnDestroy {
     // No auto-expire for grid mode — player must click the correct green cell.
   }
 
-  /** Flash a random distraction color on a random section, then reset to red. */
+  /** Flash 1–4 random sections simultaneously, each with an independent distraction color. */
   private _showImpossibleDistraction(): void {
-    const sectionId = Math.floor(Math.random() * 4);
-    const color = IMP_DISTRACTION_COLORS[
-      Math.floor(Math.random() * IMP_DISTRACTION_COLORS.length)
-    ] as ImpossibleColor;
+    // Shuffle section ids [0,1,2,3] and take a random slice of 1–4
+    const shuffled = [0, 1, 2, 3].sort(() => Math.random() - 0.5);
+    const count = 1 + Math.floor(Math.random() * 4); // 1, 2, 3, or 4
+    const targetIds = new Set(shuffled.slice(0, count));
 
     this.impossibleSections.update(secs =>
-      secs.map(s => ({ ...s, color: s.id === sectionId ? color : s.color }))
+      secs.map(s => {
+        if (!targetIds.has(s.id)) return s;
+        const color = IMP_DISTRACTION_COLORS[
+          Math.floor(Math.random() * IMP_DISTRACTION_COLORS.length)
+        ] as ImpossibleColor;
+        return { ...s, color };
+      })
     );
 
     const hold = IMP_DIST_MIN + Math.random() * (IMP_DIST_MAX - IMP_DIST_MIN);
     this._impossibleFlashTimer = setTimeout(() => {
-      // Reset the flashed section back to red, then schedule the next event
+      // Reset only the sections that were lit up
       this.impossibleSections.update(secs =>
-        secs.map(s => ({ ...s, color: s.id === sectionId ? ('red' as ImpossibleColor) : s.color }))
+        secs.map(s => targetIds.has(s.id) ? { ...s, color: 'red' as ImpossibleColor } : s)
       );
       this._scheduleImpossibleEvent();
     }, hold);
@@ -344,63 +337,5 @@ export class ReactionTimeGameComponent implements OnDestroy {
       clearTimeout(this._impossibleFlashTimer);
       this._impossibleFlashTimer = null;
     }
-  }
-
-  private _startSessionTimer(): void {
-    this._clearSessionTimers();
-    this._sessionEnded = false;
-    this._sessionEndsAt = Date.now() + SESSION_DURATION_MS;
-    this.sessionRemainingSeconds.set(SESSION_DURATION_SECONDS);
-    this._syncSessionTimer();
-
-    this._sessionTickTimer = setInterval(() => {
-      this._syncSessionTimer();
-    }, 1000);
-
-    this._sessionExpiryTimer = setTimeout(() => {
-      this._endSession();
-    }, SESSION_DURATION_MS);
-  }
-
-  private _syncSessionTimer(): void {
-    const remainingMs = Math.max(0, this._sessionEndsAt - Date.now());
-    const remainingSeconds = Math.ceil(remainingMs / 1000);
-    this.sessionRemainingSeconds.set(remainingSeconds);
-
-    if (remainingSeconds <= 0) {
-      this._endSession();
-    }
-  }
-
-  private _endSession(): void {
-    if (this._sessionEnded) {
-      return;
-    }
-
-    this._sessionEnded = true;
-    this.sessionRemainingSeconds.set(0);
-    this._clearTimer();
-    this._clearImpossibleTimer();
-    this._clearSessionTimers();
-    void this.router.navigate(['/game-page'], { state: { sessionEnded: true } });
-  }
-
-  private _clearSessionTimers(): void {
-    if (this._sessionTickTimer !== null) {
-      clearInterval(this._sessionTickTimer);
-      this._sessionTickTimer = null;
-    }
-
-    if (this._sessionExpiryTimer !== null) {
-      clearTimeout(this._sessionExpiryTimer);
-      this._sessionExpiryTimer = null;
-    }
-  }
-
-  private _formatSessionTime(totalSeconds: number): string {
-    const minutes = Math.floor(totalSeconds / 60);
-    const seconds = totalSeconds % 60;
-
-    return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 }
