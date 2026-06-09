@@ -4,16 +4,14 @@
       <p class="eyebrow">Prototype landing page</p>
       <h1>{{ pageTitle }}</h1>
       <p class="lead">{{ pageDescription }}</p>
-      <p class="status-pill">Tap the card below to view the game details page.</p>
+      <div class="status-pill">
+          {{ statusText() }}
+      </div>
+      <h2>Pick a game</h2>
+      <p>Each card is ready to connect to its own route once the game flow is added.</p>
     </header>
 
-    <section class="games-section" aria-label="Available prototype games">
-      <div class="section-heading">
-        <h2>Pick a game</h2>
-        <p>Each card is ready to connect to its own route once the game flow is added.</p>
-      </div>
-
-      <div class="games-grid">
+    <div class="games-grid">
         @for (game of games; track game.id) {
           <button
             type="button"
@@ -28,6 +26,6 @@
           </button>
         }
       </div>
-    </section>
-  </div>
+    </div>
 </section>
+  

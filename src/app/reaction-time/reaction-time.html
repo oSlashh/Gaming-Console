@@ -1,0 +1,142 @@
+<div class="rtg-wrapper">
+  <div class="session-status" aria-live="polite" aria-atomic="true">
+    <div class="session-pill">
+      <span class="session-pill__label">Session</span>
+      <span class="session-pill__value">{{ sessionTimeLabel() }}</span>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════ HOME ════════════════════════════════════ -->
+  @if (phase() === 'home') {
+    <div class="rtg-card home-card">
+      <div class="rtg-icon">⚡</div>
+      <h1 class="rtg-title">Reaction Time Challenge</h1>
+      <p class="rtg-subtitle">
+        Test how fast your reflexes are. Wait for red to turn green — then click
+        as quickly as you can. On harder difficulties, only one section lights up:
+        make sure you click the right one.
+      </p>
+
+      <div class="difficulty-section">
+        <label class="section-label">Select difficulty</label>
+        <div class="difficulty-pills">
+          @for (d of ['easy', 'medium', 'hard', 'impossible']; track d) {
+            <button
+              class="pill"
+              [class.pill--active]="difficulty() === d"
+              [class.pill--impossible]="d === 'impossible'"
+              [class.pill--impossible-active]="d === 'impossible' && difficulty() === 'impossible'"
+              (click)="selectDifficulty($any(d))"
+            >{{ d | titlecase }}</button>
+          }
+        </div>
+
+        <div class="difficulty-hint">
+          @switch (difficulty()) {
+            @case ('easy')       { <span>1 full-screen zone</span> }
+            @case ('medium')     { <span>2 side-by-side zones — click the green one</span> }
+            @case ('hard')       { <span>4 zones (2 × 2) — click the green one</span> }
+            @case ('impossible') { <span>4 zones — ignore distractions, click green on the right section</span> }
+          }
+        </div>
+      </div>
+
+      @if (currentBest() !== null) {
+        <div class="best-badge">
+          🏆 Personal best ({{ difficulty() }}): <strong>{{ currentBest() }} ms</strong>
+        </div>
+      }
+
+      <button class="btn-primary" (click)="startGame()">Start Game</button>
+    </div>
+  }
+
+  <!-- ════════════════════════════ GAMEPLAY (easy/medium/hard) ══════════════ -->
+  @if ((phase() === 'waiting' || phase() === 'ready') && difficulty() !== 'impossible') {
+    <div class="rtg-arena" [class]="gridClass()">
+      @for (sec of sections(); track sec.id) {
+        <div
+          class="zone"
+          [class.zone--red]="!sec.isGreen"
+          [class.zone--green]="sec.isGreen"
+          (click)="handleSectionClick(sec.id)"
+        >
+          @if (!sec.isGreen && phase() === 'waiting') {
+            <span class="zone-hint">Wait…</span>
+          }
+          @if (sec.isGreen) {
+            <span class="zone-hint zone-hint--go">GO!</span>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ══════════════════════════ IMPOSSIBLE ARENA ════════════════════════════ -->
+  @if ((phase() === 'waiting' || phase() === 'ready') && difficulty() === 'impossible') {
+    <div class="rtg-arena grid-4">
+      @for (sec of impossibleSections(); track sec.id) {
+        <div
+          class="zone imp-section"
+          [class]="'imp-color--' + sec.color"
+          (click)="handleImpossibleSectionClick(sec.id)"
+        >
+          @if (sec.color !== 'red') {
+            <span class="zone-hint zone-hint--go">NOW!</span>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- ════════════════════════════ TOO EARLY ═════════════════════════════════ -->
+  @if (phase() === 'tooearly') {
+    <div class="rtg-card result-card">
+      <div class="result-icon result-icon--bad">✗</div>
+      <h2 class="result-heading result-heading--bad">Too Early!</h2>
+      <p class="result-sub">You clicked before the zone turned green.</p>
+      <div class="result-actions">
+        <button class="btn-primary" (click)="playAgain()">Try Again</button>
+        <button class="btn-ghost" (click)="goHome()">Home</button>
+      </div>
+    </div>
+  }
+
+  <!-- ═══════════════════════════ WRONG COLOR ═════════════════════════════════ -->
+  @if (phase() === 'wrongcolor') {
+    <div class="rtg-card result-card">
+      <div class="result-icon result-icon--bad">✗</div>
+      <h2 class="result-heading result-heading--bad">Wrong Color!</h2>
+      <p class="result-sub">You clicked while the screen wasn't green. Only click on green!</p>
+      <div class="result-actions">
+        <button class="btn-primary" (click)="playAgain()">Try Again</button>
+        <button class="btn-ghost" (click)="goHome()">Home</button>
+      </div>
+    </div>
+  }
+
+  <!-- ═════════════════════════════ RESULT ═══════════════════════════════════ -->
+  @if (phase() === 'result') {
+    <div class="rtg-card result-card">
+      <div class="result-icon result-icon--good">⚡</div>
+      <h2 class="result-heading">{{ resultMessage() }}</h2>
+
+      <div class="time-display">
+        <span class="time-value">{{ reactionTime() }}</span>
+        <span class="time-unit">ms</span>
+      </div>
+
+      @if (currentBest() !== null && reactionTime() === currentBest()) {
+        <div class="new-best-badge">🏆 New personal best!</div>
+      } @else if (currentBest() !== null) {
+        <div class="best-badge">Best: {{ currentBest() }} ms</div>
+      }
+
+      <div class="result-actions">
+        <button class="btn-primary" (click)="playAgain()">Play Again</button>
+        <button class="btn-ghost" (click)="goHome()">Home</button>
+      </div>
+    </div>
+  }
+
+</div>

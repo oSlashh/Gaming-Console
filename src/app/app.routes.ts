@@ -1,19 +1,40 @@
 import { Routes } from '@angular/router';
 
-import { Home2 } from './home2/home2';
-import { Login } from './login/login';
-import { Registration } from './registration/registration';
-import { GamePage } from './game-page/game-page';
-import { FlappyBird } from './flappy-bird/flappy-bird';
-import { ImagePuzzleComponent } from './puzzle-game/image-puzzle.component';
-import { ImagePuzzleInfoComponent } from './puzzle-game/image-puzzle-info.component';
-
 export const routes: Routes = [
-  { path: '', component: Home2 },
-  { path: 'login', component: Login },
-  { path: 'register', component: Registration },
-  { path: 'game-page', component: GamePage },
-  { path: 'flappy-bird', component: FlappyBird },
-  { path: 'image-puzzle-info', component: ImagePuzzleInfoComponent },
-  { path: 'image-puzzle', component: ImagePuzzleComponent },
+  {
+    path: '',
+    loadComponent: () => import('./home2/home2').then((m) => m.Home2),
+  },
+  {
+    path: 'login',
+    loadComponent: () => import('./login/login').then((m) => m.Login),
+  },
+  {
+    path: 'register',
+    loadComponent: () => import('./registration/registration').then((m) => m.Registration),
+  },
+  {
+    path: 'game-page',
+    loadComponent: () => import('./game-page/game-page').then((m) => m.GamePage),
+  },
+  {
+    path: 'flappy-bird',
+    loadComponent: () => import('./flappy-bird/flappy-bird').then((m) => m.FlappyBird),
+  },
+  {
+    path: 'image-puzzle-info',
+    loadComponent: () => import('./puzzle-game/image-puzzle-info.component').then((m) => m.ImagePuzzleInfoComponent),
+  },
+  {
+    path: 'image-puzzle',
+    loadComponent: () => import('./puzzle-game/image-puzzle.component').then((m) => m.ImagePuzzleComponent),
+  },
+  {
+    path: 'reaction-time',
+    loadComponent: () => import('./reaction-time/reaction-time').then((m) => m.ReactionTimeGameComponent),
+  },
+  {
+    path: '**',
+    redirectTo: '',
+  },
 ];
