@@ -347,7 +347,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
         ctx.fillRect(p.x, p.gapY + gapSize / 2, pipeW, this.height - (p.gapY + gapSize / 2) - 100);
       }
 
-      const size = 100;
+      const size = 80;
 
 
     if (
