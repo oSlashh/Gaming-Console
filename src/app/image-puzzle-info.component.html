@@ -1,0 +1,44 @@
+<section class="game-page-container">
+  <div class="game-page-shell">
+    <header class="hero-panel">
+      <p class="eyebrow">Image Puzzle Challenge</p>
+      <h1>Ready for the full 10-minute timed session?</h1>
+      <p class="lead">
+        This puzzle is a session challenge, not a single-image test. The timer runs for the full game session and does not reset when you choose a new image.
+      </p>
+      <p class="status-pill">No hints are shown; this is a pure, timed puzzle challenge.</p>
+    </header>
+
+    <section class="games-section" aria-label="Image Puzzle info">
+      <div class="section-heading">
+        <h2>How it works</h2>
+        <p>Start only when ready. The 10-minute countdown starts once the puzzle session begins.</p>
+      </div>
+
+      <div class="games-grid">
+        <div class="game-card">
+          <span class="game-badge">1</span>
+          <strong>Choose or upload an image</strong>
+          <p>Select a beautiful built-in picture or upload your own JPG/PNG/WEBP image to create the board.</p>
+        </div>
+
+        <div class="game-card">
+          <span class="game-badge">2</span>
+          <strong>Solve the shuffled tiles</strong>
+          <p>Use click swap and drag-and-drop to move tiles into the correct position before time runs out.</p>
+        </div>
+
+        <div class="game-card">
+          <span class="game-badge">3</span>
+          <strong>Finish before timeout</strong>
+          <p>You have exactly 10 minutes for the full game session. When the timer reaches 00:00, the full puzzle game resets and you are returned to the menu.</p>
+        </div>
+      </div>
+
+      <div class="info-actions">
+        <button type="button" class="secondary" (click)="goBack()">Back to menu</button>
+        <button type="button" class="primary" (click)="startGame()">Start Image Puzzle</button>
+      </div>
+    </section>
+  </div>
+</section>

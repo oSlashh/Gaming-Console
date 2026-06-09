@@ -1,11 +1,10 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 
 interface GameOption {
   id: number;
   name: string;
   description: string;
-  
 }
 
 @Component({
@@ -16,9 +15,8 @@ interface GameOption {
   styleUrl: './game-page.css',
 })
 export class GamePage {
-    pageTitle = 'Gaming Console Dashboard';
-    pageDescription =
-    'Choose a prototype game to explore the next step of your console experience.';
+  pageTitle = 'Gaming Console Dashboard';
+  pageDescription = 'Choose a prototype game to explore the next step of your console experience.';
 
   readonly games: GameOption[] = [
     {
@@ -28,21 +26,23 @@ export class GamePage {
     },
     {
       id: 2,
-      name: 'Game 2',
-      description: 'Placeholder description for Game 2',
+      name: 'Image Puzzle',
+      description: 'Solve a polished tile puzzle using curated and uploaded images.',
     },
     {
       id: 3,
       name: 'Game 3',
-      description: 'Placeholder description for Game 3',
+      description: 'Another prototype game placeholder for future expansion.',
     },
   ];
 
-  readonly selectedGame = signal<GameOption | null>(null);
-  constructor(private router: Router) {}
+  constructor(private readonly router: Router) {}
 
   onSelectGame(game: GameOption): void {
-    this.selectedGame.set(game);
+    if (game.id === 2) {
+      this.router.navigate(['/image-puzzle-info']);
+      return;
+    }
     console.log('Selected game:', game.name);
   }
 
