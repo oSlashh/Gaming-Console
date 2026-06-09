@@ -1,0 +1,64 @@
+<div class="flappy-container">
+  <canvas #gameCanvas class="game-canvas" (click)="onCanvasClick()"></canvas>
+  <button class="quit-btn" (click)="handleQuit()">Quit</button>
+
+  <div *ngIf="screen === 'instructions'" class="panel-overlay">
+    <div class="panel-card instructions-card">
+      <h1>Flappy Escape</h1>
+      <div class="panel-text">
+        <h2>How to Play</h2>
+        <ul>
+          <li>Tap or press <strong>SPACE</strong> to flap</li>
+          <li>Avoid the green pipes</li>
+          <li>Don't hit the ground</li>
+          <li>Pass pipes to score points</li>
+          <li>10 minutes before the game auto-resets</li>
+        </ul>
+      </div>
+      <button class="panel-btn" (click)="onInstructionsOK()">OK</button>
+    </div>
+  </div>
+
+  <div *ngIf="screen === 'start'" class="panel-overlay">
+    <div class="panel-card start-card">
+      <h1>Ready?</h1>
+      <p class="start-text">Press START to begin your run.</p>
+      <button class="panel-btn start-button" (click)="onStartGame()">START</button>
+    </div>
+  </div>
+
+  <div *ngIf="screen === 'countdown'" class="panel-overlay countdown-overlay">
+    <div class="countdown-card">
+      <div class="countdown-circle">{{ countdownValue > 0 ? countdownValue : 'GO!' }}</div>
+      <div class="countdown-tip" *ngIf="countdownValue <= 0">Press <strong>SPACE</strong> to fly!</div>
+    </div>
+  </div>
+
+  <div *ngIf="screen === 'gameOver'" class="panel-overlay">
+    <div class="panel-card gameover-card">
+      <h1>GAME OVER</h1>
+      <p class="final-score">Score: <strong>{{ gameOverScore }}</strong></p>
+      <div class="gameover-actions">
+        <button class="panel-btn" (click)="onGameOverRestart()">Restart</button>
+        <button class="panel-btn quit-button" (click)="handleQuit()">Quit</button>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="isTimeWarningActive" class="time-warning-overlay">
+    <div class="time-warning-card">
+      <div class="time-warning-label">TIME'S UP!</div>
+      <div class="time-warning-text">{{ timeWarningCountdown > 0 ? timeWarningCountdown : 'GO!' }}</div>
+    </div>
+  </div>
+
+  <div *ngIf="screen === 'playing'" class="hud">
+    <div class="hud-item">Best: <strong>{{ bestScore }}</strong></div>
+    <div class="hud-item">Score: <strong>{{ score }}</strong></div>
+    <div class="hud-item" [class.warn]="remaining <= 15">Time: <strong>{{ formatTime(remaining) }}</strong></div>
+  </div>
+
+  <div *ngIf="screen === 'playing'" class="lives-display">
+    <span *ngFor="let i of [1, 2, 3]" class="heart" [class.active]="i <= lives">❤️</span>
+  </div>
+</div>

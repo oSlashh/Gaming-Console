@@ -20,7 +20,7 @@
           <button
             type="button"
             class="game-card"
-            (click)="onSelectGame(game)"
+            (click)="openGame(game)"
             [attr.aria-label]="'Select ' + game.name"
           >
             <span class="game-badge">{{ game.id }}</span>
