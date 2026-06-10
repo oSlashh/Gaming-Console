@@ -67,7 +67,7 @@ const IMP_DIST_MAX = 1000;
 const IMP_GREEN_CHANCE = 0.22;
 
 /** Session duration in seconds (10 minutes) */
-const SESSION_DURATION_S = 10;
+const SESSION_DURATION_S = 10 * 60;
 
 // ─── Component ────────────────────────────────────────────────────────────────
 
