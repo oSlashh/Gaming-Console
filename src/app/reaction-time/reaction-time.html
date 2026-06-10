@@ -79,8 +79,14 @@
           [class]="'imp-color--' + sec.color"
           (click)="handleImpossibleSectionClick(sec.id)"
         >
-          @if (sec.color !== 'red') {
-            <span class="zone-hint zone-hint--go">NOW!</span>
+          @if (sec.color === 'red') {
+            <span class="zone-hint">WAIT...</span>
+          }
+          @if (sec.color === 'green') {
+            <span class="zone-hint zone-hint--go">GO!</span>
+          }
+          @if (sec.color !== 'red' && sec.color !== 'green') {
+            <span class="zone-hint zone-hint--now">NOW!</span>
           }
         </div>
       }
