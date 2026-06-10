@@ -303,14 +303,15 @@ button {
 .timer-progress {
   fill: none;
 
-  stroke: #22c55e;
-
   stroke-width: 10;
 
   stroke-linecap: round;
 
   stroke-dasharray: 327;
-  stroke-dashoffset: 100;
+
+  transition:
+    stroke 1s linear,
+    stroke-dashoffset 1s linear;
 }
 
 .timer-content {
@@ -719,6 +720,62 @@ input[type="file"] {
 
   .victory-actions {
     flex-direction: column;
+  }
+
+}
+.countdown-overlay {
+
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9999;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  pointer-events: none;
+
+  background:
+    rgba(0,0,0,.15);
+
+}
+
+.countdown-number {
+
+  font-size: 12rem;
+
+  font-weight: 900;
+
+  color: #ef4444;
+
+  text-shadow:
+    0 0 20px rgba(239,68,68,.8),
+    0 0 60px rgba(239,68,68,.5);
+
+  animation:
+    countdownPulse 1s infinite;
+
+}
+
+@keyframes countdownPulse {
+
+  0% {
+    transform: scale(0.8);
+    opacity: .6;
+  }
+
+  50% {
+    transform: scale(1.1);
+    opacity: 1;
+  }
+
+  100% {
+    transform: scale(0.8);
+    opacity: .6;
   }
 
 }
