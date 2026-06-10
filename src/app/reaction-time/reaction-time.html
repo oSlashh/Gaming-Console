@@ -3,6 +3,7 @@
   <!-- ═══════════════════════════════ HOME ════════════════════════════════════ -->
   @if (phase() === 'home') {
     <div class="rtg-card home-card">
+      <div class="session-timer session-timer--card">⏱ {{ sessionTimerDisplay() }}</div>
       <div class="rtg-icon">⚡</div>
       <h1 class="rtg-title">Reaction Time Challenge</h1>
       <p class="rtg-subtitle">
@@ -49,6 +50,7 @@
   <!-- ════════════════════════════ GAMEPLAY (easy/medium/hard) ══════════════ -->
   @if ((phase() === 'waiting' || phase() === 'ready') && difficulty() !== 'impossible') {
     <div class="rtg-arena" [class]="gridClass()">
+      <div class="session-timer session-timer--arena">⏱ {{ sessionTimerDisplay() }}</div>
       @for (sec of sections(); track sec.id) {
         <div
           class="zone"
@@ -65,12 +67,12 @@
         </div>
       }
     </div>
-    <button class="btn-quit btn-quit--arena" (click)="quitGame()">Quit</button>
   }
 
   <!-- ══════════════════════════ IMPOSSIBLE ARENA ════════════════════════════ -->
   @if ((phase() === 'waiting' || phase() === 'ready') && difficulty() === 'impossible') {
     <div class="rtg-arena grid-4">
+      <div class="session-timer session-timer--arena">⏱ {{ sessionTimerDisplay() }}</div>
       @for (sec of impossibleSections(); track sec.id) {
         <div
           class="zone imp-section"
@@ -83,12 +85,12 @@
         </div>
       }
     </div>
-    <button class="btn-quit btn-quit--arena" (click)="quitGame()">Quit</button>
   }
 
   <!-- ════════════════════════════ TOO EARLY ═════════════════════════════════ -->
   @if (phase() === 'tooearly') {
     <div class="rtg-card result-card">
+      <div class="session-timer session-timer--card">⏱ {{ sessionTimerDisplay() }}</div>
       <div class="result-icon result-icon--bad">✗</div>
       <h2 class="result-heading result-heading--bad">Too Early!</h2>
       <p class="result-sub">You clicked before the zone turned green.</p>
@@ -103,6 +105,7 @@
   <!-- ═══════════════════════════ WRONG COLOR ═════════════════════════════════ -->
   @if (phase() === 'wrongcolor') {
     <div class="rtg-card result-card">
+      <div class="session-timer session-timer--card">⏱ {{ sessionTimerDisplay() }}</div>
       <div class="result-icon result-icon--bad">✗</div>
       <h2 class="result-heading result-heading--bad">Wrong Color!</h2>
       <p class="result-sub">You clicked while the screen wasn't green. Only click on green!</p>
@@ -117,6 +120,7 @@
   <!-- ═════════════════════════════ RESULT ═══════════════════════════════════ -->
   @if (phase() === 'result') {
     <div class="rtg-card result-card">
+      <div class="session-timer session-timer--card">⏱ {{ sessionTimerDisplay() }}</div>
       <div class="result-icon result-icon--good">⚡</div>
       <h2 class="result-heading">{{ resultMessage() }}</h2>
 
@@ -136,6 +140,15 @@
         <button class="btn-ghost" (click)="goHome()">Home</button>
         <button class="btn-quit" (click)="quitGame()">Quit Game</button>
       </div>
+    </div>
+  }
+
+  <!-- ════════════════════════════ SESSION ENDED ══════════════════════════════ -->
+  @if (phase() === 'sessionended') {
+    <div class="rtg-card session-ended-card">
+      <div class="session-ended-icon">⏰</div>
+      <h2 class="session-ended-heading">Session Ended</h2>
+      <p class="result-sub">Your 10-minute session is complete. Returning to game page…</p>
     </div>
   }
 

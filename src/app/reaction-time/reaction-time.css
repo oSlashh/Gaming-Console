@@ -30,6 +30,7 @@
   color: var(--text);
   padding: 24px;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* ─── Card (shared by home / result / too-early) ──────────────────────────── */
@@ -221,10 +222,8 @@
   color: var(--gold);
 }
 
-/* ─── Arena (gameplay) ────────────────────────────────────────────────────── */
+/* ─── Arena (gameplay) — base; fullscreen overrides at bottom of file ─────── */
 .rtg-arena {
-  width: 100vw;
-  height: 100vh;
   display: grid;
   overflow: hidden;
 }
@@ -253,7 +252,7 @@
   transition: background 0.08s;
   user-select: none;
   -webkit-user-select: none;
-  border: 2px solid rgba(0, 0, 0, 0.25);
+  border: none;
 }
 
 .zone--red {
@@ -460,4 +459,72 @@
   .imp-dist-hint {
     animation: none;
   }
+}
+/* ─── Session timer ───────────────────────────────────────────────────────── */
+.session-timer {
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+}
+
+/* Timer shown inside a card (home, result, tooearly, wrongcolor) */
+.session-timer--card {
+  align-self: flex-end;
+  margin-bottom: -8px;
+}
+
+/* Timer overlaid on the full-screen arena */
+.session-timer--arena {
+  position: fixed;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  background: rgba(18, 18, 18, 0.72);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  padding: 5px 16px;
+  pointer-events: none;
+}
+
+/* ─── Session ended card ──────────────────────────────────────────────────── */
+.session-ended-card {
+  gap: 16px;
+  text-align: center;
+}
+
+.session-ended-icon {
+  font-size: 56px;
+  line-height: 1;
+  filter: drop-shadow(0 0 14px rgba(216, 162, 58, 0.5));
+}
+
+.session-ended-heading {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--gold);
+}
+
+/* ─── Arena fullscreen — remove all gaps/borders ─────────────────────────── */
+.rtg-arena {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  display: grid;
+  overflow: hidden;
+}
+
+/* Zones inside the fullscreen arena must have no visible borders */
+.rtg-arena .zone {
+  border: none;
 }

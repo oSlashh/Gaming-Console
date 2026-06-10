@@ -2,6 +2,7 @@ import {
   Component,
   signal,
   computed,
+  OnInit,
   OnDestroy,
   ChangeDetectionStrategy,
   inject,
@@ -12,7 +13,7 @@ import { Router } from '@angular/router';
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
 export type Difficulty = 'easy' | 'medium' | 'hard' | 'impossible';
-export type GamePhase = 'home' | 'waiting' | 'ready' | 'result' | 'tooearly' | 'wrongcolor';
+export type GamePhase = 'home' | 'waiting' | 'ready' | 'result' | 'tooearly' | 'wrongcolor' | 'sessionended';
 
 export interface Section {
   id: number;
@@ -65,6 +66,9 @@ const IMP_DIST_MAX = 1000;
 /** Probability any given event fires the green signal (geometric distribution) */
 const IMP_GREEN_CHANCE = 0.22;
 
+/** Session duration in seconds (10 minutes) */
+const SESSION_DURATION_S = 10;
+
 // ─── Component ────────────────────────────────────────────────────────────────
 
 @Component({
@@ -75,8 +79,9 @@ const IMP_GREEN_CHANCE = 0.22;
   styleUrls: ['./reaction-time.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ReactionTimeGameComponent implements OnDestroy {
+export class ReactionTimeGameComponent implements OnInit, OnDestroy {
   private readonly _router = inject(Router);
+
   // ── State signals ──────────────────────────────────────────────────────────
   readonly phase = signal<GamePhase>('home');
   readonly difficulty = signal<Difficulty>('easy');
@@ -86,6 +91,17 @@ export class ReactionTimeGameComponent implements OnDestroy {
   readonly bestScores = signal<BestScores>({ easy: null, medium: null, hard: null, impossible: null });
   readonly tooEarlySection = signal<number | null>(null);
   readonly impossibleSections = signal<ImpossibleSection[]>([]);
+
+  // ── Session timer signals ──────────────────────────────────────────────────
+  readonly sessionSecondsLeft = signal<number>(SESSION_DURATION_S);
+
+  readonly sessionTimerDisplay = computed(() => {
+    const s = this.sessionSecondsLeft();
+    const m = Math.floor(s / 60);
+    const sec = s % 60;
+    return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+  });
+
   /** The section id secretly chosen as the target for this round */
   private _targetSectionId: number = 0;
 
@@ -117,12 +133,19 @@ export class ReactionTimeGameComponent implements OnDestroy {
   // ── Private fields ─────────────────────────────────────────────────────────
   private _delayTimer: ReturnType<typeof setTimeout> | null = null;
   private _impossibleFlashTimer: ReturnType<typeof setTimeout> | null = null;
+  private _sessionInterval: ReturnType<typeof setInterval> | null = null;
+  private _sessionEndNavTimer: ReturnType<typeof setTimeout> | null = null;
   private _startTimestamp: number | null = null;
 
   // ── Lifecycle ──────────────────────────────────────────────────────────────
+  ngOnInit(): void {
+    this._startSessionTimer();
+  }
+
   ngOnDestroy(): void {
     this._clearTimer();
     this._clearImpossibleTimer();
+    this._clearSessionTimer();
   }
 
   // ── Public actions ─────────────────────────────────────────────────────────
@@ -218,12 +241,47 @@ export class ReactionTimeGameComponent implements OnDestroy {
   quitGame(): void {
     this._clearTimer();
     this._clearImpossibleTimer();
+    this._clearSessionTimer();
     this._startTimestamp = null;
     this.phase.set('home');
     this._router.navigate(['/game-page']);
   }
 
   // ── Private helpers ────────────────────────────────────────────────────────
+
+  private _startSessionTimer(): void {
+    this.sessionSecondsLeft.set(SESSION_DURATION_S);
+    this._sessionInterval = setInterval(() => {
+      const remaining = this.sessionSecondsLeft() - 1;
+      this.sessionSecondsLeft.set(remaining);
+      if (remaining <= 0) {
+        this._onSessionEnd();
+      }
+    }, 1000);
+  }
+
+  private _onSessionEnd(): void {
+    this._clearTimer();
+    this._clearImpossibleTimer();
+    this._clearSessionTimer();
+    this._startTimestamp = null;
+    this.phase.set('sessionended');
+    // Navigate to game-page after a brief delay to show the message
+    this._sessionEndNavTimer = setTimeout(() => {
+      this._router.navigate(['/game-page']);
+    }, 2500);
+  }
+
+  private _clearSessionTimer(): void {
+    if (this._sessionInterval !== null) {
+      clearInterval(this._sessionInterval);
+      this._sessionInterval = null;
+    }
+    if (this._sessionEndNavTimer !== null) {
+      clearTimeout(this._sessionEndNavTimer);
+      this._sessionEndNavTimer = null;
+    }
+  }
 
   private _scheduleGreen(): void {
     const delay = MIN_DELAY_MS + Math.random() * (MAX_DELAY_MS - MIN_DELAY_MS);

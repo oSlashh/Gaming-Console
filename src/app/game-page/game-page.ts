@@ -20,7 +20,7 @@ export class GamePage {
 
   pageTitle = 'Gaming Console Dashboard';
   pageDescription =
-    'Choose a game to play from the selection below! :D';
+    'Choose a game to play from the selection  q  below! :D';
 
   readonly games: GameOption[] = [
     {
