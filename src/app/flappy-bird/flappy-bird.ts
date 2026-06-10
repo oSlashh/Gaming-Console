@@ -37,6 +37,8 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   showEvolutionNotification = false;
   private lastEvolutionStage = 0;
 
+  evolutionMode = false;
+
   gravity = 0.42;
   flapImpulse = -8;
 
@@ -157,7 +159,15 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   onInstructionsOK() {
     this.screen = 'start';
-    this.draw();
+    this.draw(); 
+  }
+
+  selectNormalMode() {
+    this.evolutionMode = false;
+  }
+
+  selectEvolutionMode() {
+    this.evolutionMode = true;
   }
 
   onStartGame() {
@@ -275,6 +285,9 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   }
 
   updateBirdEvolution() {
+    if (!this.evolutionMode) {
+      return;
+    }
     const stage = this.getBirdEvolutionStage(this.score);
     if (stage === this.lastEvolutionStage) {
       return;
@@ -290,6 +303,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   }
 
   getBirdEvolutionStage(score: number) {
+    
     if (score >= 10) {
       return 2;
     }
@@ -449,6 +463,11 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   }
 
   get currentBirdImage() {
+
+    if (!this.evolutionMode) {
+      return this.birdImages.bird;
+    }
+
     const stage = this.getBirdEvolutionStage(this.score);
 
     if (stage >= 2) {
@@ -462,7 +481,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     return this.birdImages.egg;
   }
 
-  formatTime(sec: number) {
+    formatTime(sec: number) {
     const m = Math.floor(sec / 60).toString().padStart(2, '0');
     const s = Math.floor(sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
