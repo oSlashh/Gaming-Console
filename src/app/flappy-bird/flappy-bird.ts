@@ -20,6 +20,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   private countdownInterval: any = null;
   private tenMinTimer: any = null;
   private timerStart = 0;
+  private evolutionNotificationTimer: any = null;
 
   screen: 'instructions' | 'start' | 'countdown' | 'playing' | 'gameOver' = 'instructions';
 
@@ -27,7 +28,14 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   height = 0;
 
   bird = { x: 0, y: 0, vy: 0, radius: 14 };
-  birdImage: HTMLImageElement | null = typeof Image !== 'undefined' ? new Image() : null;
+  birdImages: { egg: HTMLImageElement | null; bird: HTMLImageElement | null; bigBird: HTMLImageElement | null } = {
+    egg: typeof Image !== 'undefined' ? new Image() : null,
+    bird: typeof Image !== 'undefined' ? new Image() : null,
+    bigBird: typeof Image !== 'undefined' ? new Image() : null,
+  };
+  evolutionNotification: string | null = null;
+  showEvolutionNotification = false;
+  private lastEvolutionStage = 0;
 
   gravity = 0.42;
   flapImpulse = -8;
@@ -62,12 +70,21 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     canvas.width = this.width;
     canvas.height = this.height;
     this.ctx = canvas.getContext('2d');
-    if (this.birdImage) {
-      this.birdImage.src = 'bird.png';
-      console.log(this.birdImage.src);
-    }
+    this.loadBirdImages();
 
     this.initGame();
+  }
+
+  loadBirdImages() {
+    if (this.birdImages.egg) {
+      this.birdImages.egg.src = '/Egg.png';
+    }
+    if (this.birdImages.bird) {
+      this.birdImages.bird.src = '/bird.png';
+    }
+    if (this.birdImages.bigBird) {
+      this.birdImages.bigBird.src = '/bigbird.png';
+    }
   }
 
   ngOnDestroy(): void {
@@ -78,6 +95,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.stopLoop();
     if (this.countdownInterval) clearInterval(this.countdownInterval);
     if (this.tenMinTimer) clearInterval(this.tenMinTimer);
+    if (this.evolutionNotificationTimer) clearTimeout(this.evolutionNotificationTimer);
     this.isTimeWarningActive = false;
   }
 
@@ -86,9 +104,20 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.pipes = [];
     this.pipeTimer = 0;
     this.score = 0;
+    this.resetEvolutionState();
     this.screen = 'instructions';
     this.draw();
     this.startTenMinTimer();
+  }
+
+  resetEvolutionState() {
+    this.lastEvolutionStage = 0;
+    this.evolutionNotification = null;
+    this.showEvolutionNotification = false;
+    if (this.evolutionNotificationTimer) {
+      clearTimeout(this.evolutionNotificationTimer);
+      this.evolutionNotificationTimer = null;
+    }
   }
 
   startTenMinTimer() {
@@ -166,6 +195,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.score = 0;
     this.lives = 3;
     this.invincibilityTime = 0;
+    this.resetEvolutionState();
   }
 
   startLoop() {
@@ -210,6 +240,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     if (this.pipes.length && this.pipes[0].x < -80) {
       this.pipes.shift();
       this.score += 1;
+      this.updateBirdEvolution();
     }
 
     if (this.bird.y + this.bird.radius > this.height - 100) {
@@ -241,6 +272,50 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
         return;
       }
     }
+  }
+
+  updateBirdEvolution() {
+    const stage = this.getBirdEvolutionStage(this.score);
+    if (stage === this.lastEvolutionStage) {
+      return;
+    }
+
+    this.lastEvolutionStage = stage;
+
+    if (stage === 1) {
+      this.showEvolutionMessage('Egg hatched!');
+    } else if (stage === 2) {
+      this.showEvolutionMessage('Bird evolved!');
+    }
+  }
+
+  getBirdEvolutionStage(score: number) {
+    if (score >= 10) {
+      return 2;
+    }
+
+    if (score >= 5) {
+      return 1;
+    }
+
+    return 0;
+    
+  }
+
+  showEvolutionMessage(message: string) {
+    this.evolutionNotification = message;
+    this.showEvolutionNotification = true;
+
+    if (this.evolutionNotificationTimer) {
+      clearTimeout(this.evolutionNotificationTimer);
+    }
+
+    this.evolutionNotificationTimer = setTimeout(() => {
+      this.showEvolutionNotification = false;
+      this.cdr.detectChanges();
+    }, 1400);
+
+    this.cdr.detectChanges();
   }
 
   loseLife() {
@@ -348,56 +423,43 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
       }
 
       const size = 80;
+      const birdImage = this.currentBirdImage;
 
-
-    if (
-        this.birdImage &&
-        this.birdImage.complete &&
-        this.birdImage.naturalWidth > 0
-      ) {
+      if (birdImage && birdImage.complete && birdImage.naturalWidth > 0) {
         ctx.drawImage(
-            this.birdImage,
-            this.bird.x - size / 2,
-            this.bird.y - size / 2,
-            size,
-            size
+          birdImage,
+          this.bird.x - size / 2,
+          this.bird.y - size / 2,
+          size,
+          size
         );
-    }   else {
-    // Fallback yellow circle
+      } else {
         ctx.fillStyle = '#fddc56';
         ctx.beginPath();
         ctx.arc(
-            this.bird.x,
-            this.bird.y,
-            this.bird.radius,
-            0,
-            Math.PI * 2
+          this.bird.x,
+          this.bird.y,
+          this.bird.radius,
+          0,
+          Math.PI * 2
         );
         ctx.fill();
-        }
+      }
     }
   }
 
-  drawHUD(ctx: CanvasRenderingContext2D) {
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
-    ctx.fillRect(20, 20, 210, 70);
-    ctx.strokeStyle = 'rgba(216, 162, 58, 0.45)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(20, 20, 210, 70);
-    ctx.fillStyle = '#ffd36d';
-    ctx.font = 'bold 26px "Segoe UI", Arial';
-    ctx.textAlign = 'left';
-    ctx.fillText('Score: ' + this.score, 34, 54);
+  get currentBirdImage() {
+    const stage = this.getBirdEvolutionStage(this.score);
 
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.38)';
-    ctx.fillRect(this.width - 250, 20, 230, 70);
-    ctx.strokeStyle = 'rgba(216, 162, 58, 0.45)';
-    ctx.lineWidth = 2;
-    ctx.strokeRect(this.width - 250, 20, 230, 70);
-    ctx.fillStyle = '#ffd36d';
-    ctx.font = 'bold 26px "Segoe UI", Arial';
-    ctx.textAlign = 'center';
-    ctx.fillText('Time: ' + this.formatTime(this.remaining), this.width - 135, 54);
+    if (stage >= 2) {
+      return this.birdImages.bigBird;
+    }
+
+    if (stage >= 1) {
+      return this.birdImages.bird;
+    }
+
+    return this.birdImages.egg;
   }
 
   formatTime(sec: number) {
