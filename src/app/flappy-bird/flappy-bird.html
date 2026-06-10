@@ -22,8 +22,50 @@
   <div *ngIf="screen === 'start'" class="panel-overlay">
     <div class="panel-card start-card">
       <h1>Ready?</h1>
-      <p class="start-text">Press START to begin your run.</p>
-      <button class="panel-btn start-button" (click)="onStartGame()">START</button>
+
+<p class="start-text">
+  Choose Your Game Mode
+</p>
+
+<div class="mode-selection">
+
+  <button
+    class="panel-btn mode-btn"
+    [class.selected-mode]="!evolutionMode"
+    (click)="selectNormalMode()">
+
+    Normal Mode
+
+  </button>
+
+  <button
+    class="panel-btn mode-btn"
+    [class.selected-mode]="evolutionMode"
+    (click)="selectEvolutionMode()">
+
+    Evolution Mode
+
+  </button>
+
+</div>
+
+<p class="mode-description">
+
+  {{
+    evolutionMode
+      ? 'Start as an Egg, hatch into a Chick, and finally grow into a Hen as your score increases.'
+      : 'Play as the Chick for the entire game with no evolution.'
+  }}
+
+</p>
+
+<button
+  class="panel-btn start-button"
+  (click)="onStartGame()">
+
+  START JOURNEY
+
+</button>
     </div>
   </div>
 
