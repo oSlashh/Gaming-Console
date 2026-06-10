@@ -95,10 +95,14 @@
             ></circle>
 
             <circle
-              class="timer-progress"
-              cx="60"
-              cy="60"
-              r="52"
+            class="timer-progress"
+            cx="60"
+            cy="60"
+            r="52"
+
+            [attr.stroke-dashoffset]="getTimerProgress()"
+
+            [attr.stroke]="getTimerColor()"
             ></circle>
 
           </svg>
@@ -397,9 +401,7 @@
   </div>
 
   <!-- Victory Modal -->
-  @if(winVisible() && winRecord()){
-
-  <div class="victory-overlay">
+   <div *ngIf="winVisible() && winRecord()" class="victory-overlay">
 
     <div class="victory-card">
 
@@ -472,6 +474,14 @@
 
   </div>
 
-  }
+  <div *ngIf="showCountdownOverlay" class="countdown-overlay">
+
+    <div class="countdown-number">
+
+      {{ exitCountdown() }}
+
+    </div>
+
+  </div>
 
 </section>

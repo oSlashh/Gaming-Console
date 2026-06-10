@@ -156,6 +156,9 @@ export class ImagePuzzleComponent
       'Select an image to begin.'
     );
 
+  readonly exitCountdown =
+    signal<number | null>(null);
+
   // ==========================
   // TIMER
   // ==========================
@@ -683,7 +686,26 @@ export class ImagePuzzleComponent
         this.tiles().length
       ) {
         this.elapsedSeconds.update((seconds) => seconds + 1);
+
+        const remaining =
+          this.maxTimeSeconds -
+          this.elapsedSeconds();
+
+        if (
+          remaining > 0 &&
+          remaining <= 5
+        ) {
+          this.exitCountdown.set(
+            remaining
+          );
+        } else {
+          this.exitCountdown.set(
+            null
+          );
+        }
+
         this.syncSummary();
+
         if (this.elapsedSeconds() >= this.maxTimeSeconds) {
           this.handleTimeout();
         }
@@ -727,9 +749,16 @@ export class ImagePuzzleComponent
   }
 
   showCountdownOverlay(): boolean {
-    const remaining = this.countdownValue();
-    return remaining > 0 && remaining <= 3 && !this.winVisible();
-  }
+
+  const remaining =
+    this.countdownValue();
+
+  return (
+    remaining > 0 &&
+    remaining <= 5 &&
+    !this.winVisible()
+  );
+}
 
   private formatTime(seconds: number): string {
     const minutes = Math.floor(seconds / 60);
@@ -944,4 +973,35 @@ export class ImagePuzzleComponent
     }
     return achievements;
   }
+  getTimerProgress(): number {
+
+  const circumference = 327;
+
+  const progress =
+    this.countdownValue() /
+    this.maxTimeSeconds;
+
+  return circumference * (1 - progress);
 }
+getTimerColor(): string {
+
+  const percent =
+    (this.countdownValue() /
+      this.maxTimeSeconds) * 100;
+
+  if (percent > 60) {
+    return '#22c55e';
+  }
+
+  if (percent > 30) {
+    return '#eab308';
+  }
+
+  if (percent > 10) {
+    return '#f97316';
+  }
+
+  return '#ef4444';
+}
+}
+
