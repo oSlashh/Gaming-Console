@@ -58,6 +58,10 @@
     <div class="hud-item" [class.warn]="remaining <= 15">Time: <strong>{{ formatTime(remaining) }}</strong></div>
   </div>
 
+  <div *ngIf="screen === 'playing' && showEvolutionNotification && evolutionNotification" class="evolution-notification">
+    <div class="evolution-notification-card">{{ evolutionNotification }}</div>
+  </div>
+
   <div *ngIf="screen === 'playing'" class="lives-display">
     <span *ngFor="let i of [1, 2, 3]" class="heart" [class.active]="i <= lives">❤️</span>
   </div>
