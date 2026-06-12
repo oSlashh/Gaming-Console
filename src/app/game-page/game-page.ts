@@ -41,6 +41,25 @@ export class GamePage {
       description: 'Test your reflexes in this fast-paced reaction time game.',
       route: '/reaction-time',
     },
+    {
+      id: 4,
+      name: 'Guess Guessss',
+      description: 'Test your luck through four card prediction challenges.',
+      route: '',
+    },
+    {
+      id: 5,
+      name: 'newgame',
+      description: 'newgame',
+      route: '',
+    },
+    {
+      id: 6,
+      name: 'newgame',
+      description: 'newgame',
+      route: '',
+    },
+    
   ];
 
   readonly selectedGame = signal<GameOption | null>(null);

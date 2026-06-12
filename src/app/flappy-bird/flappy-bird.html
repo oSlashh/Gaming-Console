@@ -97,7 +97,7 @@
   <div *ngIf="screen === 'playing'" class="hud">
     <div class="hud-item">Best: <strong>{{ bestScore }}</strong></div>
     <div class="hud-item">Score: <strong>{{ score }}</strong></div>
-    <div class="hud-item" [class.warn]="remaining <= 15">Time: <strong>{{ formatTime(remaining) }}</strong></div>
+    <div class="hud-item" [class.warn]="remaining <= 15">Session: <strong>{{ formatTime(remaining) }}</strong></div>
   </div>
 
   <div *ngIf="screen === 'playing' && showEvolutionNotification && evolutionNotification" class="evolution-notification">
