@@ -43,15 +43,15 @@ export class GamePage {
     },
     {
       id: 4,
-      name: 'Guess Guessss',
+      name: 'newgame',
       description: 'Test your luck through four card prediction challenges.',
       route: '',
     },
     {
       id: 5,
-      name: 'newgame',
-      description: 'newgame',
-      route: '',
+      name: 'Guess Guess',
+      description: 'A fun and engaging guessing game that challenges your intuition and deduction skills.',
+      route: '/guess',
     },
     {
       id: 6,
