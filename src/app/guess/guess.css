@@ -1,0 +1,1270 @@
+/* ═══════════════════════════════════════════════════════════════
+   GUESS GUESS — Gaming Console Theme
+   Dark gaming aesthetic · Gold accents · Glassmorphism panels
+   ═══════════════════════════════════════════════════════════════ */
+
+/* ── CSS Custom Properties ─────────────────────────────────── */
+:host {
+  --gg-bg-primary:     #d7b082;
+  --gg-bg-panel:       rgba(255,255,255,0.04);
+  --gg-bg-panel-hover: rgba(255,255,255,0.08);
+  --gg-border:         rgba(255,255,255,0.08);
+  --gg-border-gold:    rgba(212,175,55,0.4);
+
+  --gg-gold:           #d4af37;
+  --gg-gold-light:     #f0cc5a;
+  --gg-gold-dim:       rgba(212,175,55,0.15);
+  --gg-gold-glow:      0 0 20px rgba(212,175,55,0.35);
+
+  --gg-red:            #e05252;
+  --gg-red-dim:        rgba(224,82,82,0.15);
+  --gg-red-glow:       0 0 20px rgba(224,82,82,0.4);
+
+  --gg-text-primary:   #2d2215;
+  --gg-text-secondary: #6b5842;
+  --gg-text-gold:      #3a2a18;
+
+  --gg-radius-sm:      8px;
+  --gg-radius-md:      14px;
+  --gg-radius-lg:      20px;
+  --gg-radius-xl:      28px;
+
+  --gg-transition:     0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  display: block;
+  width: 100%;
+  min-height: 100vh;
+  background: var(--gg-bg-primary);
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
+  color:#3a2a18;
+}
+
+/* ── Overlay / Modal base ──────────────────────────────────── */
+.gg-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  z-index: 100;
+  animation: gg-fade-in 0.35s ease;
+}
+
+.gg-modal {
+  background: linear-gradient(145deg, rgba(20,18,30,0.98), rgba(12,11,20,0.98));
+  border: 1px solid var(--gg-border-gold);
+  border-radius: var(--gg-radius-xl);
+  padding: 36px 40px;
+  max-width: 560px;
+  width: 100%;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), var(--gg-gold-glow);
+  animation: gg-slide-up 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ── Modal header ──────────────────────────────────────────── */
+.gg-modal-header {
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.gg-game-icon {
+  font-size: 3rem;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 12px rgba(212,175,55,0.5));
+}
+
+.gg-title {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, var(--gg-gold-light), var(--gg-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 6px;
+}
+
+.gg-subtitle {
+  color: #3a2a18;
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+/* ── Stages grid (instructions) ────────────────────────────── */
+.gg-stages-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.gg-stage-card {
+  background: var(--gg-bg-panel);
+  border: 1px solid var(--gg-border);
+  border-radius: var(--gg-radius-md);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transition: border-color var(--gg-transition), background var(--gg-transition);
+}
+
+.gg-stage-card:hover {
+  border-color: var(--gg-border-gold);
+  background: var(--gg-gold-dim);
+}
+
+.gg-stage-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gg-gold);
+}
+
+.gg-stage-name {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #e8d7a5;
+}
+
+.gg-stage-pts {
+  font-size: 0.8rem;
+  color:  #c8a94a;
+}
+
+/* ── Rules box ─────────────────────────────────────────────── */
+.gg-rules-box {
+  background: rgba(212,175,55,0.06);
+  border: 1px solid var(--gg-border-gold);
+  border-radius: var(--gg-radius-md);
+  padding: 18px 20px;
+  margin-bottom: 28px;
+}
+
+.gg-rules-title {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gg-gold);
+  margin: 0 0 12px;
+}
+
+.gg-rules-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gg-rules-list li {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: rgba(232,215,165,.75);
+  padding-left: 18px;
+  position: relative;
+}
+
+.gg-rules-list li::before {
+  content: '›';
+  position: absolute;
+  left: 0;
+  color: var(--gg-gold);
+  font-weight: 700;
+}
+
+/* ── Buttons ───────────────────────────────────────────────── */
+.gg-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border: none;
+  border-radius: var(--gg-radius-md);
+  padding: 14px 28px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all var(--gg-transition);
+  width: 100%;
+}
+
+.gg-btn-gold {
+  background: linear-gradient(135deg, var(--gg-gold-light), var(--gg-gold));
+  color: #1a1500;
+  box-shadow: 0 4px 18px rgba(212,175,55,0.3);
+}
+
+.gg-btn-gold:hover {
+  background: linear-gradient(135deg, #f7dd70, var(--gg-gold-light));
+  box-shadow: 0 6px 28px rgba(212,175,55,0.5);
+  transform: translateY(-2px);
+}
+
+.gg-btn-ghost {
+  background: transparent;
+  border: 1px solid var(--gg-border);
+  color:#3a2a18;
+}
+
+.gg-btn-ghost:hover {
+  border-color: var(--gg-gold);
+  color: var(--gg-gold);
+}
+
+.gg-btn-arrow {
+  font-size: 1.1rem;
+}
+
+/* ── Setup modal specific ──────────────────────────────────── */
+.gg-setup-modal {
+  max-height: 90vh;
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.gg-setup-modal::-webkit-scrollbar {
+  display: none;
+}
+
+/* ── Instructions modal specific ───────────────────────────── */
+.gg-instructions-modal {
+  max-height: 90vh;
+  overflow-y: auto;
+
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+}
+
+.gg-instructions-modal::-webkit-scrollbar {
+  display: none; /* Chrome, Edge, Safari */
+}
+
+.gg-setup-section {
+  margin-bottom: 28px;
+}
+
+.gg-section-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gg-gold);
+  margin: 0 0 14px;
+}
+
+/* Player counter */
+.gg-counter-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.gg-counter-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 2px solid var(--gg-border-gold);
+  background: var(--gg-bg-panel);
+  color: var(--gg-gold);
+  font-size: 1.4rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--gg-transition);
+}
+
+.gg-counter-btn:hover:not(:disabled) {
+  background: var(--gg-gold-dim);
+  box-shadow: var(--gg-gold-glow);
+}
+
+.gg-counter-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.gg-counter-value {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #e8d7a5;
+  min-width: 40px;
+  text-align: center;
+}
+
+/* Player name rows */
+.gg-players-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-right: 4px;
+}
+
+.gg-player-name-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.gg-player-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gg-gold-dim);
+  border: 1px solid var(--gg-border-gold);
+  color: var(--gg-gold);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.gg-name-input {
+  flex: 1;
+  background: var(--gg-bg-panel);
+  border: 1px solid var(--gg-border);
+  border-radius: var(--gg-radius-sm);
+  padding: 10px 14px;
+  color: #e8d7a5;
+  font-size: 0.88rem;
+  transition: border-color var(--gg-transition);
+}
+
+.gg-name-input:focus {
+  outline: none;
+  border-color: var(--gg-gold);
+  background: rgba(212,175,55,0.05);
+}
+
+.gg-name-input::placeholder {
+  color: rgba(232, 215, 165, 0.45);
+}
+
+/* Turn mode buttons */
+.gg-turn-modes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.gg-mode-btn {
+  padding: 9px 18px;
+  border-radius: var(--gg-radius-sm);
+  border: 1px solid var(--gg-border);
+  background: var(--gg-bg-panel);
+  color:#3a2a18;
+  font-size: 0.84rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--gg-transition);
+}
+
+.gg-mode-btn:hover {
+  border-color: var(--gg-border-gold);
+  color: var(--gg-gold);
+}
+
+.gg-mode-btn--active {
+  background: var(--gg-gold-dim);
+  border-color: var(--gg-gold);
+  color: var(--gg-gold);
+  box-shadow: var(--gg-gold-glow);
+}
+
+.gg-start-btn {
+  margin-top: 4px;
+}
+
+.gg-btn-icon {
+  font-size: 0.9rem;
+}
+
+/* ── Game screen ───────────────────────────────────────────── */
+.gg-game-screen {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+
+  background:
+    linear-gradient(
+      to bottom,
+      #f5deb3,
+      #e6c79c,
+      #d8b07d
+    );
+}
+
+/* Top bar */
+.gg-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 28px;
+  background: rgba(255,255,255,0.75);
+  border-bottom: 1px solid var(--gg-border);
+  border-bottom: 2px solid rgba(120,80,40,.25);
+  backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.gg-player-badge {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.gg-player-badge-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color:#3a2a18;
+}
+
+.gg-player-badge-name {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #8b5e34;
+}
+
+/* Timer */
+.gg-timer-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: var(--gg-bg-panel);
+  border: 1px solid var(--gg-border);
+  border-radius: 999px;
+  transition: all var(--gg-transition);
+}
+
+.gg-timer-icon {
+  font-size: 0.95rem;
+}
+
+.gg-timer-display {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  font-variant-numeric: tabular-nums;
+  color: #3a2a18;
+  transition: color var(--gg-transition);
+}
+
+.gg-timer--warning .gg-timer-display {
+  color: #f5a623;
+}
+
+.gg-timer--critical {
+  border-color: rgba(224,82,82,0.6) !important;
+  animation: gg-timer-pulse 0.6s ease infinite;
+}
+
+.gg-timer--critical .gg-timer-display {
+  color: var(--gg-red) !important;
+}
+
+.gg-quit-btn {
+  padding: 8px 16px;
+  border-radius: var(--gg-radius-sm);
+  border: 1px solid rgba(224,82,82,0.3);
+  background: rgba(224,82,82,0.08);
+  color: var(--gg-red);
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--gg-transition);
+}
+
+.gg-quit-btn:hover {
+  background: rgba(224,82,82,0.2);
+  border-color: var(--gg-red);
+}
+
+/* Game body layout */
+.gg-game-body {
+  display: flex;
+  flex: 1;
+  gap: 0;
+}
+
+/* Main panel */
+.gg-main-panel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  justify-content: flex-start;
+  gap: 24px;
+  padding-top: 30px;
+  padding-bottom: 120px;
+
+}
+
+/* Stage indicator pips */
+.gg-stage-indicator {
+  display: flex;
+  gap: 10px;
+}
+
+.gg-stage-pip {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--gg-border);
+  background: var(--gg-bg-panel);
+  color: #3a2a18;
+  font-size: 0.82rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all var(--gg-transition);
+}
+
+.gg-stage-pip--done {
+  background: rgba(80,200,100,0.15);
+  border-color: rgba(80,200,100,0.5);
+  color: #50c864;
+}
+
+.gg-stage-pip--active {
+  background: var(--gg-gold-dim);
+  border-color: var(--gg-gold);
+  color: var(--gg-gold);
+  box-shadow: var(--gg-gold-glow);
+  animation: gg-pip-pulse 1.8s ease infinite;
+}
+
+/* Stage header */
+.gg-stage-header {
+  text-align: center;
+}
+
+.gg-stage-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: #2d2215;
+  margin: 0 0 4px;
+}
+
+.gg-stage-reward {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3a2a18;
+  background: var(--gg-gold-dim);
+  border: 1px solid var(--gg-border-gold);
+  padding: 3px 12px;
+  border-radius: 999px;
+}
+
+/* ── Cards ─────────────────────────────────────────────────── */
+.gg-cards-row {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Card 3D Perspective Slot */
+.gg-card-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  perspective: 1000px;
+}
+
+.gg-card-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color:#3a2a18;
+}
+
+/* Card 3D flip */
+.gg-card {
+  width: 220px;
+  height: 308px;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.9s cubic-bezier(.4,.2,.2,1);
+  cursor: default;
+}
+
+.gg-card-back,
+.gg-card-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gg-card-back {
+  background: linear-gradient(135deg, #1e1a2e, #2d2645);
+  border: 2px solid rgba(212,175,55,0.3);
+  transform: rotateY(0deg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.gg-card-back-pattern {
+  width: 60px;
+  height: 92px;
+  border: 2px solid rgba(212,175,55,0.2);
+  border-radius: 6px;
+  background: repeating-linear-gradient(
+    45deg,
+    transparent,
+    transparent 4px,
+    rgba(212,175,55,0.06) 4px,
+    rgba(212,175,55,0.06) 8px
+  );
+}
+
+.gg-card-face {
+  position: absolute;
+  inset: 0;
+
+  background: #fffef8;
+  border: 3px solid #d4c5a2;
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.15),
+    inset 0 0 10px rgba(0,0,0,.03);
+  border-radius: 16px;
+
+  transform: rotateY(180deg);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Flip state */
+.gg-card--flipped .gg-card-back {
+  transform: rotateY(-180deg);
+}
+
+.gg-card--flipped .gg-card-face {
+  transform: rotateY(0deg);
+}
+
+/* Card color */
+.gg-card--red .gg-card-face {
+  color: #c0282c;
+}
+
+.gg-card:not(.gg-card--red) .gg-card-face {
+  color: #1a1a1a;
+}
+
+.gg-card-tl {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  font-size: 1.7rem;
+  font-weight: 900;
+  line-height: 1.1;
+  text-align: center;
+  color:inherit;
+}
+
+.gg-card-center {
+  font-size: 4rem;
+  line-height: 1;
+}
+
+.gg-card-br {
+  position: absolute;
+  bottom: 12px;
+  right: 12px;
+  font-size: 1.7rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-align: center;
+  transform: rotate(180deg);
+}
+
+/* Range hint */
+.gg-range-hint {
+  font-size: 0.82rem;
+  color: #3a2a18;
+  background: var(--gg-gold-dim);
+  border: 1px solid var(--gg-border-gold);
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-weight: 600;
+}
+
+/* Feedback */
+.gg-feedback {
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 12px 24px;
+  border-radius: var(--gg-radius-md);
+  animation: gg-fade-in 0.25s ease;
+}
+
+.gg-feedback--correct {
+  color: #50c864;
+  background: rgba(80,200,100,0.12);
+  border: 1px solid rgba(80,200,100,0.3);
+}
+
+.gg-feedback--wrong {
+  color: var(--gg-red);
+  background: var(--gg-red-dim);
+  border: 1px solid rgba(224,82,82,0.3);
+}
+
+/* ── Action buttons ─────────────────────────────────────────── */
+.gg-action-area{
+  width:100%;
+  max-width:900px;
+  position:static;
+  transform:none;
+
+  padding-bottom:30px;
+}
+
+.gg-action-btns {
+  display: flex;
+  gap: 14px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.gg-action-btns--suits {
+  gap: 10px;
+}
+
+.gg-guess-btn {
+  flex: 1;
+  min-width: 180px;
+  padding: 16px 22px;
+  border-radius: var(--gg-radius-md);
+  border: 2px solid transparent;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all var(--gg-transition);
+  letter-spacing: 0.02em;
+}
+
+.gg-guess-icon {
+  font-size: 1.1rem;
+}
+
+/* Red */
+.gg-guess-btn--red {
+  background: rgba(192,40,44,0.15);
+  border-color: rgba(192,40,44,0.5);
+  color: #cb0e0e;
+}
+.gg-guess-btn--red:hover {
+  background: rgba(192,40,44,0.3);
+  border-color: #c0282c;
+  box-shadow: 0 0 20px rgba(192,40,44,0.4);
+  transform: translateY(-2px);
+}
+
+/* Black */
+.gg-guess-btn--black {
+  background: rgba(80,80,100,0.15);
+  border-color: rgba(80,80,100,0.5);
+  color: #000000;
+}
+.gg-guess-btn--black:hover {
+  background: rgba(80,80,100,0.3);
+  border-color: #8080a0;
+  box-shadow: 0 0 20px rgba(80,80,100,0.4);
+  transform: translateY(-2px);
+}
+
+/* Higher */
+.gg-guess-btn--higher {
+  background: rgba(80,180,120,0.12);
+  border-color: rgba(80,180,120,0.4);
+  color: #50c880;
+}
+.gg-guess-btn--higher:hover {
+  background: rgba(80,180,120,0.25);
+  border-color: #50c880;
+  box-shadow: 0 0 20px rgba(80,180,120,0.35);
+  transform: translateY(-2px);
+}
+
+/* Lower */
+.gg-guess-btn--lower {
+  background: rgba(224,140,60,0.12);
+  border-color: rgba(224,140,60,0.4);
+  color: #e08c3c;
+}
+.gg-guess-btn--lower:hover {
+  background: rgba(224,140,60,0.25);
+  border-color: #e08c3c;
+  box-shadow: 0 0 20px rgba(224,140,60,0.35);
+  transform: translateY(-2px);
+}
+
+/* Inside */
+.gg-guess-btn--inside {
+  background: rgba(90,140,220,0.12);
+  border-color: rgba(90,140,220,0.4);
+  color: #6aacf0;
+}
+.gg-guess-btn--inside:hover {
+  background: rgba(90,140,220,0.25);
+  border-color: #6aacf0;
+  box-shadow: 0 0 20px rgba(90,140,220,0.35);
+  transform: translateY(-2px);
+}
+
+/* Outside */
+.gg-guess-btn--outside {
+  background: rgba(180,80,220,0.12);
+  border-color: rgba(180,80,220,0.4);
+  color: #c06ee0;
+}
+.gg-guess-btn--outside:hover {
+  background: rgba(180,80,220,0.25);
+  border-color: #c06ee0;
+  box-shadow: 0 0 20px rgba(180,80,220,0.35);
+  transform: translateY(-2px);
+}
+
+/* Suit buttons */
+.gg-guess-btn--hearts {
+  background: rgba(200,50,50,0.12);
+  border-color: rgba(200,50,50,0.4);
+  color: #e06060;
+  min-width: 110px;
+}
+.gg-guess-btn--hearts:hover {
+  background: rgba(200,50,50,0.25);
+  border-color: #e06060;
+  transform: translateY(-2px);
+}
+
+.gg-guess-btn--diamonds {
+  background: rgba(220,120,50,0.12);
+  border-color: rgba(220,120,50,0.4);
+  color: #e09050;
+  min-width: 110px;
+}
+.gg-guess-btn--diamonds:hover {
+  background: rgba(220,120,50,0.25);
+  border-color: #e09050;
+  transform: translateY(-2px);
+}
+
+.gg-guess-btn--clubs {
+  background: rgba(60,180,120,0.12);
+  border-color: rgba(60,180,120,0.4);
+  color: #50c890;
+  min-width: 110px;
+}
+.gg-guess-btn--clubs:hover {
+  background: rgba(60,180,120,0.25);
+  border-color: #50c890;
+  transform: translateY(-2px);
+}
+
+.gg-guess-btn--spades {
+  background: rgba(100,120,200,0.12);
+  border-color: rgba(100,120,200,0.4);
+  color: #8090e0;
+  min-width: 110px;
+}
+.gg-guess-btn--spades:hover {
+  background: rgba(100,120,200,0.25);
+  border-color: #8090e0;
+  transform: translateY(-2px);
+}
+
+/* Turn score */
+.gg-turn-score {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  gap: 10px;
+  margin-top: 2px;
+}
+
+.gg-turn-score-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color:#3a2a18;
+}
+
+.gg-turn-score-value {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color:#3a2a18;
+  text-shadow: 0 0 10px rgba(212,175,55,0.4);
+}
+
+/* ── Sidebar / Leaderboard ──────────────────────────────────── */
+.gg-sidebar {
+  width: 240px;
+  flex-shrink: 0;
+  background: rgba(255,255,255,0.75);
+  border-left: 1px solid var(--gg-border);
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.gg-sidebar-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gg-gold);
+  margin: 0;
+}
+
+.gg-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.gg-lb-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: var(--gg-radius-sm);
+  background: var(--gg-bg-panel);
+  border: 1px solid transparent;
+  transition: all var(--gg-transition);
+}
+
+.gg-lb-row--current {
+  background: var(--gg-gold-dim);
+  border-color: var(--gg-border-gold);
+  box-shadow: var(--gg-gold-glow);
+}
+
+.gg-lb-rank {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color:#3a2a18;
+  min-width: 18px;
+}
+
+.gg-lb-name {
+  flex: 1;
+  font-size: 0.84rem;
+  font-weight: 600;
+  color:#3a2a18;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.gg-lb-score {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--gg-gold);
+}
+
+.gg-sidebar-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.78rem;
+  color: #3a2a18;
+  padding: 10px 12px;
+  background: var(--gg-bg-panel);
+  border-radius: var(--gg-radius-sm);
+  border: 1px solid var(--gg-border);
+}
+
+/* ── Final countdown overlay ───────────────────────────────── */
+.gg-countdown-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.82);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  animation: gg-fade-in 0.3s ease;
+}
+
+.gg-countdown-number {
+  font-size: 8rem;
+  font-weight: 900;
+  color: var(--gg-red);
+  text-shadow: 0 0 40px rgba(224,82,82,0.6), 0 0 80px rgba(224,82,82,0.3);
+  animation: gg-count-pop 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.gg-countdown--timesup {
+  font-size: 3.5rem;
+  letter-spacing: -0.01em;
+}
+
+/* ── End game modal ─────────────────────────────────────────── */
+.gg-end-modal {
+  max-width: 500px;
+  text-align: center;
+}
+
+.gg-end-header {
+  margin-bottom: 24px;
+}
+
+.gg-trophy {
+  font-size: 3.5rem;
+  margin-bottom: 10px;
+  filter: drop-shadow(0 0 16px rgba(212,175,55,0.6));
+  animation: gg-trophy-bounce 1.2s cubic-bezier(0.22,1,0.36,1);
+}
+
+.gg-end-title {
+  font-size: 1.8rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--gg-gold-light), var(--gg-gold));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin: 0 0 8px;
+}
+
+.gg-end-winner {
+  font-size: 0.95rem;
+  color: #3a2a18;
+  margin: 0;
+}
+
+.gg-end-winner strong {
+  color: var(--gg-gold);
+}
+
+.gg-end-lb-title {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gg-gold);
+  margin: 0 0 14px;
+}
+
+.gg-end-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+
+.gg-end-lb-row {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  border-radius: var(--gg-radius-md);
+  background: var(--gg-bg-panel);
+  border: 1px solid var(--gg-border);
+  transition: all var(--gg-transition);
+}
+
+.gg-end-lb-row--winner {
+  background: var(--gg-gold-dim);
+  border-color: var(--gg-border-gold);
+  box-shadow: var(--gg-gold-glow);
+}
+
+.gg-end-lb-rank {
+  font-size: 1.1rem;
+  min-width: 30px;
+}
+
+.gg-end-lb-name {
+  flex: 1;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #3a2a18;
+  text-align: left;
+}
+
+.gg-end-lb-score {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--gg-gold);
+}
+
+.gg-end-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* ── Keyframe animations ────────────────────────────────────── */
+@keyframes gg-fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes gg-slide-up {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes gg-pip-pulse {
+  0%, 100% { box-shadow: var(--gg-gold-glow); }
+  50%       { box-shadow: 0 0 28px rgba(212,175,55,0.6); }
+}
+
+@keyframes gg-timer-pulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(224,82,82,0); }
+  50%       { box-shadow: 0 0 16px rgba(224,82,82,0.5); }
+}
+
+@keyframes gg-count-pop {
+  from { opacity: 0; transform: scale(0.5); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes gg-trophy-bounce {
+  0%   { transform: scale(0); opacity: 0; }
+  60%  { transform: scale(1.2); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
+/* ── Responsive ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .gg-modal {
+    padding: 24px 20px;
+  }
+
+  .gg-stages-grid {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .gg-game-body {
+    flex-direction: column-reverse;
+  }
+
+  .gg-sidebar {
+    width: 100%;
+    border-left: none;
+    border-bottom: 1px solid var(--gg-border);
+    padding: 16px 20px;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 10px;
+  }
+
+  .gg-sidebar-title {
+    display: none;
+  }
+
+  .gg-leaderboard {
+    flex-direction: row;
+    gap: 8px;
+  }
+
+  .gg-lb-row {
+    min-width: 110px;
+    flex-direction: column;
+    text-align: center;
+    gap: 2px;
+    padding: 8px;
+  }
+
+  .gg-topbar {
+    padding: 12px 16px;
+    gap: 10px;
+  }
+
+  .gg-main-panel {
+    padding: 20px 16px;
+    gap: 16px;
+  }
+
+  .gg-stage-title {
+    font-size: 1.3rem;
+  }
+
+  .gg-card {
+    width: 200px;
+    height: 280px;
+  }
+
+  .gg-guess-btn {
+    min-width: 100px;
+    padding: 13px 16px;
+    font-size: 0.9rem;
+  }
+
+  .gg-countdown-number {
+    font-size: 5rem;
+  }
+
+  .gg-countdown--timesup {
+    font-size: 2.2rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .gg-action-btns--suits {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .gg-guess-btn {
+    min-width: unset;
+  }
+} 
+.gg-turn-banner{
+  position: fixed;
+  inset: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background: rgba(0,0,0,.7);
+
+  font-size: 3rem;
+  font-weight: 700;
+
+  z-index: 9999;
+
+  backdrop-filter: blur(5px);
+}

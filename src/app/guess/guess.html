@@ -1,0 +1,369 @@
+<!-- ════════════════════════════════════════════════════════════════
+     GUESS GUESS — Angular Gaming Console
+     ════════════════════════════════════════════════════════════════ -->
+
+<!-- ── INSTRUCTIONS MODAL ─────────────────────────────────────── -->
+<div class="gg-overlay" *ngIf="phase === 'instructions'" [@fadeIn]>
+  <div class="gg-modal gg-instructions-modal">
+    <div class="gg-modal-header">
+      <div class="gg-game-icon">🃏</div>
+      <h1 class="gg-title">Guess Guess</h1>
+      <p class="gg-subtitle">Test your luck across four card-guessing challenges</p>
+    </div>
+
+    <div class="gg-stages-grid">
+      <div class="gg-stage-card">
+        <span class="gg-stage-badge">Stage 1</span>
+        <span class="gg-stage-name">Red or Black?</span>
+        <span class="gg-stage-pts">1 pt</span>
+      </div>
+      <div class="gg-stage-card">
+        <span class="gg-stage-badge">Stage 2</span>
+        <span class="gg-stage-name">Higher or Lower?</span>
+        <span class="gg-stage-pts">2 pts</span>
+      </div>
+      <div class="gg-stage-card">
+        <span class="gg-stage-badge">Stage 3</span>
+        <span class="gg-stage-name">Inside or Outside?</span>
+        <span class="gg-stage-pts">3 pts</span>
+      </div>
+      <div class="gg-stage-card">
+        <span class="gg-stage-badge">Stage 4</span>
+        <span class="gg-stage-name">Guess the Suit!</span>
+        <span class="gg-stage-pts">4 pts</span>
+      </div>
+    </div>
+
+    <div class="gg-rules-box">
+      <h3 class="gg-rules-title">Rules</h3>
+      <ul class="gg-rules-list">
+        <li>Wrong guess immediately ends your turn</li>
+        <li>Next player begins — deck reshuffles each turn</li>
+        <li>Points earned at each stage are kept on wrong guess</li>
+        <li>Maximum 4 points per turn (complete all stages)</li>
+      </ul>
+    </div>
+
+    <button class="gg-btn gg-btn-gold" (click)="proceedFromInstructions()">
+      <span>Continue</span>
+      <span class="gg-btn-arrow">→</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── PLAYER SETUP ────────────────────────────────────────────── -->
+<div class="gg-overlay" *ngIf="phase === 'setup'" [@fadeIn]>
+  <div class="gg-modal gg-setup-modal">
+    <div class="gg-modal-header">
+      <h2 class="gg-title">Game Setup</h2>
+    </div>
+
+    <!-- Player Count -->
+    <section class="gg-setup-section">
+      <h3 class="gg-section-label">Players</h3>
+      <div class="gg-counter-row">
+        <button class="gg-counter-btn" (click)="decrementPlayers()" [disabled]="playerCount <= 2">
+          <span>−</span>
+        </button>
+        <span class="gg-counter-value">{{ playerCount }}</span>
+        <button class="gg-counter-btn" (click)="incrementPlayers()" [disabled]="playerCount >= 10">
+          <span>+</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- Player Names -->
+    <section class="gg-setup-section">
+      <h3 class="gg-section-label">Player Names</h3>
+      <div class="gg-players-grid">
+        <div class="gg-player-name-row" *ngFor="let player of players; trackBy: trackByPlayer">
+          <span class="gg-player-num">{{ player.id }}</span>
+          <input
+            class="gg-name-input"
+            [(ngModel)]="player.name"
+            [placeholder]="'Player ' + player.id"
+            maxlength="20"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- Turn Settings -->
+    <section class="gg-setup-section">
+      <h3 class="gg-section-label">Turn Mode</h3>
+      <div class="gg-turn-modes">
+        <button
+          *ngFor="let mode of turnOptions"
+          class="gg-mode-btn"
+          [class.gg-mode-btn--active]="isTurnModeSelected(mode)"
+          (click)="setTurnMode(mode)"
+        >
+          {{ turnModeLabel(mode) }}
+        </button>
+      </div>
+    </section>
+
+    <button class="gg-btn gg-btn-gold gg-start-btn" (click)="startGame()">
+      <span class="gg-btn-icon">▶</span>
+      <span>Start Game</span>
+    </button>
+  </div>
+</div>
+
+<!-- ── GAMEPLAY ────────────────────────────────────────────────── -->
+<div class="gg-game-screen" *ngIf="phase === 'playing'">
+
+  <!-- Top bar -->
+  <header class="gg-topbar">
+    <div class="gg-player-badge">
+      <span class="gg-player-badge-label">Current Player</span>
+      <span class="gg-player-badge-name">{{ currentPlayer.name }}</span>
+    </div>
+
+    <div class="gg-timer-wrap" [class.gg-timer--warning]="timerWarning" [class.gg-timer--critical]="timerCritical">
+      <span class="gg-timer-icon">⏱</span>
+      <span class="gg-timer-display">{{ timerDisplay }}</span>
+    </div>
+
+    <button class="gg-quit-btn" (click)="quitGame()">✕ Quit</button>
+  </header>
+    <div
+    *ngIf="showTurnBanner"
+    class="gg-turn-banner">
+
+    {{ turnBannerText }}
+    </div>
+
+  <div class="gg-game-body">
+
+    <!-- Left: Game area -->
+    <main class="gg-main-panel">
+
+      <!-- Stage indicator -->
+      <div class="gg-stage-indicator">
+        <div
+          *ngFor="let s of [1,2,3,4]"
+          class="gg-stage-pip"
+          [class.gg-stage-pip--active]="s === currentStage"
+          [class.gg-stage-pip--done]="s < currentStage"
+        >
+          {{ s }}
+        </div>
+      </div>
+
+      <!-- Stage title -->
+      <div class="gg-stage-header">
+        <h2 class="gg-stage-title">{{ stageLabel }}</h2>
+        <span class="gg-stage-reward">{{ stagePoints }}</span>
+      </div>
+
+      <!-- Cards area -->
+      <div class="gg-cards-row">
+        <!-- Stage 1 card -->
+        <div class="gg-card-slot" *ngIf="currentStage >= 1">
+          <div class="gg-card" [class.gg-card--flipped]="!!drawnCards[0]" [class.gg-card--red]="drawnCards[0]?.color === 'red'">
+            <div class="gg-card-back">
+              <div class="gg-card-back-pattern"></div>
+            </div>
+            <div class="gg-card-face">
+              <ng-container *ngIf="drawnCards[0]">
+                <span class="gg-card-tl">{{ drawnCards[0].value }}<br>{{ suitSymbols[drawnCards[0].suit] }}</span>
+                <span class="gg-card-center">{{ suitSymbols[drawnCards[0].suit] }} {{ suitSymbols[drawnCards[0].suit] }}</span>
+                <span class="gg-card-br">{{ drawnCards[0].value }}<br>{{ suitSymbols[drawnCards[0].suit] }}</span>
+              </ng-container>
+            </div>
+          </div>
+          <span class="gg-card-label">Card 1</span>
+        </div>
+
+        <!-- Stage 2 card -->
+        <div class="gg-card-slot" *ngIf="currentStage >= 2">
+          <div class="gg-card" [class.gg-card--flipped]="!!drawnCards[1]" [class.gg-card--red]="drawnCards[1]?.color === 'red'">
+            <div class="gg-card-back">
+              <div class="gg-card-back-pattern"></div>
+            </div>
+            <div class="gg-card-face">
+              <ng-container *ngIf="drawnCards[1]">
+                <span class="gg-card-tl">{{ drawnCards[1].value }}<br>{{ suitSymbols[drawnCards[1].suit] }}</span>
+                <span class="gg-card-center">{{ suitSymbols[drawnCards[1].suit] }}</span>
+                <span class="gg-card-br">{{ drawnCards[1].value }}<br>{{ suitSymbols[drawnCards[1].suit] }}</span>
+              </ng-container>
+            </div>
+          </div>
+          <span class="gg-card-label">Card 2</span>
+        </div>
+
+        <!-- Stage 3 card -->
+        <div class="gg-card-slot" *ngIf="currentStage >= 3">
+          <div class="gg-card" [class.gg-card--flipped]="!!drawnCards[2]" [class.gg-card--red]="drawnCards[2]?.color === 'red'">
+            <div class="gg-card-back">
+              <div class="gg-card-back-pattern"></div>
+            </div>
+            <div class="gg-card-face">
+              <ng-container *ngIf="drawnCards[2]">
+                <span class="gg-card-tl">{{ drawnCards[2].value }}<br>{{ suitSymbols[drawnCards[2].suit] }}</span>
+                <span class="gg-card-center">{{ suitSymbols[drawnCards[2].suit] }}</span>
+                <span class="gg-card-br">{{ drawnCards[2].value }}<br>{{ suitSymbols[drawnCards[2].suit] }}</span>
+              </ng-container>
+            </div>
+          </div>
+          <span class="gg-card-label">Card 3</span>
+        </div>
+
+        <!-- Stage 4 card -->
+        <div class="gg-card-slot" *ngIf="currentStage >= 4">
+          <div class="gg-card" [class.gg-card--flipped]="!!drawnCards[3]" [class.gg-card--red]="drawnCards[3]?.color === 'red'">
+            <div class="gg-card-back">
+              <div class="gg-card-back-pattern"></div>
+            </div>
+            <div class="gg-card-face">
+              <ng-container *ngIf="drawnCards[3]">
+                <span class="gg-card-tl">{{ drawnCards[3].value }}<br>{{ suitSymbols[drawnCards[3].suit] }}</span>
+                <span class="gg-card-center">{{ suitSymbols[drawnCards[3].suit] }}</span>
+                <span class="gg-card-br">{{ drawnCards[3].value }}<br>{{ suitSymbols[drawnCards[3].suit] }}</span>
+              </ng-container>
+            </div>
+          </div>
+          <span class="gg-card-label">Card 4</span>
+        </div>
+      </div>
+
+      <!-- Inside/outside range hint -->
+      <div class="gg-range-hint" *ngIf="currentStage === 3 && drawnCards.length >= 2">
+        {{ insideOutsideRange }}
+      </div>
+
+      <!-- Feedback message -->
+      <div class="gg-feedback" *ngIf="turnFeedbackMessage"
+           [class.gg-feedback--correct]="isCorrectGuess"
+           [class.gg-feedback--wrong]="isWrongGuess">
+        {{ turnFeedbackMessage }}
+      </div>
+
+      <!-- Action buttons per stage -->
+      <div class="gg-action-area" *ngIf="!isCardFlipping && !isWrongGuess && !isCorrectGuess">
+      <div class="gg-turn-score">
+        <span class="gg-turn-score-label">Turn Score</span>
+        <span class="gg-turn-score-value">{{ currentTurnScore }}</span>
+      </div>
+        <!-- Stage 1: Red / Black -->
+        <ng-container *ngIf="currentStage === 1 && !drawnCards[0]">
+          <div class="gg-action-btns">
+            <button class="gg-guess-btn gg-guess-btn--red" (click)="processRedBlack('red')">
+              <span class="gg-guess-icon">♥</span> Red
+            </button>
+            <button class="gg-guess-btn gg-guess-btn--black" (click)="processRedBlack('black')">
+              <span class="gg-guess-icon">♠</span> Black
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- Stage 2: Higher / Lower -->
+        <ng-container *ngIf="currentStage === 2 && !drawnCards[1]">
+          <div class="gg-action-btns">
+            <button class="gg-guess-btn gg-guess-btn--higher" (click)="processHigherLower('higher')">
+              ▲ Higher
+            </button>
+            <button class="gg-guess-btn gg-guess-btn--lower" (click)="processHigherLower('lower')">
+              ▼ Lower
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- Stage 3: Inside / Outside -->
+        <ng-container *ngIf="currentStage === 3 && !drawnCards[2]">
+          <div class="gg-action-btns">
+            <button class="gg-guess-btn gg-guess-btn--inside" (click)="processInsideOutside('inside')">
+              ◈ Inside
+            </button>
+            <button class="gg-guess-btn gg-guess-btn--outside" (click)="processInsideOutside('outside')">
+              ◇ Outside
+            </button>
+          </div>
+        </ng-container>
+
+        <!-- Stage 4: Suit Guess -->
+        <ng-container *ngIf="currentStage === 4 && !drawnCards[3]">
+          <div class="gg-action-btns gg-action-btns--suits">
+            <button class="gg-guess-btn gg-guess-btn--hearts" (click)="processSuitGuess('hearts')">♥ Hearts</button>
+            <button class="gg-guess-btn gg-guess-btn--diamonds" (click)="processSuitGuess('diamonds')">♦ Diamonds</button>
+            <button class="gg-guess-btn gg-guess-btn--clubs" (click)="processSuitGuess('clubs')">♣ Clubs</button>
+            <button class="gg-guess-btn gg-guess-btn--spades" (click)="processSuitGuess('spades')">♠ Spades</button>
+          </div>
+        </ng-container>
+
+      </div>
+    </main>
+
+    <!-- Right: Leaderboard -->
+    <aside class="gg-sidebar">
+      <h3 class="gg-sidebar-title">Leaderboard</h3>
+      <div class="gg-leaderboard">
+        <div
+          *ngFor="let p of sortedLeaderboard; let i = index; trackBy: trackByPlayer"
+          class="gg-lb-row"
+          [class.gg-lb-row--current]="p.id === currentPlayer.id"
+        >
+          <span class="gg-lb-rank">{{ i + 1 }}</span>
+          <span class="gg-lb-name">{{ p.name }}</span>
+          <span class="gg-lb-score">{{ p.score }}</span>
+        </div>
+      </div>
+
+      <div class="gg-sidebar-meta" *ngIf="turnMode !== 'unlimited'">
+        <span>Turns played</span>
+        <span>Round {{ currentRound }} / {{ turnMode }}</span>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<!-- ── FINAL COUNTDOWN OVERLAY ─────────────────────────────────── -->
+<div class="gg-countdown-overlay" *ngIf="showCountdown">
+  <div class="gg-countdown-number" [class.gg-countdown--timesup]="countdownValue === 'TIME\'S UP!'">
+    {{ countdownValue }}
+  </div>
+</div>
+
+<!-- ── END GAME MODAL ──────────────────────────────────────────── -->
+<div class="gg-overlay" *ngIf="showEndModal" [@fadeIn]>
+  <div class="gg-modal gg-end-modal">
+    <div class="gg-end-header">
+      <div class="gg-trophy">🏆</div>
+      <h2 class="gg-end-title">Game Over</h2>
+      <p class="gg-end-winner">
+        <span *ngIf="endReason === 'timer'">Time's Up! </span>
+        <span *ngIf="endReason === 'turns'">Turns Complete! </span>
+        <span *ngIf="endReason === 'quit'">Game Ended. </span>
+        Winner: <strong>{{ winner.name }}</strong> with {{ winner.score }} pts
+      </p>
+    </div>
+
+    <h3 class="gg-end-lb-title">Final Scores</h3>
+    <div class="gg-end-leaderboard">
+      <div
+        *ngFor="let p of sortedLeaderboard; let i = index; trackBy: trackByPlayer"
+        class="gg-end-lb-row"
+        [class.gg-end-lb-row--winner]="i === 0"
+      >
+        <span class="gg-end-lb-rank">
+          <ng-container *ngIf="i === 0">🥇</ng-container>
+          <ng-container *ngIf="i === 1">🥈</ng-container>
+          <ng-container *ngIf="i === 2">🥉</ng-container>
+          <ng-container *ngIf="i > 2">{{ i + 1 }}</ng-container>
+        </span>
+        <span class="gg-end-lb-name">{{ p.name }}</span>
+        <span class="gg-end-lb-score">{{ p.score }} pts</span>
+      </div>
+    </div>
+
+    <div class="gg-end-actions">
+      <button class="gg-btn gg-btn-gold" (click)="playAgain()">
+        ↺ Play Again
+      </button>
+      <button class="gg-btn gg-btn-ghost" (click)="returnToGamePage()">
+        ← Game Page
+      </button>
+    </div>
+  </div>
+</div>
