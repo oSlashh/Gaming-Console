@@ -5,6 +5,7 @@
 <!-- ── INSTRUCTIONS MODAL ─────────────────────────────────────── -->
 <div class="gg-overlay" *ngIf="phase === 'instructions'" [@fadeIn]>
   <div class="gg-modal gg-instructions-modal">
+    <button class="gg-back-btn" (click)="returnToGamePage()" aria-label="Back to dashboard">←</button>
     <div class="gg-modal-header">
       <div class="gg-game-icon">🃏</div>
       <h1 class="gg-title">Guess Guess</h1>
@@ -54,6 +55,7 @@
 <!-- ── PLAYER SETUP ────────────────────────────────────────────── -->
 <div class="gg-overlay" *ngIf="phase === 'setup'" [@fadeIn]>
   <div class="gg-modal gg-setup-modal">
+    <button class="gg-back-btn" (click)="backToInstructions()" aria-label="Back to instructions">←</button>
     <div class="gg-modal-header">
       <h2 class="gg-title">Game Setup</h2>
     </div>
