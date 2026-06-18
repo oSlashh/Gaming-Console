@@ -487,6 +487,10 @@ export class GuessGuessComponent implements OnInit, OnDestroy {
     this.router.navigate(['/game-page']);
   }
 
+  backToInstructions(): void {
+    this.phase = 'instructions';
+  }
+
   // ─── Stage display helpers ──────────────────────────────────────────────────
 
   get stageLabel(): string {
