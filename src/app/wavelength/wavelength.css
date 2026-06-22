@@ -498,8 +498,34 @@
     gap: 22px;
     padding: 24px 16px 36px;
     width: 100%;
-    max-width: 370px; /* Reduced by 12% (from 420px) for better breathing room */
+    max-width: 370px;
+    /* Reduced by 12% (from 420px) for better breathing room */
     margin: 0 auto;
+}
+
+/* Two-column card layout for Wavelength setup on wider screens */
+.setup-cards-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .setup-screen:has(.setup-cards-row) {
+        max-width: 760px;
+    }
+
+    .setup-cards-row {
+        flex-direction: row;
+        gap: 20px;
+        align-items: stretch;
+    }
+
+    .setup-cards-row .glass-card {
+        flex: 1;
+        margin: 0;
+    }
 }
 
 /* Logo */
@@ -755,7 +781,8 @@
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 610px; /* Conservatively reduced by 6.15% (from 650px) to preserve dial centerpiece */
+    max-width: 610px;
+    /* Conservatively reduced by 6.15% (from 650px) to preserve dial centerpiece */
     margin: 0 auto;
     padding: 0 14px 16px !important;
 }
@@ -2769,6 +2796,9 @@
     background: transparent;
     position: relative;
     z-index: 2;
+    padding: 14px 20px;
+    box-sizing: border-box;
+    overflow-y: auto;
 }
 
 .nb-left::-webkit-scrollbar-thumb,
@@ -3066,7 +3096,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
     width: 100%;
 }
 
@@ -3075,12 +3105,12 @@
     background: #fffdf5;
     border: 3px solid #3e1f08;
     border-radius: 4px;
-    padding: 8px 24px;
+    padding: 6px 18px;
     box-shadow: 4px 5px 0px #3e1f08;
     transform: rotate(1deg);
     display: inline-block;
     text-align: center;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
 }
 
 .nb-right-icon {
@@ -3166,17 +3196,19 @@
 
 /* Page 1 (Wavelength) layout style - polaroid frame visual centerpiece */
 #nb-right-1 .nb-art-area {
-    background: #ffffff; /* pure polaroid white */
+    background: #ffffff;
+    /* pure polaroid white */
     border: 3px solid #3e1f08;
     border-radius: 4px;
     box-shadow:
         5px 6px 0px #3e1f08,
         0 12px 20px rgba(40, 20, 5, 0.14);
     transform: rotate(-1.5deg);
-    padding: 14px 14px 34px 14px; /* Polaroid bottom border */
-    margin: 20px auto;
+    padding: 10px 10px 28px 10px;
+    /* Polaroid bottom border */
+    margin: 8px auto;
     width: 90%;
-    max-width: 320px;
+    max-width: 300px;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -3239,7 +3271,7 @@
 /* Page 2 (Estimation Battle) layout style - direct-page sticker layout */
 .hfo-logo-wrapper {
     position: relative;
-    margin: 22px auto 10px; /* positioned slightly above center, leaving room below */
+    margin: 10px auto 6px;
     width: fit-content;
     display: flex;
     justify-content: center;
@@ -3255,14 +3287,14 @@
 
 .hfo-logo-wrapper .nb-target-svg {
     width: 100%;
-    max-width: 220px; /* increased by 20-30% to fill recovered layout space */
-    max-height: 220px;
+    max-width: 180px;
+    max-height: 180px;
     filter: drop-shadow(4px 6px 0px rgba(62, 31, 8, 0.18));
-    transform: none; /* Let parent wrapper handle rotation */
+    transform: none;
 }
 
 .hfo-logo-wrapper .nb-target-svg:hover {
-    transform: none; /* Let parent wrapper handle hover scale */
+    transform: none;
 }
 
 /* Handwritten scribble ("close enough?") directly under target logo */
@@ -3271,7 +3303,7 @@
     align-items: center;
     justify-content: center;
     gap: 6px;
-    margin: 2px auto 14px;
+    margin: 2px auto 8px;
     transform: rotate(-3deg);
     width: fit-content;
     z-index: 2;
@@ -3292,13 +3324,13 @@
     text-shadow: 0.5px 0.5px 0px rgba(255, 255, 255, 0.45);
 }
 
-/* Enlarged Page 2 hint sticky note (40-50% larger) */
+/* Page 2 hint sticky — tightened margins for compact fit */
 #nb-right-2 .hint-sticky {
-    font-size: 1.25rem; /* ~42% larger */
-    padding: 18px 24px;  /* ~50% larger */
+    font-size: 1.1rem;
+    padding: 12px 16px;
     width: 92%;
-    max-width: 320px;
-    margin: 14px auto 20px;
+    max-width: 300px;
+    margin: 8px auto 12px;
     transform: rotate(2deg);
     box-sizing: border-box;
     box-shadow:
@@ -3428,8 +3460,8 @@
 /* Illustrations reduced to 60-70% size to support rather than dominate layout */
 .nb-dial-svg {
     width: 100%;
-    max-height: 180px; /* 2.5x larger centerpiece */
-    max-width: 280px;  /* 2.5x larger centerpiece */
+    max-height: 160px;
+    max-width: 260px;
     object-fit: contain;
     filter: drop-shadow(3px 4px 0px rgba(62, 31, 8, 0.15));
 }
@@ -4111,6 +4143,116 @@
     }
 }
 
+/* ── Viewport height compact mode (100% zoom on ~1080p and smaller screens) ──
+   The notebook itself does NOT change. Only the content inside the pages scales
+   down so it fits within the existing notebook frame. */
+@media (max-height: 900px) {
+
+    /* Tighter inner page padding */
+    .nb-left,
+    .nb-right {
+        padding: 10px 16px;
+    }
+
+    /* Smaller section titles */
+    .nb-left-title,
+    .nb-right-title {
+        font-size: 1.75rem;
+    }
+
+    /* Smaller body text */
+    .nb-left-body {
+        font-size: 1.1rem;
+        line-height: 20px;
+    }
+
+    /* Smaller checklists */
+    .nb-checklist li {
+        font-size: 1.05rem;
+    }
+
+    .nb-dash-list {
+        gap: 4px;
+    }
+
+    .nb-dash-list li {
+        font-size: 0.82rem;
+    }
+
+    /* Smaller sticky notes */
+    .nb-sticky {
+        padding: 9px 11px;
+        font-size: 0.82rem;
+    }
+
+    /* Compact paperclip */
+    .nb-paperclip {
+        font-size: 1.5rem;
+    }
+
+    /* Play button — slightly smaller */
+    .nb-play-btn {
+        font-size: 1.25rem;
+        padding: 8px 16px;
+    }
+
+    /* Navigation bar */
+    .nb-nav-bar {
+        margin-top: 8px;
+    }
+
+    /* ── Wavelength page (nb-right-1) ── */
+    #nb-right-1 .nb-right-header {
+        margin-bottom: 4px;
+    }
+
+    #nb-right-1 .nb-title-plate {
+        padding: 4px 14px;
+        margin-bottom: 2px;
+    }
+
+    #nb-right-1 .nb-art-area {
+        margin: 4px auto;
+        padding: 8px 8px 24px 8px;
+        max-width: 280px;
+    }
+
+    .nb-dial-svg {
+        max-height: 140px;
+        max-width: 240px;
+    }
+
+    /* ── How Far Off page (nb-right-2) ── */
+    .hfo-logo-wrapper {
+        margin: 6px auto 4px;
+    }
+
+    .hfo-logo-wrapper .nb-target-svg {
+        max-width: 155px;
+        max-height: 155px;
+    }
+
+    .hfo-scribble {
+        margin: 0 auto 6px;
+    }
+
+    #nb-right-2 .hint-sticky {
+        font-size: 1rem;
+        padding: 9px 12px;
+        margin: 6px auto 8px;
+    }
+
+    /* ── Notebook cover padding — recover a few pixels ── */
+    .notebook-cover {
+        padding: 18px 32px;
+    }
+
+    /* ── Page inner border — tighter inset ── */
+    .notebook-page-inner {
+        inset: 8px;
+    }
+}
+
 /* ── Final Pass Custom Element Styling ── */
 
 .nb-brainstorm-list {
@@ -4269,23 +4411,29 @@
     z-index: 0 !important;
     pointer-events: none !important;
     overflow: hidden !important;
-    background-color: #f5eedc !important; /* Unified background color */
-    background-image: 
-        linear-gradient(rgba(245, 238, 220, 0.35), rgba(245, 238, 220, 0.35)), /* Soft cream wash layer */
-        url('/assets/crumpled-paper.png'), /* Primary crumpled paper texture */
-        linear-gradient(rgba(139, 93, 51, 0.05) 1px, transparent 1px), /* Faint notebook lines */
-        linear-gradient(90deg, transparent 10%, rgba(229, 83, 83, 0.12) 10%, rgba(229, 83, 83, 0.12) calc(10% + 2px), transparent calc(10% + 3px)) !important; /* Soft vertical rule */
+    background-color: #f5eedc !important;
+    /* Unified background color */
+    background-image:
+        linear-gradient(rgba(245, 238, 220, 0.35), rgba(245, 238, 220, 0.35)),
+        /* Soft cream wash layer */
+        url('/assets/crumpled-paper.png'),
+        /* Primary crumpled paper texture */
+        linear-gradient(rgba(139, 93, 51, 0.05) 1px, transparent 1px),
+        /* Faint notebook lines */
+        linear-gradient(90deg, transparent 10%, rgba(229, 83, 83, 0.12) 10%, rgba(229, 83, 83, 0.12) calc(10% + 2px), transparent calc(10% + 3px)) !important;
+    /* Soft vertical rule */
     background-size: cover, cover, 100% 24px, 100% 100% !important;
     background-position: center, center, center, center !important;
     background-repeat: no-repeat, no-repeat, repeat, no-repeat !important;
     background-blend-mode: normal, normal, multiply, multiply !important;
-    box-shadow: inset 0 0 120px rgba(91, 61, 33, 0.22) !important; /* warm notebook vignette */
+    box-shadow: inset 0 0 120px rgba(91, 61, 33, 0.22) !important;
+    /* warm notebook vignette */
 }
 
 /* Hide all digital, glowing particles and starry decorations */
-.wl-bg .wl-blob, 
-.wl-bg .wl-star, 
-.wl-bg .wl-doodle, 
+.wl-bg .wl-blob,
+.wl-bg .wl-star,
+.wl-bg .wl-doodle,
 .wl-bg .floating-decor {
     display: none !important;
 }
@@ -4293,14 +4441,18 @@
 /* 2. Papercraft Card Panels with physical cardstock/cardboard styles and hand-cut filter */
 .setup-screen .glass-card,
 .game-screen .glass-card {
-    background: #fffdf5 !important; /* Cream cardstock */
-    border: 4px solid #2a2521 !important; /* thick marker black outline */
+    background: #fffdf5 !important;
+    /* Cream cardstock */
+    border: 4px solid #2a2521 !important;
+    /* thick marker black outline */
     border-radius: 12px 6px 14px 4px / 6px 12px 4px 10px !important;
     box-shadow: 6px 7px 0px #2a2521 !important;
     backdrop-filter: none !important;
     transition: transform 0.2s ease, box-shadow 0.2s ease !important;
-    filter: url(#hand-drawn-backing) !important; /* global hand-cut wobbly outline */
+    filter: url(#hand-drawn-backing) !important;
+    /* global hand-cut wobbly outline */
 }
+
 .game-screen .glass-card {
     padding: 14px 18px !important;
 }
@@ -4313,7 +4465,7 @@
 .game-screen .guess-card,
 .game-screen .psychic-card {
     background-color: #fffdf5 !important;
-    background-image: 
+    background-image:
         linear-gradient(rgba(30, 100, 190, 0.09) 1px, transparent 1px),
         linear-gradient(90deg, rgba(235, 100, 100, 0.3) 1.5px, transparent 1.5px) !important;
     background-size: 100% 24px, 100% 100% !important;
@@ -4323,12 +4475,13 @@
 
 /* Give different cards distinct hand-laid paper tilts and rotations (college collage chaos) */
 .setup-screen .teams-card {
-    background: #fffdf5 !important; 
+    background: #fffdf5 !important;
     transform: rotate(-1.3deg) !important;
 }
 
 .setup-screen .category-builder-card {
-    background: #fffbe6 !important; /* Yellow construction paper */
+    background: #fffbe6 !important;
+    /* Yellow construction paper */
     border-radius: 9px 11px 8px 12px / 12px 9px 11px 8px !important;
     transform: rotate(2.3deg) !important;
 }
@@ -4349,9 +4502,11 @@
 }
 
 .game-screen .leaderboard-card {
-    background-color: #fffdf5 !important; /* Cream index card */
-    background-image: 
-        linear-gradient(rgba(30, 100, 190, 0.08) 1px, transparent 1px) !important; /* subtle lines */
+    background-color: #fffdf5 !important;
+    /* Cream index card */
+    background-image:
+        linear-gradient(rgba(30, 100, 190, 0.08) 1px, transparent 1px) !important;
+    /* subtle lines */
     background-size: 100% 22px !important;
     background-position: 0 8px !important;
     border: 3.5px solid #2a2521 !important;
@@ -4373,13 +4528,12 @@
     top: -12px !important;
     width: 60px !important;
     height: 20px !important;
-    background: rgba(246, 238, 204, 0.78) !important; /* torn masking tape */
+    background: rgba(246, 238, 204, 0.78) !important;
+    /* torn masking tape */
     backdrop-filter: blur(0.5px) !important;
-    box-shadow: 1px 1.5px 3px rgba(0,0,0,0.1) !important;
-    clip-path: polygon(
-        0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%, 
-        98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%
-    ) !important;
+    box-shadow: 1px 1.5px 3px rgba(0, 0, 0, 0.1) !important;
+    clip-path: polygon(0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%,
+            98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%) !important;
     z-index: 10 !important;
     filter: url(#hand-drawn-needle) !important;
 }
@@ -4400,30 +4554,63 @@
     height: 20px !important;
     background: rgba(246, 238, 204, 0.78) !important;
     backdrop-filter: blur(0.5px) !important;
-    box-shadow: 1px 1.5px 3px rgba(0,0,0,0.1) !important;
-    clip-path: polygon(
-        0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%, 
-        98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%
-    ) !important;
+    box-shadow: 1px 1.5px 3px rgba(0, 0, 0, 0.1) !important;
+    clip-path: polygon(0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%,
+            98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%) !important;
     z-index: 10 !important;
     filter: url(#hand-drawn-needle) !important;
 }
 
 /* Card-specific tape angles & positions to simulate custom hand placement */
-.setup-screen .teams-card::before { transform: rotate(-24deg) translateY(-2px) !important; left: 24px !important; }
-.setup-screen .teams-card::after { transform: rotate(16deg) translateX(3px) !important; right: 29px !important; }
+.setup-screen .teams-card::before {
+    transform: rotate(-24deg) translateY(-2px) !important;
+    left: 24px !important;
+}
 
-.setup-screen .category-builder-card::before { transform: rotate(-16deg) translateX(-4px) !important; left: 32px !important; }
-.setup-screen .category-builder-card::after { transform: rotate(23deg) translateY(2px) !important; right: 24px !important; }
+.setup-screen .teams-card::after {
+    transform: rotate(16deg) translateX(3px) !important;
+    right: 29px !important;
+}
 
-.game-screen .psychic-card::before { transform: rotate(-28deg) translateY(-3px) !important; left: 20px !important; }
-.game-screen .psychic-card::after { transform: rotate(12deg) translateX(5px) !important; right: 34px !important; }
+.setup-screen .category-builder-card::before {
+    transform: rotate(-16deg) translateX(-4px) !important;
+    left: 32px !important;
+}
 
-.game-screen .guess-card::before { transform: rotate(-20deg) translateX(2px) !important; left: 30px !important; }
-.game-screen .guess-card::after { transform: rotate(26deg) translateY(-2px) !important; right: 22px !important; }
+.setup-screen .category-builder-card::after {
+    transform: rotate(23deg) translateY(2px) !important;
+    right: 24px !important;
+}
 
-.game-screen .reveal-card::before { transform: rotate(-14deg) translateY(-4px) !important; left: 25px !important; }
-.game-screen .reveal-card::after { transform: rotate(20deg) translateX(-2px) !important; right: 32px !important; }
+.game-screen .psychic-card::before {
+    transform: rotate(-28deg) translateY(-3px) !important;
+    left: 20px !important;
+}
+
+.game-screen .psychic-card::after {
+    transform: rotate(12deg) translateX(5px) !important;
+    right: 34px !important;
+}
+
+.game-screen .guess-card::before {
+    transform: rotate(-20deg) translateX(2px) !important;
+    left: 30px !important;
+}
+
+.game-screen .guess-card::after {
+    transform: rotate(26deg) translateY(-2px) !important;
+    right: 22px !important;
+}
+
+.game-screen .reveal-card::before {
+    transform: rotate(-14deg) translateY(-4px) !important;
+    left: 25px !important;
+}
+
+.game-screen .reveal-card::after {
+    transform: rotate(20deg) translateX(-2px) !important;
+    right: 32px !important;
+}
 
 .game-screen .leaderboard-card::before {
     transform: rotate(-3deg) translateX(-50%) !important;
@@ -4432,25 +4619,44 @@
     top: -12px !important;
     width: 70px !important;
 }
+
 .game-screen .leaderboard-card::after {
     display: none !important;
 }
 
-.game-screen .hfo-reveal-card::before { transform: rotate(-19deg) translateY(-1px) !important; left: 22px !important; }
-.game-screen .hfo-reveal-card::after { transform: rotate(22deg) translateX(4px) !important; right: 30px !important; }
+.game-screen .hfo-reveal-card::before {
+    transform: rotate(-19deg) translateY(-1px) !important;
+    left: 22px !important;
+}
 
-.game-screen .hfo-transition-card::before { transform: rotate(-23deg) translateX(1px) !important; left: 26px !important; }
-.game-screen .hfo-transition-card::after { transform: rotate(17deg) translateY(-3px) !important; right: 28px !important; }
+.game-screen .hfo-reveal-card::after {
+    transform: rotate(22deg) translateX(4px) !important;
+    right: 30px !important;
+}
+
+.game-screen .hfo-transition-card::before {
+    transform: rotate(-23deg) translateX(1px) !important;
+    left: 26px !important;
+}
+
+.game-screen .hfo-transition-card::after {
+    transform: rotate(17deg) translateY(-3px) !important;
+    right: 28px !important;
+}
 
 /* 3. Question paper taped to the desk (improving How Far Off cue card) */
 .game-screen .hfo-question-card {
     position: relative !important;
     background: #fffdf5 !important;
-    border: 5.5px solid #2a2521 !important; /* stronger marker outline */
-    border-radius: 12px 8px 14px 7px / 7px 14px 8px 12px !important; /* wobbly paper edges */
-    transform: rotate(-2.3deg) !important; /* imperfect skew */
+    border: 5.5px solid #2a2521 !important;
+    /* stronger marker outline */
+    border-radius: 12px 8px 14px 7px / 7px 14px 8px 12px !important;
+    /* wobbly paper edges */
+    transform: rotate(-2.3deg) !important;
+    /* imperfect skew */
     padding: 24px 30px !important;
-    box-shadow: 8px 10px 0px rgba(42, 37, 33, 0.9) !important; /* heavy drop shadow */
+    box-shadow: 8px 10px 0px rgba(42, 37, 33, 0.9) !important;
+    /* heavy drop shadow */
 }
 
 .game-screen .hfo-question-card::before {
@@ -4462,11 +4668,10 @@
     height: 22px !important;
     background: rgba(246, 238, 204, 0.8) !important;
     backdrop-filter: blur(0.5px) !important;
-    transform: rotate(-34deg) !important; /* misaligned tape angle */
-    clip-path: polygon(
-        0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%, 
-        98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%
-    ) !important;
+    transform: rotate(-34deg) !important;
+    /* misaligned tape angle */
+    clip-path: polygon(0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%,
+            98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%) !important;
     z-index: 10 !important;
     filter: url(#hand-drawn-needle) !important;
 }
@@ -4476,15 +4681,15 @@
     position: absolute !important;
     top: -12px !important;
     right: -12px !important;
-    width: 75px !important; /* different length tape */
+    width: 75px !important;
+    /* different length tape */
     height: 22px !important;
     background: rgba(246, 238, 204, 0.8) !important;
     backdrop-filter: blur(0.5px) !important;
-    transform: rotate(27deg) !important; /* misaligned tape angle */
-    clip-path: polygon(
-        0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%, 
-        98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%
-    ) !important;
+    transform: rotate(27deg) !important;
+    /* misaligned tape angle */
+    clip-path: polygon(0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%,
+            98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%) !important;
     z-index: 10 !important;
     filter: url(#hand-drawn-needle) !important;
 }
@@ -4507,7 +4712,8 @@
 
 /* 4. Category Strip styled as a taped cardstock note */
 .game-screen .category-strip {
-    background: #fffbe6 !important; /* Soft yellow cardstock */
+    background: #fffbe6 !important;
+    /* Soft yellow cardstock */
     border: 4px solid #2a2521 !important;
     border-radius: 6px 8px 5px 9px / 8px 5px 9px 6px !important;
     box-shadow: 6px 6px 0 #2a2521 !important;
@@ -4515,7 +4721,8 @@
     width: 100% !important;
     margin-bottom: 10px !important;
     position: relative !important;
-    transform: rotate(1.6deg) !important; /* slightly offset */
+    transform: rotate(1.6deg) !important;
+    /* slightly offset */
     filter: url(#hand-drawn-backing) !important;
 }
 
@@ -4529,10 +4736,8 @@
     height: 20px !important;
     background: rgba(246, 238, 204, 0.78) !important;
     backdrop-filter: blur(0.5px) !important;
-    clip-path: polygon(
-        0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%, 
-        98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%
-    ) !important;
+    clip-path: polygon(0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%,
+            98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%) !important;
     z-index: 10 !important;
     filter: url(#hand-drawn-needle) !important;
 }
@@ -4583,18 +4788,22 @@
 .game-screen .outline-btn,
 .setup-screen .ghost-btn,
 .game-screen .ghost-btn {
-    background: #ffd93d !important; /* Yellow construction paper */
+    background: #ffd93d !important;
+    /* Yellow construction paper */
     color: #2a2521 !important;
     border: 3.5px solid #2a2521 !important;
     border-radius: 6px 12px 9px 13px / 12px 9px 13px 6px !important;
     box-shadow: 4px 4px 0 #2a2521 !important;
     text-transform: uppercase !important;
     font-family: 'Caveat Brush', cursive !important;
-    font-size: 1.38rem !important; /* Scale reduction */
+    font-size: 1.38rem !important;
+    /* Scale reduction */
     letter-spacing: 0.03em !important;
     font-weight: normal !important;
-    padding: 8px 18px !important; /* Scale reduction */
-    filter: url(#hand-drawn-text) !important; /* Readability pass */
+    padding: 8px 18px !important;
+    /* Scale reduction */
+    filter: url(#hand-drawn-text) !important;
+    /* Readability pass */
     transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, background 0.2s ease !important;
 }
 
@@ -4637,10 +4846,12 @@
 /* Obvious craft colors for buttons */
 .setup-screen .start-btn,
 .game-screen .start-btn {
-    background: #4ba375 !important; /* Chart paper green */
+    background: #4ba375 !important;
+    /* Chart paper green */
     color: #fffdf5 !important;
     transform: rotate(2.2deg) !important;
 }
+
 .setup-screen .start-btn:hover:not(:disabled),
 .game-screen .start-btn:hover:not(:disabled) {
     background: #4ba375 !important;
@@ -4648,15 +4859,19 @@
 }
 
 .game-screen .reveal-result-btn {
-    background: #ff8fab !important; /* Pastel pink sticky note paper */
+    background: #ff8fab !important;
+    /* Pastel pink sticky note paper */
 }
+
 .game-screen .reveal-result-btn:hover:not(:disabled) {
     background: #ff8fab !important;
 }
 
 .game-screen .reveal-btn {
-    background: #b39ddb !important; /* Pastel purple paper */
+    background: #b39ddb !important;
+    /* Pastel purple paper */
 }
+
 .game-screen .reveal-btn:hover:not(:disabled) {
     background: #b39ddb !important;
 }
@@ -4666,6 +4881,7 @@
     background: #fffdf5 !important;
     border-style: solid !important;
 }
+
 .setup-screen .outline-btn:hover,
 .game-screen .outline-btn:hover {
     background: #fffdf5 !important;
@@ -4675,6 +4891,7 @@
 .game-screen .ghost-btn {
     background: #fbf6ea !important;
 }
+
 .setup-screen .ghost-btn:hover,
 .game-screen .ghost-btn:hover {
     background: #fbf6ea !important;
@@ -4687,13 +4904,14 @@
     background: #ffffff !important;
     border: 3px solid #2a2521 !important;
     border-radius: 4px 8px 5px 6px / 6px 4px 8px 5px !important;
-    box-shadow: inset 2px 2px 0 rgba(0,0,0,0.1), 3px 3px 0 rgba(0,0,0,0.06) !important;
+    box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.1), 3px 3px 0 rgba(0, 0, 0, 0.06) !important;
     font-family: 'Gochi Hand', 'Patrick Hand', cursive !important;
     color: #2a2521 !important;
     font-size: 1.65rem !important;
     padding: 8px 12px !important;
     outline: none !important;
-    filter: url(#hand-drawn-text) !important; /* Gentler text wobble */
+    filter: url(#hand-drawn-text) !important;
+    /* Gentler text wobble */
     min-width: 0 !important;
     width: 100% !important;
 }
@@ -4703,14 +4921,16 @@
     padding: 12px 20px !important;
     border-radius: 6px 9px 5px 8px / 8px 5px 9px 6px !important;
     width: 90% !important;
-    max-width: 440px !important; /* Stretched centrally across most of the card width */
+    max-width: 440px !important;
+    /* Stretched centrally across most of the card width */
     text-align: center !important;
     filter: url(#hand-drawn-text) !important;
 }
 
 /* 7. Round Indicators & Badges styled as sticky notes / tags */
 .game-screen .round-badge {
-    background: #ffd93d !important; /* Yellow sticky note */
+    background: #ffd93d !important;
+    /* Yellow sticky note */
     color: #2a2521 !important;
     border: 3px solid #2a2521 !important;
     border-radius: 4px 6px 3px 5px / 5px 3px 6px 4px !important;
@@ -4719,16 +4939,19 @@
     font-size: 1.35rem !important;
     letter-spacing: 0.02em !important;
     box-shadow: 3px 3px 0 #2a2521 !important;
-    transform: rotate(-6deg) translate(-5px, -3px) !important; /* misaligned sticky badge */
+    transform: rotate(-6deg) translate(-5px, -3px) !important;
+    /* misaligned sticky badge */
     display: inline-block !important;
-    filter: url(#hand-drawn-text) !important; /* Gentler text wobble */
+    filter: url(#hand-drawn-text) !important;
+    /* Gentler text wobble */
 }
 
 .game-screen .hfo-question-badge,
 .game-screen .psychic-badge,
 .game-screen .guess-badge,
 .game-screen .guess-header .guess-badge {
-    background: #ff8fab !important; /* Pink cardstock badge */
+    background: #ff8fab !important;
+    /* Pink cardstock badge */
     color: #2a2521 !important;
     border: 2.5px solid #2a2521 !important;
     border-radius: 3px 5px 4px 6px / 5px 4px 6px 3px !important;
@@ -4739,15 +4962,18 @@
     padding: 4px 14px !important;
     letter-spacing: 0.04em !important;
     display: inline-block !important;
-    filter: url(#hand-drawn-text) !important; /* Clean readability for small badges */
+    filter: url(#hand-drawn-text) !important;
+    /* Clean readability for small badges */
 }
 
 .game-screen .guess-badge {
-    background: #ff6b6b !important; /* Coral */
+    background: #ff6b6b !important;
+    /* Coral */
 }
 
 .game-screen .psychic-badge {
-    background: #b39ddb !important; /* Purple */
+    background: #b39ddb !important;
+    /* Purple */
 }
 
 /* 8. Setup Screen Title cutout card */
@@ -4774,10 +5000,8 @@
     background: rgba(246, 238, 204, 0.78) !important;
     backdrop-filter: blur(0.5px) !important;
     transform: rotate(-30deg) !important;
-    clip-path: polygon(
-        0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%, 
-        98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%
-    ) !important;
+    clip-path: polygon(0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%,
+            98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%) !important;
     filter: url(#hand-drawn-needle) !important;
 }
 
@@ -4791,10 +5015,8 @@
     background: rgba(246, 238, 204, 0.78) !important;
     backdrop-filter: blur(0.5px) !important;
     transform: rotate(30deg) !important;
-    clip-path: polygon(
-        0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%, 
-        98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%
-    ) !important;
+    clip-path: polygon(0% 12%, 10% 2%, 22% 14%, 35% 4%, 50% 12%, 64% 3%, 78% 13%, 90% 2%, 100% 10%,
+            98% 88%, 88% 97%, 75% 85%, 62% 98%, 48% 86%, 34% 96%, 20% 84%, 10% 98%, 0% 88%) !important;
     filter: url(#hand-drawn-needle) !important;
 }
 
@@ -4828,16 +5050,19 @@
     transition: transform 0.15s ease, box-shadow 0.15s ease !important;
     filter: url(#hand-drawn-backing) !important;
 }
+
 .setup-screen .team-row:hover,
 .game-screen .team-row:hover {
     transform: translateY(-2px) rotate(1.5deg) !important;
     box-shadow: 4px 4px 0 #2a2521 !important;
 }
+
 .setup-screen .team-dot,
 .game-screen .team-dot {
     border: 2.5px solid #2a2521 !important;
     box-shadow: 1px 1px 0 #2a2521 !important;
 }
+
 .setup-screen .team-name,
 .game-screen .team-name {
     color: #2a2521 !important;
@@ -4856,10 +5081,13 @@
     transform: rotate(-1.4deg) !important;
     padding: 8px 14px !important;
     margin-bottom: 12px !important;
-    filter: url(#hand-drawn-text) !important; /* Gentler text wobble */
+    filter: url(#hand-drawn-text) !important;
+    /* Gentler text wobble */
 }
+
 .game-screen .turn-label {
-    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important; /* Cursive body clarity */
+    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important;
+    /* Cursive body clarity */
     color: #2a2521 !important;
     font-size: 1.25rem !important;
     font-weight: 600 !important;
@@ -4877,6 +5105,7 @@
     margin-bottom: 12px !important;
     font-size: 2rem !important;
 }
+
 .game-screen .lb-row {
     background: #fbf6ea !important;
     border: 2.5px solid #2a2521 !important;
@@ -4884,11 +5113,13 @@
     box-shadow: 3px 3px 0 #2a2521 !important;
     margin-bottom: 10px !important;
     padding: 8px 14px !important;
-    filter: url(#hand-drawn-text) !important; /* Gentler text wobble */
+    filter: url(#hand-drawn-text) !important;
+    /* Gentler text wobble */
     display: flex !important;
     justify-content: space-between !important;
     align-items: center !important;
 }
+
 .game-screen .lb-row.lb-current {
     border-color: var(--team-color, #7c5cbf) !important;
     border-width: 3.5px !important;
@@ -4897,6 +5128,7 @@
     padding: 8px 14px !important;
     margin: 0 0 10px 0 !important;
 }
+
 .game-screen .lb-row-left {
     display: flex !important;
     align-items: center !important;
@@ -4904,11 +5136,13 @@
     min-width: 0 !important;
     flex: 1 !important;
 }
+
 .game-screen .lb-row-right {
     display: flex !important;
     align-items: center !important;
     flex-shrink: 0 !important;
 }
+
 .game-screen .lb-row .team-dot {
     width: 12px !important;
     height: 12px !important;
@@ -4918,6 +5152,7 @@
     display: inline-block !important;
     flex-shrink: 0 !important;
 }
+
 .game-screen .lb-rank {
     white-space: nowrap !important;
     flex-shrink: 0 !important;
@@ -4927,6 +5162,7 @@
     font-weight: 600 !important;
     margin-right: 4px !important;
 }
+
 .game-screen .lb-name {
     color: #2a2521 !important;
     font-family: 'Gochi Hand', 'Patrick Hand', cursive !important;
@@ -4937,6 +5173,7 @@
     text-overflow: ellipsis !important;
     min-width: 0 !important;
 }
+
 .game-screen .lb-score {
     color: #2a2521 !important;
     font-family: 'Gochi Hand', 'Patrick Hand', cursive !important;
@@ -4975,7 +5212,8 @@
     box-shadow: 3px 3px 0 #2a2521 !important;
     color: #2a2521 !important;
     margin-bottom: 10px !important;
-    filter: url(#hand-drawn-text) !important; /* Gentler text wobble */
+    filter: url(#hand-drawn-text) !important;
+    /* Gentler text wobble */
 }
 
 .game-screen .hfo-result-row.hfo-result-first {
@@ -4986,14 +5224,16 @@
 }
 
 .game-screen .hfo-result-place {
-    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important; /* Cursive body clarity */
+    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important;
+    /* Cursive body clarity */
     color: #ff6b6b !important;
     font-size: 1.25rem !important;
     font-weight: 600 !important;
 }
 
 .game-screen .hfo-result-name {
-    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important; /* Cursive body clarity */
+    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important;
+    /* Cursive body clarity */
     color: #2a2521 !important;
     font-size: 1.25rem !important;
     font-weight: 600 !important;
@@ -5006,7 +5246,8 @@
 }
 
 .game-screen .hfo-result-points {
-    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important; /* Cursive body clarity */
+    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important;
+    /* Cursive body clarity */
     color: #4ba375 !important;
     font-size: 1.25rem !important;
     font-weight: 600 !important;
@@ -5034,11 +5275,13 @@
     box-shadow: 3px 3px 0 #2a2521 !important;
     color: #2a2521 !important;
     margin-bottom: 10px !important;
-    filter: url(#hand-drawn-text) !important; /* Gentler text wobble */
+    filter: url(#hand-drawn-text) !important;
+    /* Gentler text wobble */
 }
 
 .game-screen .hfo-transition-team {
-    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important; /* Cursive body clarity */
+    font-family: 'Gochi Hand', 'Patrick Hand', cursive !important;
+    /* Cursive body clarity */
     color: #2a2521 !important;
     font-size: 1.3rem !important;
     font-weight: 600 !important;
@@ -5051,16 +5294,19 @@
     font-size: 6.5rem !important;
     text-shadow: none !important;
 }
+
 .game-screen .score-display .score-label {
     font-family: 'Caveat Brush', cursive !important;
     color: #ff6b6b !important;
     font-size: 2rem !important;
 }
+
 .game-screen .score-display .score-pts-label {
     font-family: 'Caveat Brush', cursive !important;
     color: #2a2521 !important;
     font-size: 1.25rem !important;
 }
+
 .game-screen .positions-row .pos-item {
     font-family: 'Caveat Brush', cursive !important;
     color: #2a2521 !important;
@@ -5081,33 +5327,39 @@
         position: fixed !important;
         right: 40px !important;
         top: 100px !important;
-        width: 340px !important; /* Enlarged by ~36% (from 250px) */
+        width: 340px !important;
+        /* Enlarged by ~36% (from 250px) */
         max-width: 340px !important;
         margin: 0 !important;
         z-index: 1000 !important;
         transform: rotate(2deg) !important;
-        padding: 26px 24px 20px !important; /* Enlarged padding */
+        padding: 26px 24px 20px !important;
+        /* Enlarged padding */
         filter: url(#hand-drawn-backing) !important;
     }
-    
+
     .game-screen .leaderboard-card::before {
-        width: 90px !important; /* Scaled up tape */
+        width: 90px !important;
+        /* Scaled up tape */
         height: 22px !important;
         top: -14px !important;
     }
-    
+
     .game-screen .leaderboard-card .lb-title {
-        font-size: 2.1rem !important; /* Enlarged title */
+        font-size: 2.1rem !important;
+        /* Enlarged title */
         margin-bottom: 12px !important;
     }
-    
+
     .game-screen .leaderboard-card .lb-row {
-        padding: 11px 18px !important; /* Increased row height */
-        margin-bottom: 12px !important; /* Increased entry spacing */
+        padding: 11px 18px !important;
+        /* Increased row height */
+        margin-bottom: 12px !important;
+        /* Increased entry spacing */
         border-radius: 6px 8px 6px 7px / 8px 6px 7px 6px !important;
         box-shadow: 3px 3px 0 #2a2521 !important;
     }
-    
+
     .game-screen .leaderboard-card .lb-row.lb-current {
         border-width: 3.5px !important;
         box-shadow: 4px 4px 0 #2a2521 !important;
@@ -5115,11 +5367,12 @@
         margin-bottom: 12px !important;
         transform: scale(1.02) rotate(1.2deg) !important;
     }
-    
+
     .game-screen .leaderboard-card .lb-rank,
     .game-screen .leaderboard-card .lb-name,
     .game-screen .leaderboard-card .lb-score {
-        font-size: 1.5rem !important; /* Enlarged rank/name/score text sizes */
+        font-size: 1.5rem !important;
+        /* Enlarged rank/name/score text sizes */
     }
 }
 
@@ -5141,7 +5394,8 @@
 .team-edit-container .team-name-input {
     flex: 1 !important;
     min-width: 140px !important;
-    width: auto !important; /* Let flex control width */
+    width: auto !important;
+    /* Let flex control width */
 }
 
 .team-edit-actions {
