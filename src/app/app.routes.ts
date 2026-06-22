@@ -34,8 +34,8 @@ export const routes: Routes = [
     loadComponent: () => import('./reaction-time/reaction-time').then((m) => m.ReactionTimeGameComponent),
   },
   {
-    path: 'guess',
-    loadComponent: () => import('./guess/guess').then((m) => m.GuessGuessComponent),
+    path: 'oops',
+    loadComponent: () => import('./oops/components/oops.component').then((m) => m.OopsComponent),
   },
   {
     path: '**',

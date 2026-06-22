@@ -43,9 +43,9 @@ export class GamePage {
     },
     {
       id: 4,
-      name: 'newgame',
-      description: 'Test your luck through four card prediction challenges.',
-      route: '',
+      name: 'Oops',
+      description: "Trust no-one. Someone in the room doesn't know the secret..",
+      route: '/oops',
     },
     {
       id: 5,

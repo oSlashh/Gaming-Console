@@ -1,0 +1,410 @@
+<main class="oops-shell">
+  <div class="background-doodles" aria-hidden="true">
+
+    <span>{{ chaosMode ? '👀' : '+' }}</span>
+
+    <span>{{ chaosMode ? '😮' : '?' }}</span>
+
+    <span>{{ chaosMode ? '😱' : '!' }}</span>
+
+    <span>{{ chaosMode ? '🤦' : '★' }}</span>
+
+    <span>{{ chaosMode ? '🙊' : '%' }}</span>
+
+  </div>
+  <button
+    *ngIf="phase !== 'modeSelect' && phase !== 'instructions' && phase !== 'playerSetup'"
+    class="exit-button"
+    type="button"
+    (click)="showQuitModal = true"
+  >
+    Exit
+  </button>
+
+  <div *ngIf="timerVisible" 
+    class="timer-sticker"
+    [class.warning]="timerState === 'warning'"
+    [class.danger]="timerState === 'danger'"
+    (mouseenter)="onTimerHover()"
+    (mouseleave)="onTimerLeave()">
+    ⏳ {{ formattedTime }}
+  </div>
+
+  <div *ngIf="showCritters" class="critter-stage">
+    <div class="cat-walk" *ngIf="activeCritters.includes('cat')">
+      <img src="/cat.gif" alt="cat" class="cat-gif"/>
+    </div>
+    <div class="dog-walk" *ngIf="activeCritters.includes('dog')">
+      <img src="/oreo.gif" alt="dog" class="dog-gif"/>
+    </div>
+    <div class="duck-walk" *ngIf="activeCritters.includes('duck')">
+      <img src="/duck.gif" alt="duck" class="duck-gif"/>
+    </div>
+    <div class="ele-walk" *ngIf="activeCritters.includes('ele')">
+      <img src="/ele.gif" alt="elephant" class="ele-gif"/>
+    </div>
+    <div class="chick-walk" *ngIf="activeCritters.includes('chick')">
+      <img src="/chick.gif" alt="chick" class="chick-gif"/>
+    </div>
+  </div>
+
+  <section *ngIf="phase === 'modeSelect'" class="screen mode-screen" [class.screen-spin]="isSpinning"
+(animationend)="isSpinning = false">
+    <p class="eyebrow" [style.visibility]="phewwMode || heheMode ? 'hidden' : 'visible'">single-device party chaos</p>
+    <h1
+      *ngIf="!heheMode"
+      class="oops-title"
+      [class.pheww-title]="phewwMode">
+      {{ phewwMode ? 'PHEWW' : 'OOPS' }}
+    </h1>
+
+    <div *ngIf="heheMode" class="hehe-block">
+    <h1 class="hehe-title">
+      <span class="hehe-letter" style="animation-delay: 0s">h</span>
+      <span class="hehe-letter" style="animation-delay: 0.15s">e</span>
+      <span class="hehe-letter" style="animation-delay: 0.3s">h</span>
+      <span class="hehe-letter" style="animation-delay: 0.45s">e</span>
+    </h1>
+    <p class="sid-tag">
+      <span class="sid-letter sid-emoji-wrap" style="animation-delay: 0s">
+        <span class="sid-emoji">😁</span>
+        <span class="sid-bubble">am sid!</span>
+      </span>
+    </p>
+    </div>
+    <div class="oops-rain">
+
+      <span
+        *ngFor="let o of activeOops"
+        class="oops-float"
+        [style.left.%]="o.x"
+        [style.top.%]="o.y"
+        [style.fontSize.rem]="o.size"
+        [style.rotate]="o.rotation + 'deg'"
+      >
+        OOPS
+      </span>
+
+    </div>
+
+    <div class="mode-grid">
+      <button
+        *ngFor="let mode of modes"
+        class="mode-card"
+        type="button"
+        (click)="selectMode(mode)"
+      >
+        <span class="mode-icon">{{ mode.icon }}</span>
+        <strong>{{ mode.title }}</strong>
+        <small>{{ mode.short }}</small>
+      </button>
+    </div>
+  </section>
+
+  <section *ngIf="phase === 'instructions' && selectedMode" class="screen">
+    <div class="comic-panel">
+      <span class="hero-icon">{{ selectedMode.icon }}</span>
+      <h2>{{ selectedMode.title }}</h2>
+
+      <div class="rules-list">
+        <p *ngFor="let rule of selectedMode.rules">{{ rule }}</p>
+      </div>
+
+      <div class="actions">
+        <button class="secondary-button" type="button" (click)="backToModes()">Back</button>
+        <button class="primary-button" type="button" (click)="phase = 'playerSetup'">Continue</button>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="phase === 'playerSetup'" class="screen">
+    <div class="comic-panel wide">
+      <h2>Build the Crew</h2>
+
+      <div class="crew-selector">
+        <div class="crew-count">{{ playerCount }} Players</div>
+
+        <div class="bus-track" (pointerdown)="updateBusFromTrack($event)">
+          <div class="bus-progress" [style.width.%]="busPercent"></div>
+          <div
+            class="devil-wrapper"
+            [style.left.%]="busPercent"
+          >
+
+            <div
+              class="devil-speech"
+              *ngIf="showDevilEasterEgg"
+            >
+              666...
+              <br>
+              That's minee.
+            </div>
+
+            <div
+              class="devil-marker"
+              [class.easter-shake]="showDevilEasterEgg"
+              [class.dragging]="busDragging"
+              (pointerdown)="startBusDrag($event)"
+              (pointermove)="dragBus($event)"
+              (pointerup)="stopBusDrag()"
+              (pointercancel)="stopBusDrag()"
+            >
+              😈
+            </div>
+
+          </div>
+        </div>
+
+        <div class="crew-numbers" #crewNumbers>
+          <button
+            *ngFor="let count of playerCountOptions"
+            type="button"
+            [class.selected]="count === playerCount"
+            (click)="setPlayerCount(count)"
+          >
+            {{ count }}
+          </button>
+        </div>
+      </div>
+
+      <div class="name-grid">
+        <label *ngFor="let player of players; let i = index">
+          <span>Player {{ i + 1 }}</span>
+
+          <div class="input-wrapper">
+            <input
+              [(ngModel)]="player.name"
+              maxlength="20"
+              (focus)="triggerDevilEasterEgg(i)"
+            />
+            <span class="edit-icon">✏️</span>
+          </div>
+        </label>
+      </div>
+
+      <div class="actions">
+        <button class="secondary-button" type="button" (click)="phase = 'instructions'">Back</button>
+        <button class="primary-button" type="button" (click)="startGame()">Start Game</button>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="phase === 'reveal'" class="screen reveal-screen">
+    <div class="progress-area">
+      <strong>{{ currentPlayer.name }}</strong>
+      <span>Player {{ revealIndex + 1 }} of {{ players.length }}</span>
+
+      <div class="progress-bar">
+        <i [style.width.%]="revealPercent"></i>
+      </div>
+    </div>
+
+    <button
+      class="secret-card"
+      type="button"
+      [class.flipped]="revealed"
+      (pointerdown)="showSecret()"
+      (pointerup)="hideSecret()"
+      (pointerleave)="hideSecret()"
+      (pointercancel)="hideSecret()"
+    >
+      <span class="card-inner">
+        <span class="card-face card-front">
+          <b>🤫</b>
+          <b>SECRET FILE</b>
+          <em>Hold to Peek</em>
+        </span>
+
+        <span class="card-face card-back" [class.imposter-reveal]="currentPlayer.isSpecial">
+          <ng-container *ngIf="currentPlayer.isSpecial && selectedMode?.id !== 'close'; else wordReveal">
+            <div class="reveal-content">
+              <div class="reveal-icon">🚨</div>
+              <strong class="reveal-title sus-title" >YOU ARE SUS</strong>
+              <small class="reveal-label">Hint</small>
+              <b class="reveal-value">{{ currentPlayer.hint }}</b>
+            </div>
+          </ng-container>
+
+          <ng-template #wordReveal>
+            <div class="reveal-content">
+              <div class="reveal-icon">🔑</div>
+              <strong class="reveal-title">YOUR WORD</strong>
+              <small class="reveal-label">Word</small>
+              <b class="reveal-value">{{ currentPlayer.word }}</b>
+            </div>
+          </ng-template>
+        </span>
+      </span>
+    </button>
+
+    <button
+      class="primary-button"
+      type="button"
+      [disabled]="!hasPeeked"
+      (click)="nextReveal()"
+    >
+      {{ revealIndex === players.length - 1 ? 'Continue' : 'Done & Pass' }}
+    </button>
+  </section>
+  <section *ngIf="phase === 'drawing'" class="screen">   
+    <div class="comic-panel sketch-panel">
+      <h2>Classified Sketch Pad</h2>
+      <p>
+        Round {{ currentDrawingRound }} of {{ totalDrawingRounds }} ·
+        {{ currentDrawingPlayer.name }} Drawing
+      </p>
+      <div class="canvas-wrap">
+        <canvas
+          #canvas
+          (pointerdown)="startDraw($event)"
+          (pointermove)="draw($event)"
+          (pointerup)="stopDraw()"
+          (pointerleave)="stopDraw()"
+        ></canvas>
+            </div>
+      <div class="tools">
+        <button type="button" (click)="usePen()">Pen</button>
+        <button type="button" (click)="useEraser()">Eraser</button>
+        <button type="button" (click)="undo()">Undo</button>
+      </div>
+
+      <button class="primary-button" type="button" (click)="nextDrawingTurn()">
+        {{ drawingTurnIndex === totalDrawingTurns - 1 ? 'Finish Drawing' : 'Next Turn' }}
+      </button>
+
+    </div>
+    <div *ngIf="showDrawingTurnOverlay" class="turn-overlay">
+      <div class="turn-card">
+        <ng-container *ngIf="!drawingComplete; else drawingDone">
+          <span class="hero-icon">🎨</span>
+          <h2>{{ currentDrawingPlayer.name }}'s Turn</h2>
+          <p>Round {{ currentDrawingRound }} of {{ totalDrawingRounds }}</p>
+          <p>Pass the device to:</p>
+          <strong>{{ currentDrawingPlayer.name }}</strong>
+          <p>Continue the drawing.</p>
+          <button class="primary-button" type="button" (click)="readyToDraw()">I'm Ready</button>
+        </ng-container>
+
+        <ng-template #drawingDone>
+          <span class="hero-icon">🎨</span>
+          <h2>Drawing Complete!</h2>
+          <p>Starting voting...</p>
+        </ng-template>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="phase === 'discussion'" class="screen">
+    <div class="comic-panel">
+      <span class="hero-icon">💬</span>
+      <h2>Discuss!</h2>
+      <p>Talk it out and find the suspicious player.</p>
+
+      <button class="primary-button" type="button" (click)="startVoting()">
+        Vote Now
+      </button>
+    </div>
+  </section>
+
+  <section *ngIf="phase === 'voting'" class="screen voting-screen">
+    <div class="comic-panel wide">
+      <h2>Who Is Sus?</h2>
+      <p class="vote-turn">{{ currentVotingPlayer.name }}'s Turn</p>
+      <p>Choose who you suspect.</p>
+
+      <div class="private-vote-grid">
+        <button
+          *ngFor="let player of players"
+          type="button"
+          class="private-vote-card"
+          [class.selected]="selectedSuspectId === player.id"
+          [disabled]="showVotingTurnOverlay"
+          (click)="chooseSuspect(player.id)"
+        >
+          {{ player.name }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="showVotingTurnOverlay" class="turn-overlay">
+      <div class="turn-card">
+        <span class="hero-icon">🕵️</span>
+        <h2>{{ currentVotingPlayer.name }}'s Turn</h2>
+        <p>Pass the device to:</p>
+        <strong>{{ currentVotingPlayer.name }}</strong>
+        <p>Choose who you suspect.</p>
+        <button class="primary-button" type="button" (click)="readyToVote()">I'm Ready</button>
+      </div>
+    </div>
+
+    <div *ngIf="pendingVoteTargetId" class="modal-backdrop">
+      <div class="quit-modal">
+        <h2>Vote for {{ selectedSuspect?.name }}?</h2>
+        <p>This vote will stay private.</p>
+
+        <div class="actions">
+          <button class="secondary-button" type="button" (click)="cancelVote()">Cancel</button>
+          <button class="primary-button" type="button" (click)="confirmVote()">Confirm</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="phase === 'suspense'" class="suspense-screen">
+    <div class="suspense-card">
+      <span>🕵️</span>
+      <h2>{{ suspenseText }}</h2>
+      <div class="suspense-dots">
+        <i></i>
+        <i></i>
+        <i></i>
+      </div>
+    </div>
+  </section>
+
+  <section *ngIf="phase === 'results'" class="screen results-screen">
+    <div class="confetti" aria-hidden="true">
+      <span>★</span>
+      <span>✦</span>
+      <span>✹</span>
+      <span>★</span>
+      <span>✦</span>
+    </div>
+
+    <div class="comic-panel result-panel">
+      <span class="stamp">FINAL VERDICT</span>
+      <h2>{{ resultTitle }}</h2>
+      <p>{{ resultMessage }}</p>
+
+      <div class="result-details">
+        <p><b>Secret Word:</b> {{ secretWord }}</p>
+        <p *ngIf="differentWord"><b>Different Word:</b> {{ differentWord }}</p>
+        <p><b>{{ selectedMode?.id === 'close' ? 'Different Player' : 'Sus Player' }}:</b> {{ specialPlayer?.name }}</p>
+        <p *ngIf="votedOutPlayer"><b>Voted Player:</b> {{ votedOutPlayer.name }}</p>
+        <p *ngIf="!votedOutPlayer"><b>Voted Player:</b> No clear majority</p>
+      </div>
+
+      <div class="actions">
+        <button class="primary-button" type="button" (click)="playAgain()">Play Again</button>
+        <button class="secondary-button" type="button" (click)="backToModes()">Change Mode</button>
+        <button class="secondary-button" type="button" (click)="quit()">Exit</button>
+      </div>
+    </div>
+  </section>
+
+  <div *ngIf="timeoutText" class="timeout-overlay">
+    <strong>{{ timeoutText }}</strong>
+  </div>
+
+  <div *ngIf="showQuitModal" class="modal-backdrop">
+    <div class="quit-modal">
+      <h2>Quit Game?</h2>
+      <p>Do you really want to quit this session?</p>
+
+      <div class="actions">
+        <button class="secondary-button" type="button" (click)="showQuitModal = false">Cancel</button>
+        <button class="primary-button" type="button" (click)="quit()">Quit</button>
+      </div>
+    </div>
+  </div>
+</main>
