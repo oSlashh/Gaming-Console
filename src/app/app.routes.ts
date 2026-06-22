@@ -38,6 +38,10 @@ export const routes: Routes = [
     loadComponent: () => import('./oops/components/oops.component').then((m) => m.OopsComponent),
   },
   {
+    path: 'guess',
+    loadComponent: () => import('./guess/guess').then((m) => m.GuessGuessComponent),
+  },
+  {
     path: '**',
     redirectTo: '',
   },
