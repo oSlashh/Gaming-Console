@@ -21,6 +21,8 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   private tenMinTimer: any = null;
   private timerStart = 0;
   private evolutionNotificationTimer: any = null;
+  private secretToastTimer: any = null;
+  private secretCloudTaps = 0;
 
   screen: 'instructions' | 'start' | 'countdown' | 'playing' | 'gameOver' = 'instructions';
 
@@ -33,11 +35,15 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     bird: typeof Image !== 'undefined' ? new Image() : null,
     bigBird: typeof Image !== 'undefined' ? new Image() : null,
   };
+
   evolutionNotification: string | null = null;
   showEvolutionNotification = false;
   private lastEvolutionStage = 0;
 
   evolutionMode = false;
+  goldenHour = false;
+  secretToast = false;
+  secretToastMessage = '';
 
   gravity = 0.42;
   flapImpulse = -8;
@@ -49,7 +55,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   invincibilityTime = 0;
   running = false;
 
-  totalSeconds = 10*60;
+  totalSeconds = 10 * 60;
   remaining = this.totalSeconds;
   countdownValue = 3;
   timeWarningCountdown = 0;
@@ -98,6 +104,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     if (this.countdownInterval) clearInterval(this.countdownInterval);
     if (this.tenMinTimer) clearInterval(this.tenMinTimer);
     if (this.evolutionNotificationTimer) clearTimeout(this.evolutionNotificationTimer);
+    if (this.secretToastTimer) clearTimeout(this.secretToastTimer);
     this.isTimeWarningActive = false;
   }
 
@@ -116,6 +123,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.lastEvolutionStage = 0;
     this.evolutionNotification = null;
     this.showEvolutionNotification = false;
+
     if (this.evolutionNotificationTimer) {
       clearTimeout(this.evolutionNotificationTimer);
       this.evolutionNotificationTimer = null;
@@ -126,15 +134,18 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     if (this.tenMinTimer) clearInterval(this.tenMinTimer);
     this.timerStart = Date.now();
     this.remaining = this.totalSeconds;
+
     this.tenMinTimer = setInterval(() => {
       this.zone.run(() => {
         const elapsed = Math.floor((Date.now() - this.timerStart) / 1000);
         this.remaining = Math.max(0, this.totalSeconds - elapsed);
+
         if (this.remaining <= 3 && !this.isTimeWarningActive) {
           this.isTimeWarningActive = true;
           this.timeWarningCountdown = 3;
           this.startTimeWarningCountdown();
         }
+
         if (this.remaining <= 0) {
           this.cleanup();
           this.router.navigate(['/game-page']);
@@ -147,11 +158,13 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     const warningInterval = setInterval(() => {
       this.zone.run(() => {
         this.timeWarningCountdown -= 1;
+
         if (this.timeWarningCountdown < 0) {
           clearInterval(warningInterval);
           this.cleanup();
           this.router.navigate(['/game-page']);
         }
+
         this.cdr.detectChanges();
       });
     }, 1000);
@@ -159,7 +172,18 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   onInstructionsOK() {
     this.screen = 'start';
-    this.draw(); 
+    this.draw();
+  }
+
+  goBackFromInstructions() {
+    this.cleanup();
+    this.router.navigate(['/game-page']);
+  }
+
+  goBackToInstructions() {
+    this.screen = 'instructions';
+    this.draw();
+    this.cdr.detectChanges();
   }
 
   selectNormalMode() {
@@ -170,22 +194,49 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.evolutionMode = true;
   }
 
+  tapCloudSecret() {
+    this.secretCloudTaps += 1;
+
+    if (this.secretCloudTaps >= 3) {
+      this.secretCloudTaps = 0;
+      this.goldenHour = !this.goldenHour;
+      this.secretToastMessage = this.goldenHour ? 'Golden Hour unlocked' : 'Normal sky unlocked';
+      this.secretToast = true;
+      this.draw();
+
+      if (this.secretToastTimer) {
+        clearTimeout(this.secretToastTimer);
+      }
+
+      this.secretToastTimer = setTimeout(() => {
+        this.secretToast = false;
+        this.cdr.detectChanges();
+      }, 1800);
+
+      this.cdr.detectChanges();
+    }
+  }
+
   onStartGame() {
     this.screen = 'countdown';
     this.countdownValue = 3;
     this.resetGameState();
+
     if (this.countdownInterval) {
       clearInterval(this.countdownInterval);
     }
+
     this.startCountdown();
   }
 
   startCountdown() {
     this.countdownValue = 3;
     this.draw();
+
     this.countdownInterval = setInterval(() => {
       this.zone.run(() => {
         this.countdownValue -= 1;
+
         if (this.countdownValue < 0) {
           clearInterval(this.countdownInterval);
           this.countdownInterval = null;
@@ -193,6 +244,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
           this.resetGameState();
           this.startLoop();
         }
+
         this.cdr.detectChanges();
       });
     }, 1000);
@@ -211,13 +263,17 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   startLoop() {
     this.running = true;
     this.lastTime = performance.now();
+
     if (this.rafId) cancelAnimationFrame(this.rafId);
+
     this.rafId = requestAnimationFrame(this.loop.bind(this));
   }
 
   stopLoop() {
     this.running = false;
+
     if (this.rafId) cancelAnimationFrame(this.rafId);
+
     this.rafId = null;
   }
 
@@ -237,6 +293,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.invincibilityTime -= dtScale;
 
     this.pipeTimer += 0.8 * dtScale;
+
     if (this.pipeTimer > 110) {
       this.pipeTimer = 0;
       const gapSize = 190;
@@ -247,6 +304,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     }
 
     for (const p of this.pipes) p.x -= 3.2 * dtScale;
+
     if (this.pipes.length && this.pipes[0].x < -80) {
       this.pipes.shift();
       this.score += 1;
@@ -259,6 +317,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
       }
       return;
     }
+
     if (this.bird.y - this.bird.radius < 0) {
       if (this.invincibilityTime <= 0) {
         this.loseLife();
@@ -272,6 +331,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
       const r = this.bird.radius;
       const pipeW = 70;
       const gapSize = 160;
+
       if (
         bx + r > p.x && bx - r < p.x + pipeW &&
         (by - r < p.gapY - gapSize / 2 || by + r > p.gapY + gapSize / 2)
@@ -288,7 +348,9 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     if (!this.evolutionMode) {
       return;
     }
+
     const stage = this.getBirdEvolutionStage(this.score);
+
     if (stage === this.lastEvolutionStage) {
       return;
     }
@@ -303,7 +365,6 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   }
 
   getBirdEvolutionStage(score: number) {
-    
     if (score >= 10) {
       return 2;
     }
@@ -313,7 +374,6 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     }
 
     return 0;
-    
   }
 
   showEvolutionMessage(message: string) {
@@ -334,27 +394,27 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   loseLife() {
     this.lives -= 1;
+
     if (this.lives <= 0) {
       this.onDeath();
     } else {
       this.invincibilityTime = 1.0;
       this.bird = { x: this.width * 0.2, y: this.height / 2, vy: 0, radius: 14 };
-      // Clear existing pipes then spawn a nearby pipe so the gap isn't too far
       this.pipes = [];
-      // Spawn a close pipe, then a second pipe spaced like normal spawns so gaps stay regular
+
       const immediateX = Math.max(120, this.width * 0.45);
       const gapSize = 190;
       const minGapY = gapSize + 80;
       const maxGapY = this.height - 120 - gapSize;
       const gapY1 = minGapY + Math.random() * (maxGapY - minGapY);
-      // use viewport-relative spacing to keep the follow-up pipes visually consistent
       const spacing = Math.round(Math.max(260, Math.min(420, this.width * 0.28)));
       const gapY2 = Math.min(maxGapY, Math.max(minGapY, gapY1 + (Math.random() - 0.5) * 60));
       const gapY3 = Math.min(maxGapY, Math.max(minGapY, gapY2 + (Math.random() - 0.5) * 60));
+
       this.pipes.push({ x: immediateX, gapY: gapY1 });
       this.pipes.push({ x: immediateX + spacing, gapY: gapY2 });
       this.pipes.push({ x: immediateX + spacing * 2, gapY: gapY3 });
-      // reset pipeTimer so subsequent spawns follow the normal rhythm
+
       this.pipeTimer = 0;
       this.cdr.detectChanges();
     }
@@ -362,11 +422,14 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   onDeath() {
     this.stopLoop();
+
     this.zone.run(() => {
       this.gameOverScore = this.score;
+
       if (this.score > this.bestScore) {
         this.bestScore = this.score;
       }
+
       this.screen = 'gameOver';
       this.cdr.detectChanges();
       this.draw();
@@ -382,6 +445,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   draw() {
     if (!this.ctx) return;
+
     const ctx = this.ctx;
 
     this.drawBackground(ctx);
@@ -389,55 +453,117 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   }
 
   drawBackground(ctx: CanvasRenderingContext2D) {
-    const sky = ctx.createLinearGradient(0, 0, 0, this.height * 0.6);
-    sky.addColorStop(0, '#87ceff');
-    sky.addColorStop(0.6, '#64b5f6');
+    const sky = ctx.createLinearGradient(0, 0, 0, this.height);
+    sky.addColorStop(0, this.goldenHour ? '#ffc98b' : '#8fd8ff');
+    sky.addColorStop(0.5, this.goldenHour ? '#ffe6a7' : '#b9ecff');
+    sky.addColorStop(1, '#fff7da');
     ctx.fillStyle = sky;
     ctx.fillRect(0, 0, this.width, this.height);
 
-    ctx.fillStyle = '#ffffff';
+    this.drawSoftSun(ctx);
+    this.drawSoftCloud(ctx, this.width * 0.16, this.height * 0.18, 1.05);
+    this.drawSoftCloud(ctx, this.width * 0.42, this.height * 0.12, 0.72);
+    this.drawSoftCloud(ctx, this.width * 0.68, this.height * 0.24, 0.92);
+
+    ctx.fillStyle = this.goldenHour ? '#f7c76d' : '#9ed9f5';
     ctx.beginPath();
-    ctx.arc(this.width * 0.85, this.height * 0.15, 60, 0, Math.PI * 2);
+    ctx.ellipse(this.width * 0.18, this.height - 80, this.width * 0.46, 150, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    const cloud = (x: number, y: number, scale: number) => {
-      ctx.fillStyle = 'rgba(255,255,255,0.85)';
-      ctx.beginPath();
-      ctx.arc(x, y, 26 * scale, 0, Math.PI * 2);
-      ctx.arc(x + 30 * scale, y - 10 * scale, 24 * scale, 0, Math.PI * 2);
-      ctx.arc(x + 60 * scale, y, 28 * scale, 0, Math.PI * 2);
-      ctx.arc(x + 36 * scale, y + 10 * scale, 22 * scale, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.closePath();
-    };
+    ctx.fillStyle = this.goldenHour ? '#b8d66f' : '#a7df6f';
+    ctx.beginPath();
+    ctx.ellipse(this.width * 0.72, this.height - 70, this.width * 0.58, 165, 0, 0, Math.PI * 2);
+    ctx.fill();
 
-    cloud(this.width * 0.2, this.height * 0.18, 1.1);
-    cloud(this.width * 0.4, this.height * 0.12, 0.8);
-    cloud(this.width * 0.65, this.height * 0.22, 1.0);
-
-    ctx.fillStyle = '#72b1e0';
-    ctx.fillRect(0, this.height * 0.6, this.width, this.height * 0.15);
-    ctx.fillStyle = '#a6db5b';
-    ctx.fillRect(0, this.height * 0.75, this.width, this.height * 0.15);
-    ctx.fillStyle = '#7d983d';
+    ctx.fillStyle = '#68c95d';
     ctx.fillRect(0, this.height - 100, this.width, 100);
 
-    ctx.fillStyle = '#ffffff22';
-    ctx.fillRect(0, this.height * 0.63, this.width, 8);
+    ctx.fillStyle = '#4ead42';
+    for (let x = -20; x < this.width + 40; x += 34) {
+      ctx.beginPath();
+      ctx.moveTo(x, this.height - 100);
+      ctx.lineTo(x + 12, this.height - 122);
+      ctx.lineTo(x + 24, this.height - 100);
+      ctx.fill();
+    }
+
+    ctx.fillStyle = '#ffe082';
+    ctx.fillRect(0, this.height - 30, this.width, 30);
+  }
+
+  drawSoftSun(ctx: CanvasRenderingContext2D) {
+    const x = this.width * 0.84;
+    const y = this.height * 0.14;
+    const r = 54;
+
+    ctx.fillStyle = this.goldenHour ? 'rgba(255, 177, 91, 0.24)' : 'rgba(255, 225, 130, 0.22)';
+    ctx.beginPath();
+    ctx.arc(x, y, r + 34, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = this.goldenHour ? '#ffb75e' : '#ffd166';
+    ctx.strokeStyle = '#24435c';
+    ctx.lineWidth = 4;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.fillStyle = '#24435c';
+    ctx.beginPath();
+    ctx.arc(x - 16, y - 8, 4, 0, Math.PI * 2);
+    ctx.arc(x + 16, y - 8, 4, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.strokeStyle = '#24435c';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.arc(x, y + 6, 18, 0.1, Math.PI - 0.1);
+    ctx.stroke();
+  }
+
+  drawSoftCloud(ctx: CanvasRenderingContext2D, x: number, y: number, scale: number) {
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.scale(scale, scale);
+
+    ctx.fillStyle = 'rgba(36, 67, 92, 0.12)';
+    ctx.beginPath();
+    ctx.ellipse(38, 20, 82, 24, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = this.goldenHour ? '#fff1cf' : '#ffffff';
+    ctx.strokeStyle = 'rgba(36, 67, 92, 0.55)';
+    ctx.lineWidth = 3;
+
+    ctx.beginPath();
+    ctx.arc(-24, 8, 28, Math.PI, 0);
+    ctx.arc(12, -12, 36, Math.PI, 0);
+    ctx.arc(54, 4, 30, Math.PI, 0);
+    ctx.quadraticCurveTo(82, 8, 86, 28);
+    ctx.lineTo(-50, 28);
+    ctx.quadraticCurveTo(-48, 12, -24, 8);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    ctx.restore();
   }
 
   drawGameArea(ctx: CanvasRenderingContext2D) {
     if (this.screen === 'playing') {
-      ctx.fillStyle = '#24a63f';
       for (const p of this.pipes) {
-        const pipeW = 70;
-        const gapSize = 160;
-        ctx.fillRect(p.x, 0, pipeW, p.gapY - gapSize / 2);
-        ctx.fillRect(p.x, p.gapY + gapSize / 2, pipeW, this.height - (p.gapY + gapSize / 2) - 100);
+        this.drawPipe(ctx, p.x, p.gapY);
       }
 
       const size = 80;
       const birdImage = this.currentBirdImage;
+
+      ctx.save();
+
+      if (this.invincibilityTime > 0) {
+        ctx.globalAlpha = 0.62 + Math.sin(Date.now() / 70) * 0.25;
+      }
 
       if (birdImage && birdImage.complete && birdImage.naturalWidth > 0) {
         ctx.drawImage(
@@ -448,22 +574,59 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
           size
         );
       } else {
-        ctx.fillStyle = '#fddc56';
+        ctx.fillStyle = '#ffd166';
+        ctx.strokeStyle = '#24435c';
+        ctx.lineWidth = 4;
         ctx.beginPath();
-        ctx.arc(
-          this.bird.x,
-          this.bird.y,
-          this.bird.radius,
-          0,
-          Math.PI * 2
-        );
+        ctx.arc(this.bird.x, this.bird.y, this.bird.radius + 10, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.fillStyle = '#24435c';
+        ctx.beginPath();
+        ctx.arc(this.bird.x + 9, this.bird.y - 5, 4, 0, Math.PI * 2);
         ctx.fill();
       }
+
+      ctx.restore();
     }
   }
 
-  get currentBirdImage() {
+  drawPipe(ctx: CanvasRenderingContext2D, x: number, gapY: number) {
+    const pipeW = 70;
+    const gapSize = 160;
+    const topH = gapY - gapSize / 2;
+    const bottomY = gapY + gapSize / 2;
+    const bottomH = this.height - bottomY - 100;
 
+    const drawSinglePipe = (px: number, py: number, w: number, h: number, flip: boolean) => {
+      const grad = ctx.createLinearGradient(px, py, px + w, py);
+      grad.addColorStop(0, '#35b957');
+      grad.addColorStop(0.5, '#9ae66e');
+      grad.addColorStop(1, '#228c45');
+
+      ctx.fillStyle = grad;
+      ctx.strokeStyle = '#24435c';
+      ctx.lineWidth = 4;
+      ctx.fillRect(px, py, w, h);
+      ctx.strokeRect(px, py, w, h);
+
+      const capH = 26;
+      const capY = flip ? py + h - capH : py;
+
+      ctx.fillStyle = '#c6f285';
+      ctx.fillRect(px - 8, capY, w + 16, capH);
+      ctx.strokeRect(px - 8, capY, w + 16, capH);
+
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.28)';
+      ctx.fillRect(px + 10, py + 10, 10, Math.max(20, h - 20));
+    };
+
+    drawSinglePipe(x, 0, pipeW, topH, true);
+    drawSinglePipe(x, bottomY, pipeW, bottomH, false);
+  }
+
+  get currentBirdImage() {
     if (!this.evolutionMode) {
       return this.birdImages.bird;
     }
@@ -481,7 +644,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     return this.birdImages.egg;
   }
 
-    formatTime(sec: number) {
+  formatTime(sec: number) {
     const m = Math.floor(sec / 60).toString().padStart(2, '0');
     const s = Math.floor(sec % 60).toString().padStart(2, '0');
     return `${m}:${s}`;
@@ -497,6 +660,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   handleKey(e: KeyboardEvent) {
     if (e.code === 'Space') {
       e.preventDefault();
+
       if (this.screen === 'instructions') {
         this.onInstructionsOK();
       } else if (this.screen === 'start') {
@@ -525,10 +689,10 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   handleQuit() {
     const ok = confirm('Are you sure you want to quit?');
+
     if (ok) {
       this.cleanup();
       this.router.navigate(['/game-page']);
     }
   }
 }
-

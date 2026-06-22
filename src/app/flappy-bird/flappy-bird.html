@@ -1,71 +1,81 @@
-<div class="flappy-container">
+<div class="flappy-container" [class.golden-hour]="goldenHour">
   <canvas #gameCanvas class="game-canvas" (click)="onCanvasClick()"></canvas>
+
   <button class="quit-btn" (click)="handleQuit()">Quit</button>
+
+  <div *ngIf="secretToast" class="secret-toast">
+    {{ secretToastMessage }}
+  </div>
 
   <div *ngIf="screen === 'instructions'" class="panel-overlay">
     <div class="panel-card instructions-card">
+      <button class="back-btn" type="button" (click)="goBackFromInstructions()">Back</button>
+
+      <div class="badge">Meadow Flight</div>
       <h1>Flappy Escape</h1>
+
       <div class="panel-text">
         <h2>How to Play</h2>
         <ul>
-          <li>Tap or press <strong>SPACE</strong> to flap</li>
-          <li>Avoid the green pipes</li>
-          <li>Don't hit the ground</li>
+          <li><span>Space</span> or tap to flap</li>
+          <li>Slip through the leafy pipes</li>
+          <li>Stay above the grass</li>
           <li>Pass pipes to score points</li>
-          <li>10 minutes before the game auto-resets</li>
+          <li>The session resets after 10 minutes</li>
         </ul>
       </div>
-      <button class="panel-btn" (click)="onInstructionsOK()">OK</button>
+
+      <button class="panel-btn" (click)="onInstructionsOK()">Continue</button>
     </div>
   </div>
 
   <div *ngIf="screen === 'start'" class="panel-overlay">
     <div class="panel-card start-card">
+      <button class="back-btn" type="button" (click)="goBackToInstructions()">Back</button>
+
+      <div class="badge">Choose Mode</div>
       <h1>Ready?</h1>
 
-<p class="start-text">
-  Choose Your Game Mode
-</p>
+      <button
+        class="secret-hatchling"
+        type="button"
+        aria-label="hidden hatchling"
+        title="This little chick looks suspicious..."
+        (click)="tapCloudSecret()">
+        <img src="/hatchling.webp" alt="" />
+      </button>
 
-<div class="mode-selection">
+      <p class="start-text">Pick your flight style and head into the meadow sky.</p>
 
-  <button
-    class="panel-btn mode-btn"
-    [class.selected-mode]="!evolutionMode"
-    (click)="selectNormalMode()">
+      <div class="mode-selection">
+        <button
+          class="panel-btn mode-btn"
+          [class.selected-mode]="!evolutionMode"
+          (click)="selectNormalMode()">
+          <span class="mode-icon">C</span>
+          Normal Mode
+        </button>
 
-    Normal Mode
+        <button
+          class="panel-btn mode-btn"
+          [class.selected-mode]="evolutionMode"
+          (click)="selectEvolutionMode()">
+          <span class="mode-icon">E</span>
+          Evolution Mode
+        </button>
+      </div>
 
-  </button>
+      <p class="mode-description">
+        {{
+          evolutionMode
+            ? 'Start as an egg, hatch into a chick, and grow into a stronger flyer as your score rises.'
+            : 'Classic chick flight from start to finish. Simple, bright, and fast.'
+        }}
+      </p>
 
-  <button
-    class="panel-btn mode-btn"
-    [class.selected-mode]="evolutionMode"
-    (click)="selectEvolutionMode()">
-
-    Evolution Mode
-
-  </button>
-
-</div>
-
-<p class="mode-description">
-
-  {{
-    evolutionMode
-      ? 'Start as an Egg, hatch into a Chick, and finally grow into a Hen as your score increases.'
-      : 'Play as the Chick for the entire game with no evolution.'
-  }}
-
-</p>
-
-<button
-  class="panel-btn start-button"
-  (click)="onStartGame()">
-
-  START JOURNEY
-
-</button>
+      <button class="panel-btn start-button" (click)="onStartGame()">
+        Start Journey
+      </button>
     </div>
   </div>
 
@@ -78,8 +88,10 @@
 
   <div *ngIf="screen === 'gameOver'" class="panel-overlay">
     <div class="panel-card gameover-card">
-      <h1>GAME OVER</h1>
+      <div class="badge">Flight Report</div>
+      <h1>Game Over</h1>
       <p class="final-score">Score: <strong>{{ gameOverScore }}</strong></p>
+
       <div class="gameover-actions">
         <button class="panel-btn" (click)="onGameOverRestart()">Restart</button>
         <button class="panel-btn quit-button" (click)="handleQuit()">Quit</button>
@@ -89,15 +101,15 @@
 
   <div *ngIf="isTimeWarningActive" class="time-warning-overlay">
     <div class="time-warning-card">
-      <div class="time-warning-label">TIME'S UP!</div>
+      <div class="time-warning-label">Time's Up!</div>
       <div class="time-warning-text">{{ timeWarningCountdown > 0 ? timeWarningCountdown : 'GO!' }}</div>
     </div>
   </div>
 
   <div *ngIf="screen === 'playing'" class="hud">
-    <div class="hud-item">Best: <strong>{{ bestScore }}</strong></div>
-    <div class="hud-item">Score: <strong>{{ score }}</strong></div>
-    <div class="hud-item" [class.warn]="remaining <= 15">Session: <strong>{{ formatTime(remaining) }}</strong></div>
+    <div class="hud-item">Best <strong>{{ bestScore }}</strong></div>
+    <div class="hud-item score-pill">Score <strong>{{ score }}</strong></div>
+    <div class="hud-item" [class.warn]="remaining <= 15">Session <strong>{{ formatTime(remaining) }}</strong></div>
   </div>
 
   <div *ngIf="screen === 'playing' && showEvolutionNotification && evolutionNotification" class="evolution-notification">
@@ -105,6 +117,6 @@
   </div>
 
   <div *ngIf="screen === 'playing'" class="lives-display">
-    <span *ngFor="let i of [1, 2, 3]" class="heart" [class.active]="i <= lives">❤️</span>
+    <span *ngFor="let i of [1, 2, 3]" class="heart" [class.active]="i <= lives">&#10084;</span>
   </div>
 </div>
