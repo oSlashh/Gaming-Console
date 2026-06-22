@@ -5,17 +5,20 @@
         <defs>
             <filter id="hand-drawn-backing" x="-10%" y="-10%" width="120%" height="120%">
                 <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.2" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.2" xChannelSelector="R" yChannelSelector="G"
+                    result="displaced" />
                 <feDropShadow dx="2" dy="5" stdDeviation="4.5" flood-color="#2a2521" flood-opacity="0.38" />
             </filter>
             <filter id="hand-drawn-needle" x="-15%" y="-15%" width="130%" height="130%">
                 <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="5.2" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="5.2" xChannelSelector="R" yChannelSelector="G"
+                    result="displaced" />
                 <feDropShadow dx="1.5" dy="3.5" stdDeviation="3" flood-color="#2a2521" flood-opacity="0.45" />
             </filter>
             <filter id="hand-drawn-text" x="-5%" y="-5%" width="110%" height="110%">
                 <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" result="noise" />
-                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G"
+                    result="displaced" />
             </filter>
         </defs>
     </svg>
@@ -401,18 +404,26 @@
                                         <div class="nb-right-header">
                                             <svg viewBox="0 0 200 200" class="nb-right-icon-svg hfo-logo-svg">
                                                 <!-- Sticker Cutout Background -->
-                                                <path d="M 28,38 C 75,18 125,18 172,38 C 188,75 188,125 172,162 C 125,182 75,182 28,162 C 12,125 12,75 28,38 Z"
-                                                    fill="#fffdf7" stroke="#3e1f08" stroke-width="3.5" stroke-linejoin="round" />
-                                                
+                                                <path
+                                                    d="M 28,38 C 75,18 125,18 172,38 C 188,75 188,125 172,162 C 125,182 75,182 28,162 C 12,125 12,75 28,38 Z"
+                                                    fill="#fffdf7" stroke="#3e1f08" stroke-width="3.5"
+                                                    stroke-linejoin="round" />
+
                                                 <!-- Target circles -->
-                                                <circle cx="100" cy="100" r="58" fill="#ff6b6b" stroke="#3e1f08" stroke-width="3.5" />
-                                                <circle cx="100" cy="100" r="42" fill="#fbf1de" stroke="#3e1f08" stroke-width="3.5" />
-                                                <circle cx="100" cy="100" r="26" fill="#4a7c9d" stroke="#3e1f08" stroke-width="3.5" />
-                                                <circle cx="100" cy="100" r="10" fill="#ffd93d" stroke="#3e1f08" stroke-width="3" />
-                                                
+                                                <circle cx="100" cy="100" r="58" fill="#ff6b6b" stroke="#3e1f08"
+                                                    stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="42" fill="#fbf1de" stroke="#3e1f08"
+                                                    stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="26" fill="#4a7c9d" stroke="#3e1f08"
+                                                    stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="10" fill="#ffd93d" stroke="#3e1f08"
+                                                    stroke-width="3" />
+
                                                 <!-- Target Crosshairs -->
-                                                <path d="M 100,32 L 100,42 M 100,158 L 100,168" stroke="#3e1f08" stroke-width="3.5" stroke-linecap="round" />
-                                                <path d="M 42,100 L 32,100 M 158,100 L 168,100" stroke="#3e1f08" stroke-width="3.5" stroke-linecap="round" />
+                                                <path d="M 100,32 L 100,42 M 100,158 L 100,168" stroke="#3e1f08"
+                                                    stroke-width="3.5" stroke-linecap="round" />
+                                                <path d="M 42,100 L 32,100 M 158,100 L 168,100" stroke="#3e1f08"
+                                                    stroke-width="3.5" stroke-linecap="round" />
                                             </svg>
                                             <div>
                                                 <h2 class="nb-right-title">How Far Off?</h2>
@@ -420,36 +431,46 @@
                                             </div>
                                         </div>
 
-                                         <!-- Centerpiece logo floating directly on page, taped -->
-                                         <div class="hfo-logo-wrapper">
-                                             <span class="tape-piece tape-piece--slant"></span>
-                                             <svg viewBox="0 0 200 200" class="nb-target-svg hfo-logo-svg">
-                                                 <!-- Sticker Cutout Background -->
-                                                 <path d="M 28,38 C 75,18 125,18 172,38 C 188,75 188,125 172,162 C 125,182 75,182 28,162 C 12,125 12,75 28,38 Z"
-                                                     fill="#fffdf7" stroke="#3e1f08" stroke-width="3.5" stroke-linejoin="round" />
-                                                 
-                                                 <!-- Target circles -->
-                                                 <circle cx="100" cy="100" r="58" fill="#ff6b6b" stroke="#3e1f08" stroke-width="3.5" />
-                                                 <circle cx="100" cy="100" r="42" fill="#fbf1de" stroke="#3e1f08" stroke-width="3.5" />
-                                                 <circle cx="100" cy="100" r="26" fill="#4a7c9d" stroke="#3e1f08" stroke-width="3.5" />
-                                                 <circle cx="100" cy="100" r="10" fill="#ffd93d" stroke="#3e1f08" stroke-width="3" />
-                                                 
-                                                 <!-- Target Crosshairs -->
-                                                 <path d="M 100,32 L 100,42 M 100,158 L 100,168" stroke="#3e1f08" stroke-width="3.5" stroke-linecap="round" />
-                                                 <path d="M 42,100 L 32,100 M 158,100 L 168,100" stroke="#3e1f08" stroke-width="3.5" stroke-linecap="round" />
-                                             </svg>
-                                         </div>
+                                        <!-- Centerpiece logo floating directly on page, taped -->
+                                        <div class="hfo-logo-wrapper">
+                                            <span class="tape-piece tape-piece--slant"></span>
+                                            <svg viewBox="0 0 200 200" class="nb-target-svg hfo-logo-svg">
+                                                <!-- Sticker Cutout Background -->
+                                                <path
+                                                    d="M 28,38 C 75,18 125,18 172,38 C 188,75 188,125 172,162 C 125,182 75,182 28,162 C 12,125 12,75 28,38 Z"
+                                                    fill="#fffdf7" stroke="#3e1f08" stroke-width="3.5"
+                                                    stroke-linejoin="round" />
 
-                                         <!-- Small handwritten "close enough?" scribble -->
-                                         <div class="hfo-scribble">
-                                             <svg viewBox="0 0 100 40" class="hfo-scribble-arrow">
-                                                 <!-- Curved hand-drawn arrow pointing up-left towards target -->
-                                                 <path d="M 70,30 C 55,28 40,20 28,12" fill="none" stroke="#3e1f08" stroke-width="2.5" stroke-dasharray="3 3" stroke-linecap="round" />
-                                                 <!-- Arrowhead -->
-                                                 <path d="M 33,20 L 26,10 L 37,8" fill="none" stroke="#3e1f08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
-                                             </svg>
-                                             <span class="hfo-scribble-text">close enough?</span>
-                                         </div>
+                                                <!-- Target circles -->
+                                                <circle cx="100" cy="100" r="58" fill="#ff6b6b" stroke="#3e1f08"
+                                                    stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="42" fill="#fbf1de" stroke="#3e1f08"
+                                                    stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="26" fill="#4a7c9d" stroke="#3e1f08"
+                                                    stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="10" fill="#ffd93d" stroke="#3e1f08"
+                                                    stroke-width="3" />
+
+                                                <!-- Target Crosshairs -->
+                                                <path d="M 100,32 L 100,42 M 100,158 L 100,168" stroke="#3e1f08"
+                                                    stroke-width="3.5" stroke-linecap="round" />
+                                                <path d="M 42,100 L 32,100 M 158,100 L 168,100" stroke="#3e1f08"
+                                                    stroke-width="3.5" stroke-linecap="round" />
+                                            </svg>
+                                        </div>
+
+                                        <!-- Small handwritten "close enough?" scribble -->
+                                        <div class="hfo-scribble">
+                                            <svg viewBox="0 0 100 40" class="hfo-scribble-arrow">
+                                                <!-- Curved hand-drawn arrow pointing up-left towards target -->
+                                                <path d="M 70,30 C 55,28 40,20 28,12" fill="none" stroke="#3e1f08"
+                                                    stroke-width="2.5" stroke-dasharray="3 3" stroke-linecap="round" />
+                                                <!-- Arrowhead -->
+                                                <path d="M 33,20 L 26,10 L 37,8" fill="none" stroke="#3e1f08"
+                                                    stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                                            </svg>
+                                            <span class="hfo-scribble-text">close enough?</span>
+                                        </div>
 
                                         <!-- One yellow sticky note containing hint -->
                                         <div class="nb-sticky nb-sticky--yellow hint-sticky">
@@ -647,7 +668,8 @@
 
                 <div class="team-list">
                     @for (team of teams(); track trackTeam($index, team)) {
-                    <div class="team-row" [style.--team-color]="team.color" [class.is-editing]="editingTeamId() === team.id">
+                    <div class="team-row" [style.--team-color]="team.color"
+                        [class.is-editing]="editingTeamId() === team.id">
                         @if (editingTeamId() === team.id) {
                         <div class="team-edit-container">
                             <input class="team-name-input" [(ngModel)]="editingName" (keyup.enter)="updateHfoTeam()"
@@ -699,7 +721,8 @@
             </header>
 
             @if (!hfoRevealed() && !hfoTransition()) {
-            <div class="turn-banner" [style.background-color]="currentHfoTeam().color + '14'" [style.border-left-color]="currentHfoTeam().color" [style.--team-color]="currentHfoTeam().color">
+            <div class="turn-banner" [style.background-color]="currentHfoTeam().color + '14'"
+                [style.border-left-color]="currentHfoTeam().color" [style.--team-color]="currentHfoTeam().color">
                 <span class="turn-dot" [style.background-color]="currentHfoTeam().color"></span>
                 <span class="turn-label">{{ currentHfoTeam().name }}'s Turn — Enter Your Guess 🤔</span>
             </div>
@@ -822,11 +845,11 @@
                     <div class="lb-row" [class.lb-current]="!hfoRevealed() && team.id === currentHfoTeam().id"
                         [style.background-color]="team.color + '14'" [style.--team-color]="team.color">
                         <div class="lb-row-left">
-                            @if (teams().length < 2 || teams().length > 6) {
-                            <span class="lb-rank">{{ i + 1 }}</span>
-                            }
-                            <span class="team-dot" [style.background-color]="team.color"></span>
-                            <span class="lb-name">{{ team.name }}</span>
+                            @if (teams().length < 2 || teams().length> 6) {
+                                <span class="lb-rank">{{ i + 1 }}</span>
+                                }
+                                <span class="team-dot" [style.background-color]="team.color"></span>
+                                <span class="lb-name">{{ team.name }}</span>
                         </div>
                         <div class="lb-row-right">
                             <span class="lb-score">{{ team.score }} pts</span>
@@ -853,56 +876,59 @@
                 <p class="logo-sub">The party game of</p>
             </div>
 
-            <div class="glass-card teams-card">
-                <h2 class="section-heading">🧑‍🤝‍🧑 Teams</h2>
+            <div class="setup-cards-row">
+                <div class="glass-card teams-card">
+                    <h2 class="section-heading">🧑‍🤝‍🧑 Teams</h2>
 
-                <div class="team-list">
-                    @for (team of teams(); track trackTeam($index, team)) {
-                    <div class="team-row" [style.--team-color]="team.color" [class.is-editing]="editingTeamId() === team.id">
-                        @if (editingTeamId() === team.id) {
-                        <div class="team-edit-container">
-                            <input class="team-name-input" [(ngModel)]="editingName" (keyup.enter)="updateWlTeam()"
-                                (keyup.escape)="cancelEdit()" autofocus />
-                            <div class="team-edit-actions">
-                                <button class="team-edit-btn confirm-edit-btn" (click)="updateWlTeam()">✓ Save</button>
-                                <button class="team-edit-btn cancel-edit-btn" (click)="cancelEdit()">✕ Cancel</button>
+                    <div class="team-list">
+                        @for (team of teams(); track trackTeam($index, team)) {
+                        <div class="team-row" [style.--team-color]="team.color"
+                            [class.is-editing]="editingTeamId() === team.id">
+                            @if (editingTeamId() === team.id) {
+                            <div class="team-edit-container">
+                                <input class="team-name-input" [(ngModel)]="editingName" (keyup.enter)="updateWlTeam()"
+                                    (keyup.escape)="cancelEdit()" autofocus />
+                                <div class="team-edit-actions">
+                                    <button class="team-edit-btn confirm-edit-btn" (click)="updateWlTeam()">✓ Save</button>
+                                    <button class="team-edit-btn cancel-edit-btn" (click)="cancelEdit()">✕ Cancel</button>
+                                </div>
                             </div>
+                            } @else {
+                            <div class="team-dot"></div>
+                            <span class="team-name">{{ team.name }}</span>
+                            <button class="icon-btn edit-btn" (click)="startEdit(team)" title="Rename">✏️</button>
+                            @if (teams().length > 2) {
+                            <button class="icon-btn del-btn" (click)="deleteWlTeam(team.id)" title="Delete">🗑️</button>
+                            }
+                            }
                         </div>
-                        } @else {
-                        <div class="team-dot"></div>
-                        <span class="team-name">{{ team.name }}</span>
-                        <button class="icon-btn edit-btn" (click)="startEdit(team)" title="Rename">✏️</button>
-                        @if (teams().length > 2) {
-                        <button class="icon-btn del-btn" (click)="deleteWlTeam(team.id)" title="Delete">🗑️</button>
-                        }
                         }
                     </div>
-                    }
+
+                    @if (teams().length < 6) { <button class="outline-btn add-team-btn" (click)="addWlTeam()">
+                        <span>＋</span> Add Team
+                        </button>
+                        }
                 </div>
 
-                @if (teams().length < 6) { <button class="outline-btn add-team-btn" (click)="addWlTeam()">
-                    <span>＋</span> Add Team
-                    </button>
-                    }
-            </div>
+                <div class="glass-card category-builder-card">
+                    <h2 class="section-heading">🃏 Category</h2>
 
-            <div class="glass-card category-builder-card">
-                <h2 class="section-heading">🃏 Category</h2>
+                    <input class="team-name-input" placeholder="Left side (e.g. Cold)" [ngModel]="customLeft()"
+                        (ngModelChange)="customLeft.set($event)" />
 
-                <input class="team-name-input" placeholder="Left side (e.g. Cold)" [ngModel]="customLeft()"
-                    (ngModelChange)="customLeft.set($event)" />
+                    <input class="team-name-input" placeholder="Right side (e.g. Hot)" [ngModel]="customRight()"
+                        (ngModelChange)="customRight.set($event)" />
 
-                <input class="team-name-input" placeholder="Right side (e.g. Hot)" [ngModel]="customRight()"
-                    (ngModelChange)="customRight.set($event)" />
+                    <div class="category-buttons">
+                        <button class="outline-btn" (click)="randomCategory()">
+                            🎲 Random
+                        </button>
 
-                <div class="category-buttons">
-                    <button class="outline-btn" (click)="randomCategory()">
-                        🎲 Random
-                    </button>
-
-                    <button class="outline-btn" (click)="useCustomCategory.set(true)">
-                        ✏️ Use These
-                    </button>
+                        <button class="outline-btn" (click)="useCustomCategory.set(true)">
+                            ✏️ Use These
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -930,7 +956,8 @@
             </header>
 
             <!-- Turn banner -->
-            <div class="turn-banner" [style.background-color]="currentTeam().color + '14'" [style.border-left-color]="currentTeam().color" [style.--team-color]="currentTeam().color">
+            <div class="turn-banner" [style.background-color]="currentTeam().color + '14'"
+                [style.border-left-color]="currentTeam().color" [style.--team-color]="currentTeam().color">
                 <span class="turn-dot" [style.background-color]="currentTeam().color"></span>
                 <span class="turn-label">
                     {{ currentTeam().name }}'s Turn
@@ -963,38 +990,47 @@
                     <defs>
                         <filter id="hand-drawn-backing" x="-10%" y="-10%" width="120%" height="120%">
                             <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" result="noise" />
-                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R"
+                                yChannelSelector="G" result="displaced" />
                             <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#2a2521" flood-opacity="0.35" />
                         </filter>
                         <filter id="hand-drawn-needle" x="-15%" y="-15%" width="130%" height="130%">
                             <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" result="noise" />
-                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R"
+                                yChannelSelector="G" result="displaced" />
                             <feDropShadow dx="1" dy="3" stdDeviation="2.5" flood-color="#2a2521" flood-opacity="0.4" />
                         </filter>
                         <filter id="hand-drawn-text" x="-5%" y="-5%" width="110%" height="110%">
                             <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" result="noise" />
-                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R"
+                                yChannelSelector="G" result="displaced" />
                         </filter>
                     </defs>
 
                     <!-- Double-layered cut paper backing with drop shadow -->
-                    <path d="M 15 270 A 235 235 0 0 1 485 270 Z" fill="#ebd8c2" stroke="#2a2521" stroke-width="4.5" filter="url(#hand-drawn-backing)" />
-                    <path d="M 22 270 A 228 228 0 0 1 478 270 Z" fill="#fffdf5" stroke="#2a2521" stroke-width="3" filter="url(#hand-drawn-backing)" />
-                    
+                    <path d="M 15 270 A 235 235 0 0 1 485 270 Z" fill="#ebd8c2" stroke="#2a2521" stroke-width="4.5"
+                        filter="url(#hand-drawn-backing)" />
+                    <path d="M 22 270 A 228 228 0 0 1 478 270 Z" fill="#fffdf5" stroke="#2a2521" stroke-width="3"
+                        filter="url(#hand-drawn-backing)" />
+
                     <!-- Semicircle background tracks/cutouts -->
-                    <path d="M 28 270 A 222 222 0 0 1 472 270" fill="none" stroke="#ebdcb9" stroke-width="44" stroke-linecap="round" filter="url(#hand-drawn-backing)" />
+                    <path d="M 28 270 A 222 222 0 0 1 472 270" fill="none" stroke="#ebdcb9" stroke-width="44"
+                        stroke-linecap="round" filter="url(#hand-drawn-backing)" />
 
                     @if (targetRevealed()) {
                     @for (band of scoreBands; track band.pts) {
                     <!-- Individual cut colored paper segments -->
                     <path [attr.d]="arcBand(band.lo, band.hi, 28, 222, 250, 270)" [attr.fill]="getBandColor(band.pts)"
-                        stroke="#2a2521" stroke-width="3.5" stroke-linejoin="round" filter="url(#hand-drawn-backing)" class="score-band" />
+                        stroke="#2a2521" stroke-width="3.5" stroke-linejoin="round" filter="url(#hand-drawn-backing)"
+                        class="score-band" />
                     }
                     }
 
-                    <path d="M 28 270 A 222 222 0 0 1 472 270" fill="none" stroke="#2a2521" stroke-width="4" filter="url(#hand-drawn-backing)" />
+                    <path d="M 28 270 A 222 222 0 0 1 472 270" fill="none" stroke="#2a2521" stroke-width="4"
+                        filter="url(#hand-drawn-backing)" />
                     <!-- Inner compass arc (dashnote look) -->
-                    <path d="M 78 270 A 172 172 0 0 1 422 270" fill="none" stroke="#2a2521" stroke-width="3" stroke-dasharray="4 8" opacity="0.75" filter="url(#hand-drawn-backing)" />
+                    <path d="M 78 270 A 172 172 0 0 1 422 270" fill="none" stroke="#2a2521" stroke-width="3"
+                        stroke-dasharray="4 8" opacity="0.75" filter="url(#hand-drawn-backing)" />
 
                     @if (targetRevealed()) {
                     <!-- Secret psychic indicator styled as red marker scribbles -->
@@ -1002,7 +1038,8 @@
                         [attr.y1]="posToXY(targetPosition(), 28, 250, 270).y"
                         [attr.x2]="posToXY(targetPosition(), 226, 250, 270).x"
                         [attr.y2]="posToXY(targetPosition(), 226, 250, 270).y" stroke="#e74c3c" stroke-width="6"
-                        stroke-linecap="round" stroke-dasharray="3 5" class="target-needle" filter="url(#hand-drawn-needle)" />
+                        stroke-linecap="round" stroke-dasharray="3 5" class="target-needle"
+                        filter="url(#hand-drawn-needle)" />
                     <circle [attr.cx]="posToXY(targetPosition(), 172, 250, 270).x"
                         [attr.cy]="posToXY(targetPosition(), 172, 250, 270).y" r="9" fill="#e74c3c" stroke="#2a2521"
                         stroke-width="3" class="target-dot" filter="url(#hand-drawn-needle)" />
@@ -1015,9 +1052,11 @@
 
                     @if (phase() === 'guessing' || phase() === 'reveal') {
                     <!-- Hand-cut physical pointer arrow rotated counter-clockwise -->
-                    <g [attr.transform]="'rotate(' + (-posToAngle(guessPosition())) + ', 250, 270)'" filter="url(#hand-drawn-needle)" class="guess-needle">
-                        <path d="M 250,265 C 310,264 370,265 425,264 L 425,256 L 472,270 L 425,284 L 425,276 C 370,275 310,276 250,275 Z"
-                              fill="#2ec4b6" stroke="#2a2521" stroke-width="4" stroke-linejoin="round" />
+                    <g [attr.transform]="'rotate(' + (-posToAngle(guessPosition())) + ', 250, 270)'"
+                        filter="url(#hand-drawn-needle)" class="guess-needle">
+                        <path
+                            d="M 250,265 C 310,264 370,265 425,264 L 425,256 L 472,270 L 425,284 L 425,276 C 370,275 310,276 250,275 Z"
+                            fill="#2ec4b6" stroke="#2a2521" stroke-width="4" stroke-linejoin="round" />
                     </g>
                     }
 
@@ -1026,7 +1065,8 @@
                         <circle cx="250" cy="270" r="17" fill="#e74c3c" stroke="#2a2521" stroke-width="4.5" />
                         <circle cx="250" cy="270" r="13" fill="#c0392b" stroke="#2a2521" stroke-width="2" />
                         <!-- Button thread stitches -->
-                        <path d="M 245,265 L 255,275 M 245,275 L 255,265" stroke="#fffdf5" stroke-width="3" stroke-linecap="round" />
+                        <path d="M 245,265 L 255,275 M 245,275 L 255,265" stroke="#fffdf5" stroke-width="3"
+                            stroke-linecap="round" />
                     </g>
 
                 </svg>
@@ -1127,11 +1167,11 @@
                     <div class="lb-row" [class.lb-current]="team.id === currentTeam().id"
                         [style.background-color]="team.color + '14'" [style.--team-color]="team.color">
                         <div class="lb-row-left">
-                            @if (teams().length < 2 || teams().length > 6) {
-                            <span class="lb-rank">{{ i + 1 }}</span>
-                            }
-                            <span class="team-dot" [style.background-color]="team.color"></span>
-                            <span class="lb-name">{{ team.name }}</span>
+                            @if (teams().length < 2 || teams().length> 6) {
+                                <span class="lb-rank">{{ i + 1 }}</span>
+                                }
+                                <span class="team-dot" [style.background-color]="team.color"></span>
+                                <span class="lb-name">{{ team.name }}</span>
                         </div>
                         <div class="lb-row-right">
                             <span class="lb-score">{{ team.score }} pts</span>
