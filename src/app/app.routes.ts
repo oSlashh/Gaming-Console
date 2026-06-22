@@ -33,6 +33,12 @@ export const routes: Routes = [
     path: 'reaction-time',
     loadComponent: () => import('./reaction-time/reaction-time').then((m) => m.ReactionTimeGameComponent),
   },
+    {
+  path: 'wavelength',
+  loadComponent: () =>
+    import('./wavelength/wavelength')
+      .then(m => (m as any).WavelengthComponent)
+},
   {
     path: 'oops',
     loadComponent: () => import('./oops/components/oops.component').then((m) => m.OopsComponent),
@@ -45,4 +51,5 @@ export const routes: Routes = [
     path: '**',
     redirectTo: '',
   },
+
 ];

@@ -1,0 +1,1146 @@
+<div class="wl-root" data-theme="dark">
+
+    <!-- Hidden global SVG container for wobbly hand-drawn filters -->
+    <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
+        <defs>
+            <filter id="hand-drawn-backing" x="-10%" y="-10%" width="120%" height="120%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="4.2" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                <feDropShadow dx="2" dy="5" stdDeviation="4.5" flood-color="#2a2521" flood-opacity="0.38" />
+            </filter>
+            <filter id="hand-drawn-needle" x="-15%" y="-15%" width="130%" height="130%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="5.2" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                <feDropShadow dx="1.5" dy="3.5" stdDeviation="3" flood-color="#2a2521" flood-opacity="0.45" />
+            </filter>
+            <filter id="hand-drawn-text" x="-5%" y="-5%" width="110%" height="110%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+            </filter>
+        </defs>
+    </svg>
+
+    <!-- ════════════════════════════════════════════════════════════════
+       DYNAMIC BACKGROUNDS
+   ════════════════════════════════════════════════════════════════ -->
+    @if (gameMode() === 'menu') {
+    <!-- Cozy study desk background using the direct background image -->
+    <div class="wl-journal-bg" aria-hidden="true"></div>
+    } @else {
+    <!-- Current existing game background -->
+    <div class="wl-bg" aria-hidden="true">
+        <!-- Soft floating blobs -->
+        <div class="wl-blob wl-blob-1"></div>
+        <div class="wl-blob wl-blob-2"></div>
+        <div class="wl-blob wl-blob-3"></div>
+        <div class="wl-blob wl-blob-4"></div>
+        <div class="wl-blob wl-blob-5"></div>
+        <div class="wl-blob wl-blob-6"></div>
+        <!-- Twinkling stars -->
+        <span class="wl-star wl-star-1">✦</span>
+        <span class="wl-star wl-star-2">✧</span>
+        <span class="wl-star wl-star-3">✦</span>
+        <span class="wl-star wl-star-4">✦</span>
+        <span class="wl-star wl-star-5">✧</span>
+        <span class="wl-star wl-star-6">✦</span>
+        <span class="wl-star wl-star-7">✧</span>
+        <span class="wl-star wl-star-8">✦</span>
+        <span class="wl-star wl-star-9">✧</span>
+        <span class="wl-star wl-star-10">✦</span>
+        <!-- Floating doodles -->
+        <span class="wl-doodle wl-doodle-1">🌀</span>
+        <span class="wl-doodle wl-doodle-2">🎈</span>
+        <span class="wl-doodle wl-doodle-3">⭐</span>
+        <span class="wl-doodle wl-doodle-4">🎉</span>
+        <div class="floating-decor decor-1">🎈</div>
+        <div class="floating-decor decor-2">⭐</div>
+        <div class="floating-decor decor-3">🎲</div>
+        <div class="floating-decor decor-4">🪁</div>
+    </div>
+    }
+    <div class="party-mascot-wrap" [class.on-shelf]="gameMode() === 'menu'">
+        <div class="dino-speech-bubble" aria-hidden="true">Tarun was here!</div>
+        <div class="party-mascot" aria-hidden="true">🐣</div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════════════
+       DARK MODE TOGGLE (fixed top-right)
+  ════════════════════════════════════════════════════════════════ -->
+
+
+    <!-- All screen content sits above background -->
+    <div class="wl-content">
+
+        <!-- ════════════════════════════════════════════════════════════════
+       MENU SCREEN
+  ════════════════════════════════════════════════════════════════ -->
+        @if (gameMode() === 'menu') {
+        <div class="menu-screen">
+            <button class="ghost-btn menu-back-btn" (click)="handleBackClick()">✕ Back</button>
+
+            <!-- ════════════════════════════════════════════════════════════
+               NOTEBOOK — adventure journal menu book
+            ════════════════════════════════════════════════════════════════ -->
+            <div class="desk-container">
+                <div class="notebook-stage">
+                    <!-- Floating ambient dust particles -->
+                    <span class="dust-particle dust-particle--1" aria-hidden="true"></span>
+                    <span class="dust-particle dust-particle--2" aria-hidden="true"></span>
+                    <span class="dust-particle dust-particle--3" aria-hidden="true"></span>
+
+                    <div class="notebook" [class.nb-state-closed]="notebookState() === 'closed'"
+                        [class.nb-state-lifting]="notebookState() === 'lifting'"
+                        [class.nb-state-flying]="notebookState() === 'flying'"
+                        [class.nb-state-open]="notebookState() === 'open'"
+                        [class.nb-state-closing-pages]="notebookState() === 'closing-pages'"
+                        [class.nb-state-closing]="notebookState() === 'closing'">
+
+                        @if (!notebookOpen()) {
+                        <div class="notebook-cover-closed" (click)="openNotebook()">
+                            <!-- Stitching and Clasp -->
+                            <div class="leather-stitch"></div>
+                            <div class="cover-clasp">
+                                <div class="clasp-strap"></div>
+                                <div class="clasp-button"></div>
+                            </div>
+
+
+
+                            <!-- Taped title label -->
+                            <div class="notebook-cover-title-plate tape-sticker">
+                                <span class="tape-piece tape-piece--tl"></span>
+                                <span class="tape-piece tape-piece--tr"></span>
+                                <span class="tape-piece tape-piece--bl"></span>
+                                <span class="tape-piece tape-piece--br"></span>
+
+                                <h1 class="cover-title">PARTY GAMES</h1>
+                            </div>
+
+                            <!-- Taped Volume I label -->
+                            <div class="cover-subtitle-plate tape-sticker">
+                                <span class="tape-piece tape-piece--tl"></span>
+                                <span class="tape-piece tape-piece--tr"></span>
+                                <span class="tape-piece tape-piece--bl"></span>
+                                <span class="tape-piece tape-piece--br"></span>
+
+                                <h2 class="cover-subtitle">VOLUME I</h2>
+                            </div>
+                        </div>
+                        } @else {
+                        <div class="notebook-tabs" aria-hidden="true">
+                            <span class="notebook-tab notebook-tab-1"></span>
+                            <span class="notebook-tab notebook-tab-2"></span>
+                            <span class="notebook-tab notebook-tab-3"></span>
+                        </div>
+
+                        <div class="notebook-cover">
+                            <div class="notebook-page notebook-page--left">
+                                <div class="notebook-page-inner">
+                                    @if (currentPageIndex() === 0) {
+                                    <div class="nb-left" id="nb-left-1">
+                                        <!-- Paperclip + title -->
+                                        <div class="nb-left-header">
+                                            <span class="nb-paperclip">📎</span>
+                                            <h2 class="nb-left-title">Wavelength Rules</h2>
+                                        </div>
+                                        <p class="nb-left-body">A telepathic party game where teams compete to read each
+                                            other's minds! One player (the Psychic) knows the secret target. Can the
+                                            guessers find the frequency?</p>
+
+                                        <!-- Small green sticky card -->
+                                        <div class="nb-sticky nb-sticky--mint rule-checklist">
+                                            <ul class="nb-checklist">
+                                                <li><span class="nb-check">✔</span> Players: 2+</li>
+                                                <li><span class="nb-check">✔</span> Time: 10 mins</li>
+                                                <li><span class="nb-check">✔</span> Teams: 2 sides</li>
+                                                <li><span class="nb-check">✔</span> Rounds: 4+</li>
+                                            </ul>
+                                        </div>
+
+                                        <!-- Small dash note -->
+                                        <ul class="nb-dash-list">
+                                            <li>— Psychic gives a single clue</li>
+                                            <li>— Team guesses the dial position</li>
+                                            <li class="nb-dash--coral">— Bullseye = 4 pts!</li>
+                                        </ul>
+                                    </div>
+                                    }
+                                    @if (currentPageIndex() === 1) {
+                                    <div class="nb-left" id="nb-left-2">
+                                        <!-- Paperclip + title -->
+                                        <div class="nb-left-header">
+                                            <span class="nb-paperclip">📎</span>
+                                            <h2 class="nb-left-title">Estimation Battle</h2>
+                                        </div>
+                                        <p class="nb-left-body">Trivia, but you don't need to know the exact answers.
+                                            You just need to estimate close enough!</p>
+
+                                        <!-- Rules list in scrapbook style -->
+                                        <ul class="nb-dash-list" style="margin-top: 12px; margin-bottom: 12px;">
+                                            <li>— Players are shown surprising trivia questions.</li>
+                                            <li>— You don't need the exact answer to score points.</li>
+                                            <li>— The closest estimate wins the round!</li>
+                                        </ul>
+
+                                        <!-- Side-by-side stickies: rules card + hint card -->
+                                        <div class="nb-stickies-row">
+                                            <!-- White statistics note card -->
+                                            <div class="nb-sticky nb-sticky--white stats-card rule-checklist">
+                                                <h3 class="stats-card-title">STATISTICS LOG</h3>
+                                                <ul class="nb-checklist">
+                                                    <li><span class="nb-check">✔</span> Players: 2+ Teams</li>
+                                                    <li><span class="nb-check">✔</span> Mechanics: Numerical</li>
+                                                    <li><span class="nb-check">✔</span> Scoring: Closest +3</li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    }
+                                    @if (currentPageIndex() === 2) {
+                                    <div class="nb-left" id="nb-left-3">
+                                        <!-- Paperclip + title -->
+                                        <div class="nb-left-header">
+                                            <span class="nb-paperclip">📎</span>
+                                            <h2 class="nb-left-title">Dev Brainstorm</h2>
+                                        </div>
+                                        <p class="nb-left-body nb-left-body--italic">"Unlocking a new secret module
+                                            soon… Here are some concepts currently in active prototyping."</p>
+
+                                        <!-- Brainstorm list directly on notebook lines -->
+                                        <ul class="nb-brainstorm-list">
+                                            <li class="brainstorm-strike">Tic-Tac-Toe Console Edition</li>
+                                            <li class="brainstorm-highlight">Word Association</li>
+                                            <li class="brainstorm-underline">Sketch Game</li>
+                                            <li>Hidden Roles</li>
+                                            <li>Rapid Fire Quiz</li>
+                                        </ul>
+
+                                        <!-- Rules sticky for brainstorm -->
+                                        <div class="nb-sticky nb-sticky--yellow rules-brainstorm">
+                                            <strong>Rule:</strong> Cross off concepts if they make it into a game!
+                                        </div>
+                                    </div>
+                                    }
+                                    @if (currentPageIndex() === 3) {
+                                    <div class="nb-left" id="nb-left-4">
+                                        <!-- Paperclip + title -->
+                                        <div class="nb-left-header">
+                                            <span class="nb-paperclip">📎</span>
+                                            <h2 class="nb-left-title">Next Milestones</h2>
+                                        </div>
+
+                                        <!-- Checklist directly on page -->
+                                        <ul class="nb-checklist nb-milestone-checklist">
+                                            <li><span class="nb-check">✔</span> Sound Engine</li>
+                                            <li><span class="nb-check">✔</span> Multiplayer Sync</li>
+                                            <li><span class="nb-check">✔</span> Save System</li>
+                                            <li><span class="nb-check">✔</span> Mobile Layout</li>
+                                        </ul>
+
+                                        <!-- Blue progress note card -->
+                                        <div class="nb-sticky nb-sticky--blue info-sticky">
+                                            <strong>Progress Notes:</strong> System specs are fully designed. Prototype
+                                            #84 is in active layout.
+                                        </div>
+                                    </div>
+                                    }
+                                    @if (currentPageIndex() === 4) {
+                                    <div class="nb-left" id="nb-left-5">
+                                        <!-- Paperclip + title -->
+                                        <div class="nb-left-header">
+                                            <span class="nb-paperclip">📎</span>
+                                            <h2 class="nb-left-title">End of Volume 1</h2>
+                                        </div>
+                                        <p class="nb-left-body">This adventure journal contains the records of our
+                                            initial arcade platform. Thank you for being a part of it!</p>
+
+                                        <!-- Dash list of credits -->
+                                        <ul class="nb-dash-list">
+                                            <li>— Designed &amp; Built with ❤️</li>
+                                            <li>— Inspired by cozy board games</li>
+                                            <li>— Playtesters: everyone who played!</li>
+                                        </ul>
+
+                                        <!-- Small green note developer message -->
+                                        <div class="nb-sticky nb-sticky--mint notes-sticky">
+                                            <strong>Dev Note:</strong> We are continuously writing new chapters. Share
+                                            your suggestions and playtest logs with us.
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <div class="notebook-spine">
+                                <span class="notebook-spine-ring"></span>
+                                <span class="notebook-spine-ring"></span>
+                                <span class="notebook-spine-ring"></span>
+                                <span class="notebook-spine-ring"></span>
+                                <span class="notebook-spine-ring"></span>
+                                <span class="notebook-spine-ring"></span>
+                            </div>
+
+                            <!-- RIGHT PAGE: active game card -->
+                            <div class="notebook-page notebook-page--right">
+                                <div class="notebook-page-inner">
+                                    @if (currentPageIndex() === 0) {
+                                    <div class="nb-right" id="nb-right-1">
+                                        <div class="nb-right-header">
+                                            <div class="nb-title-plate tape-sticker">
+                                                <span class="tape-piece tape-piece--tl"></span>
+                                                <span class="tape-piece tape-piece--tr"></span>
+                                                <h2 class="nb-right-title">Wavelength</h2>
+                                                <p class="nb-right-sub">The game of mental frequencies</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Polaroid frame photo visual centerpiece -->
+                                        <div class="nb-art-area polaroid-card">
+                                            <svg viewBox="0 0 240 240" class="nb-dial-svg"
+                                                style="width: 100%; height: auto; max-width: 280px; overflow: visible;">
+                                                <!-- Outer scalloped stamp backing -->
+                                                <path
+                                                    d="M 226,120 Q 223,127 219.1,133 Q 221,140 222.4,147.4 Q 217,153 212.4,158.3 Q 212,166 211.8,173 Q 206,177 199.3,180.9 Q 197,188 194.9,194.9 Q 188,197 180.9,199.3 Q 177,206 173,211.8 Q 166,212 158.3,212.4 Q 153,218 147.4,222.4 Q 140,221 133,219.1 Q 127,223 120,226 Q 113,223 107,219.1 Q 100,221 92.6,222.4 Q 87,218 81.7,212.4 Q 74,212 67,211.8 Q 63,206 59.1,199.3 Q 52,197 45.1,194.9 Q 43,188 39.1,180.9 Q 34,177 28.2,173 Q 28,166 27.6,158.3 Q 23,153 17.6,147.4 Q 19,140 20.9,133 Q 17,127 14,120 Q 17,113 20.9,107 Q 19,100 17.6,92.6 Q 23,87 27.6,81.7 Q 28,74 28.2,67 Q 34,63 39.1,59.1 Q 43,52 45.1,45.1 Q 52,43 59.1,39.1 Q 63,34 67,28.2 Q 74,28 81.7,27.6 Q 87,23 92.6,17.6 Q 100,19 107,20.9 Q 113,17 120,14 Q 127,17 133,20.9 Q 140,19 147.4,17.6 Q 153,23 158.3,27.6 Q 166,28 173,28.2 Q 177,34 180.9,39.1 Q 188,43 194.9,45.1 Q 197,52 199.3,59.1 Q 206,63 211.8,67 Q 212,74 212.4,81.7 Q 217,87 222.4,92.6 Q 221,100 219.1,107 Q 223,113 226,120 Z"
+                                                    fill="#f4edd8" stroke="#3e1f08" stroke-width="4.5" />
+
+                                                <!-- Dark blue dial casing circle -->
+                                                <circle cx="120" cy="120" r="95" fill="#1b2845" stroke="#3e1f08"
+                                                    stroke-width="4.5" />
+
+                                                <!-- Upper dial face window (Cream semicircle) -->
+                                                <path d="M 28 120 A 92 92 0 0 1 212 120 Z" fill="#fffdf7"
+                                                    stroke="#3e1f08" stroke-width="3" />
+
+                                                <!-- Lower dial face cosmic background (Dark navy semicircle) -->
+                                                <path d="M 28 120 A 92 92 0 0 0 212 120 Z" fill="#0d1b2a"
+                                                    stroke="#3e1f08" stroke-width="2.5" />
+
+                                                <!-- Galaxy cosmic speckles -->
+                                                <circle cx="50" cy="140" r="1.2" fill="#ffffff" opacity="0.65" />
+                                                <circle cx="70" cy="165" r="1.6" fill="#ffffff" opacity="0.85" />
+                                                <circle cx="95" cy="135" r="1" fill="#ffffff" opacity="0.5" />
+                                                <circle cx="120" cy="175" r="1.3" fill="#ffffff" opacity="0.9" />
+                                                <circle cx="150" cy="145" r="1" fill="#ffffff" opacity="0.7" />
+                                                <circle cx="180" cy="160" r="1.6" fill="#ffffff" opacity="0.85" />
+                                                <circle cx="200" cy="135" r="1" fill="#ffffff" opacity="0.5" />
+                                                <circle cx="160" cy="180" r="1.2" fill="#ffffff" opacity="0.65" />
+                                                <circle cx="85" cy="185" r="1.4" fill="#ffffff" opacity="0.75" />
+                                                <circle cx="135" cy="165" r="1.6" fill="#ffffff" opacity="0.85" />
+                                                <circle cx="60" cy="180" r="1" fill="#ffffff" opacity="0.5" />
+                                                <circle cx="190" cy="175" r="1.3" fill="#ffffff" opacity="0.7" />
+
+                                                <!-- Radiating narrow frequency wedges with text numbers -->
+                                                <!-- Left Yellow 2 -->
+                                                <g transform="rotate(-28, 120, 120)">
+                                                    <path d="M 120 120 L 113.7 30.2 A 90 90 0 0 1 126.3 30.2 Z"
+                                                        fill="#f0a824" stroke="#3e1f08" stroke-width="2" />
+                                                    <text x="120" y="46" fill="#3e1f08" font-size="10"
+                                                        font-family="'Fredoka One', sans-serif" font-weight="900"
+                                                        text-anchor="middle">2</text>
+                                                </g>
+                                                <!-- Left Red 3 -->
+                                                <g transform="rotate(-14, 120, 120)">
+                                                    <path d="M 120 120 L 113.7 30.2 A 90 90 0 0 1 126.3 30.2 Z"
+                                                        fill="#e1523d" stroke="#3e1f08" stroke-width="2" />
+                                                    <text x="120" y="46" fill="#3e1f08" font-size="10"
+                                                        font-family="'Fredoka One', sans-serif" font-weight="900"
+                                                        text-anchor="middle">3</text>
+                                                </g>
+                                                <!-- Center Blue 4 (Target) -->
+                                                <g transform="rotate(0, 120, 120)">
+                                                    <path d="M 120 120 L 113.7 30.2 A 90 90 0 0 1 126.3 30.2 Z"
+                                                        fill="#4a7c9d" stroke="#3e1f08" stroke-width="2" />
+                                                    <text x="120" y="46" fill="#fffdf7" font-size="11"
+                                                        font-family="'Fredoka One', sans-serif" font-weight="900"
+                                                        text-anchor="middle">4</text>
+                                                </g>
+                                                <!-- Right Red 3 -->
+                                                <g transform="rotate(14, 120, 120)">
+                                                    <path d="M 120 120 L 113.7 30.2 A 90 90 0 0 1 126.3 30.2 Z"
+                                                        fill="#e1523d" stroke="#3e1f08" stroke-width="2" />
+                                                    <text x="120" y="46" fill="#3e1f08" font-size="10"
+                                                        font-family="'Fredoka One', sans-serif" font-weight="900"
+                                                        text-anchor="middle">3</text>
+                                                </g>
+                                                <!-- Right Yellow 2 -->
+                                                <g transform="rotate(28, 120, 120)">
+                                                    <path d="M 120 120 L 113.7 30.2 A 90 90 0 0 1 126.3 30.2 Z"
+                                                        fill="#f0a824" stroke="#3e1f08" stroke-width="2" />
+                                                    <text x="120" y="46" fill="#3e1f08" font-size="10"
+                                                        font-family="'Fredoka One', sans-serif" font-weight="900"
+                                                        text-anchor="middle">2</text>
+                                                </g>
+
+                                                <!-- Iconic Wavelength Teal Needle/Pointer with Loop Handle -->
+                                                <g transform="rotate(-20, 120, 120)">
+                                                    <!-- Shadow -->
+                                                    <path
+                                                        d="M 115 110 L 28 112 C 20 112, 20 128, 28 128 L 42 128 Q 45 142, 55 142 Q 65 142, 65 128 L 115 130 Z M 54 120 A 7 7 0 1 0 54 134 A 7 7 0 1 0 54 120"
+                                                        fill="rgba(0,0,0,0.15)" transform="translate(2, 3)"
+                                                        fill-rule="evenodd" />
+                                                    <!-- Pointer teal body -->
+                                                    <path
+                                                        d="M 115 110 L 28 112 C 20 112, 20 128, 28 128 L 42 128 Q 45 142, 55 142 Q 65 142, 65 128 L 115 130 Z M 54 120 A 7 7 0 1 0 54 134 A 7 7 0 1 0 54 120"
+                                                        fill="#2ec4b6" stroke="#3e1f08" stroke-width="3.5"
+                                                        stroke-linejoin="round" fill-rule="evenodd" />
+                                                </g>
+
+                                                <!-- Center Pivot cap (Red Circle) -->
+                                                <circle cx="120" cy="120" r="19" fill="#eb5757" stroke="#3e1f08"
+                                                    stroke-width="3" />
+                                                <circle cx="116" cy="116" r="14" fill="none"
+                                                    stroke="rgba(255, 255, 255, 0.28)" stroke-width="2" />
+                                            </svg>
+                                        </div>
+                                        <button class="nb-play-btn" (click)="selectGame('wavelength')">Play Wavelength
+                                            ➔</button>
+                                    </div>
+                                    }
+                                    @if (currentPageIndex() === 1) {
+                                    <div class="nb-right" id="nb-right-2">
+                                        <div class="nb-right-header">
+                                            <svg viewBox="0 0 200 200" class="nb-right-icon-svg hfo-logo-svg">
+                                                <!-- Sticker Cutout Background -->
+                                                <path d="M 28,38 C 75,18 125,18 172,38 C 188,75 188,125 172,162 C 125,182 75,182 28,162 C 12,125 12,75 28,38 Z"
+                                                    fill="#fffdf7" stroke="#3e1f08" stroke-width="3.5" stroke-linejoin="round" />
+                                                
+                                                <!-- Target circles -->
+                                                <circle cx="100" cy="100" r="58" fill="#ff6b6b" stroke="#3e1f08" stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="42" fill="#fbf1de" stroke="#3e1f08" stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="26" fill="#4a7c9d" stroke="#3e1f08" stroke-width="3.5" />
+                                                <circle cx="100" cy="100" r="10" fill="#ffd93d" stroke="#3e1f08" stroke-width="3" />
+                                                
+                                                <!-- Target Crosshairs -->
+                                                <path d="M 100,32 L 100,42 M 100,158 L 100,168" stroke="#3e1f08" stroke-width="3.5" stroke-linecap="round" />
+                                                <path d="M 42,100 L 32,100 M 158,100 L 168,100" stroke="#3e1f08" stroke-width="3.5" stroke-linecap="round" />
+                                            </svg>
+                                            <div>
+                                                <h2 class="nb-right-title">How Far Off?</h2>
+                                                <p class="nb-right-sub">Closest numeric guess wins</p>
+                                            </div>
+                                        </div>
+
+                                         <!-- Centerpiece logo floating directly on page, taped -->
+                                         <div class="hfo-logo-wrapper">
+                                             <span class="tape-piece tape-piece--slant"></span>
+                                             <svg viewBox="0 0 200 200" class="nb-target-svg hfo-logo-svg">
+                                                 <!-- Sticker Cutout Background -->
+                                                 <path d="M 28,38 C 75,18 125,18 172,38 C 188,75 188,125 172,162 C 125,182 75,182 28,162 C 12,125 12,75 28,38 Z"
+                                                     fill="#fffdf7" stroke="#3e1f08" stroke-width="3.5" stroke-linejoin="round" />
+                                                 
+                                                 <!-- Target circles -->
+                                                 <circle cx="100" cy="100" r="58" fill="#ff6b6b" stroke="#3e1f08" stroke-width="3.5" />
+                                                 <circle cx="100" cy="100" r="42" fill="#fbf1de" stroke="#3e1f08" stroke-width="3.5" />
+                                                 <circle cx="100" cy="100" r="26" fill="#4a7c9d" stroke="#3e1f08" stroke-width="3.5" />
+                                                 <circle cx="100" cy="100" r="10" fill="#ffd93d" stroke="#3e1f08" stroke-width="3" />
+                                                 
+                                                 <!-- Target Crosshairs -->
+                                                 <path d="M 100,32 L 100,42 M 100,158 L 100,168" stroke="#3e1f08" stroke-width="3.5" stroke-linecap="round" />
+                                                 <path d="M 42,100 L 32,100 M 158,100 L 168,100" stroke="#3e1f08" stroke-width="3.5" stroke-linecap="round" />
+                                             </svg>
+                                         </div>
+
+                                         <!-- Small handwritten "close enough?" scribble -->
+                                         <div class="hfo-scribble">
+                                             <svg viewBox="0 0 100 40" class="hfo-scribble-arrow">
+                                                 <!-- Curved hand-drawn arrow pointing up-left towards target -->
+                                                 <path d="M 70,30 C 55,28 40,20 28,12" fill="none" stroke="#3e1f08" stroke-width="2.5" stroke-dasharray="3 3" stroke-linecap="round" />
+                                                 <!-- Arrowhead -->
+                                                 <path d="M 33,20 L 26,10 L 37,8" fill="none" stroke="#3e1f08" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+                                             </svg>
+                                             <span class="hfo-scribble-text">close enough?</span>
+                                         </div>
+
+                                        <!-- One yellow sticky note containing hint -->
+                                        <div class="nb-sticky nb-sticky--yellow hint-sticky">
+                                            <strong>Hint:</strong> Use process of elimination. If you know a century is
+                                            100 years, that helps calibrate dates!
+                                        </div>
+
+                                        <button class="nb-play-btn" (click)="selectGame('howFarOff')">Play How Far Off
+                                            ➔</button>
+                                    </div>
+                                    }
+                                    @if (currentPageIndex() === 2) {
+                                    <div class="nb-right" id="nb-right-3">
+                                        <div class="nb-right-header">
+                                            <span class="nb-right-icon">🔒</span>
+                                            <div>
+                                                <h2 class="nb-right-title">Classified Game</h2>
+                                                <p class="nb-right-sub">Locked prototype challenge</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Locked folder card positioned off-center -->
+                                        <div class="nb-locked-card">
+                                            <svg viewBox="0 0 120 140" class="nb-lock-svg">
+                                                <rect x="18" y="60" width="84" height="66" rx="10" fill="#ede0c4"
+                                                    stroke="#1a1a2e" stroke-width="3" />
+                                                <path d="M 36 60 L 36 38 A 24 24 0 0 1 84 38 L 84 60" fill="none"
+                                                    stroke="#1a1a2e" stroke-width="3.5" stroke-linecap="round"
+                                                    stroke-linejoin="round" />
+                                                <circle cx="60" cy="88" r="10" fill="#1a1a2e" />
+                                                <rect x="56" y="88" width="8" height="16" rx="3" fill="#1a1a2e" />
+                                            </svg>
+                                        </div>
+                                        <div class="nb-stamp nb-stamp--red">COMING SOON</div>
+                                    </div>
+                                    }
+                                    @if (currentPageIndex() === 3) {
+                                    <div class="nb-right" id="nb-right-4">
+                                        <div class="nb-right-header">
+                                            <span class="nb-right-icon">🚀</span>
+                                            <div>
+                                                <h2 class="nb-right-title">Next Milestone</h2>
+                                                <p class="nb-right-sub">Concept #482 under construction</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Small blueprint sketch card -->
+                                        <div class="nb-blueprint">
+                                            <svg viewBox="0 0 200 140" class="nb-blueprint-svg">
+                                                <line x1="0" y1="35" x2="200" y2="35" stroke="rgba(255,255,255,0.12)"
+                                                    stroke-width="1" />
+                                                <line x1="0" y1="70" x2="200" y2="70" stroke="rgba(255,255,255,0.12)"
+                                                    stroke-width="1" />
+                                                <line x1="0" y1="105" x2="200" y2="105" stroke="rgba(255,255,255,0.12)"
+                                                    stroke-width="1" />
+                                                <line x1="50" y1="0" x2="50" y2="140" stroke="rgba(255,255,255,0.12)"
+                                                    stroke-width="1" />
+                                                <line x1="100" y1="0" x2="100" y2="140" stroke="rgba(255,255,255,0.12)"
+                                                    stroke-width="1" />
+                                                <line x1="150" y1="0" x2="150" y2="140" stroke="rgba(255,255,255,0.12)"
+                                                    stroke-width="1" />
+                                                <rect x="68" y="30" width="64" height="64" rx="2" fill="none"
+                                                    stroke="#ffd93d" stroke-width="1.5" stroke-dasharray="5 3" />
+                                                <circle cx="100" cy="62" r="24" fill="none" stroke="white"
+                                                    stroke-width="2.5" />
+                                                <text x="108" y="24" fill="white" font-size="9"
+                                                    font-family="monospace">R=28.0px</text>
+                                                <text x="60" y="118" fill="#ffd93d" font-size="8"
+                                                    font-family="monospace">PROTOTYPE: #84</text>
+                                            </svg>
+                                        </div>
+                                        <div class="nb-stamp nb-stamp--yellow">UNDER WAY</div>
+                                    </div>
+                                    }
+                                    @if (currentPageIndex() === 4) {
+                                    <div class="nb-right" id="nb-right-5">
+                                        <div class="nb-right-header">
+                                            <span class="nb-right-icon">📖</span>
+                                            <div>
+                                                <h2 class="nb-right-title">Cozy Volume 1</h2>
+                                                <p class="nb-right-sub">Arcade Platform Complete</p>
+                                            </div>
+                                        </div>
+
+                                        <!-- Treasure chest art area -->
+                                        <div class="nb-art-area">
+                                            <div class="nb-chest-direct">
+                                                <svg viewBox="0 0 140 120" class="nb-chest-svg">
+                                                    <!-- Chest body -->
+                                                    <rect x="10" y="55" width="120" height="58" rx="8" fill="#c8974f"
+                                                        stroke="#3e1f08" stroke-width="3" />
+                                                    <!-- Chest lid -->
+                                                    <rect x="10" y="28" width="120" height="35" rx="8" fill="#d4a765"
+                                                        stroke="#3e1f08" stroke-width="3" />
+                                                    <!-- Metal band lid -->
+                                                    <rect x="8" y="50" width="124" height="10" rx="2" fill="#8a6030"
+                                                        stroke="#3e1f08" stroke-width="1.5" />
+                                                    <!-- Metal band body -->
+                                                    <rect x="8" y="80" width="124" height="8" rx="2" fill="#8a6030"
+                                                        stroke="#3e1f08" stroke-width="1.5" />
+                                                    <!-- Lock -->
+                                                    <rect x="54" y="45" width="32" height="24" rx="5" fill="#ffd93d"
+                                                        stroke="#3e1f08" stroke-width="2" />
+                                                    <path d="M 62 45 L 62 36 A 8 8 0 0 1 78 36 L 78 45" fill="none"
+                                                        stroke="#3e1f08" stroke-width="2.5" stroke-linecap="round" />
+                                                    <!-- Coins spilling -->
+                                                    <circle cx="35" cy="30" r="10" fill="#ffd93d" stroke="#b48507"
+                                                        stroke-width="1.5" />
+                                                    <circle cx="55" cy="22" r="9" fill="#ffd93d" stroke="#b48507"
+                                                        stroke-width="1.5" />
+                                                    <circle cx="75" cy="18" r="11" fill="#ffd93d" stroke="#b48507"
+                                                        stroke-width="1.5" />
+                                                    <circle cx="95" cy="23" r="8" fill="#ffd93d" stroke="#b48507"
+                                                        stroke-width="1.5" />
+                                                    <circle cx="110" cy="32" r="9" fill="#ffd93d" stroke="#b48507"
+                                                        stroke-width="1.5" />
+                                                    <!-- Stars -->
+                                                    <text x="26" y="8" font-size="12" fill="#ffd93d"
+                                                        opacity="0.8">✦</text>
+                                                    <text x="100" y="12" font-size="10" fill="#ffd93d"
+                                                        opacity="0.7">✦</text>
+                                                </svg>
+                                            </div>
+                                        </div>
+
+                                        <!-- Caption underneath -->
+                                        <p class="nb-chest-caption">Volume 1 complete! More chapters coming next.</p>
+
+                                        <!-- Pink thank you sticky -->
+                                        <div class="nb-sticky nb-sticky--pink footer-sticky">
+                                            <strong>Thank you</strong> for playing Party Games! 🎉 Stay tuned for Volume
+                                            2.
+                                        </div>
+                                    </div>
+                                    }
+                                </div>
+                            </div>
+
+                            <!-- Clickable tabs sticking out of the right edge of the book cover -->
+                            <div class="notebook-flags">
+                                <button class="notebook-flag notebook-flag--coral"
+                                    [class.active]="currentPageIndex() === 0"
+                                    (click)="currentPageIndex.set(0)">Wavelength</button>
+                                <button class="notebook-flag notebook-flag--sky"
+                                    [class.active]="currentPageIndex() === 1" (click)="currentPageIndex.set(1)">Est.
+                                    Battle</button>
+                                <button class="notebook-flag notebook-flag--mint"
+                                    [class.active]="currentPageIndex() === 2"
+                                    (click)="currentPageIndex.set(2)">Brainstorm</button>
+                                <button class="notebook-flag notebook-flag--lavender"
+                                    [class.active]="currentPageIndex() === 3"
+                                    (click)="currentPageIndex.set(3)">Milestones</button>
+                                <button class="notebook-flag notebook-flag--yellow"
+                                    [class.active]="currentPageIndex() === 4"
+                                    (click)="currentPageIndex.set(4)">Credits</button>
+                            </div>
+
+                            <span class="notebook-ribbon" aria-hidden="true"></span>
+                        </div>
+
+                        <!-- NAVIGATION BAR — sits below the cover, above ribbon -->
+                        <div class="nb-nav-bar">
+                            <button class="nb-nav-btn nb-nav-btn--prev" [disabled]="currentPageIndex() === 0"
+                                (click)="previousPage()">← Previous</button>
+                            <span class="nb-page-counter">Page {{ currentPageIndex() + 1 }} / 5</span>
+                            <button class="nb-nav-btn nb-nav-btn--next"
+                                [disabled]="currentPageIndex() === pages.length - 1" (click)="nextPage()">Next
+                                →</button>
+                        </div>
+                        }
+
+                    </div>
+                </div>
+            </div> <!-- End of .desk-container -->
+        </div>
+        }
+
+        <!-- ════════════════════════════════════════════════════════════════
+       HOW FAR OFF — SETUP SCREEN
+  ════════════════════════════════════════════════════════════════ -->
+        @if (gameMode() === 'howFarOff' && phase() === 'setup') {
+        <div class="setup-screen">
+            <div class="setup-back-btn">
+                <button class="ghost-btn" (click)="backToMenu()">← Games</button>
+            </div>
+
+            <div class="logo-block">
+                <div class="logo-wave">🎯</div>
+                <h1 class="logo-title">How Far Off?</h1>
+                <p class="logo-sub">Guess the number, closest wins!</p>
+            </div>
+
+            <div class="glass-card teams-card">
+                <h2 class="section-heading">🧑‍🤝‍🧑 Teams</h2>
+
+                <div class="team-list">
+                    @for (team of teams(); track trackTeam($index, team)) {
+                    <div class="team-row" [style.--team-color]="team.color" [class.is-editing]="editingTeamId() === team.id">
+                        @if (editingTeamId() === team.id) {
+                        <div class="team-edit-container">
+                            <input class="team-name-input" [(ngModel)]="editingName" (keyup.enter)="updateHfoTeam()"
+                                (keyup.escape)="cancelEdit()" autofocus />
+                            <div class="team-edit-actions">
+                                <button class="team-edit-btn confirm-edit-btn" (click)="updateHfoTeam()">✓ Save</button>
+                                <button class="team-edit-btn cancel-edit-btn" (click)="cancelEdit()">✕ Cancel</button>
+                            </div>
+                        </div>
+                        } @else {
+                        <div class="team-dot"></div>
+                        <span class="team-name">{{ team.name }}</span>
+                        <button class="icon-btn edit-btn" (click)="startEdit(team)" title="Rename">✏️</button>
+                        @if (teams().length > 2) {
+                        <button class="icon-btn del-btn" (click)="deleteHfoTeam(team.id)" title="Delete">🗑️</button>
+                        }
+                        }
+                    </div>
+                    }
+                </div>
+
+                @if (teams().length < 6) { <button class="outline-btn add-team-btn" (click)="addHfoTeam()">
+                    <span>＋</span> Add Team
+                    </button>
+                    }
+            </div>
+
+            <button class="primary-btn start-btn" (click)="startGame()">🎯 Start Game!</button>
+        </div>
+        }
+
+        <!-- ════════════════════════════════════════════════════════════════
+       HOW FAR OFF — GAME SCREEN (all teams guess / ranked reveal)
+  ════════════════════════════════════════════════════════════════ -->
+        @if (gameMode() === 'howFarOff' && phase() !== 'setup') {
+        <div class="game-screen">
+
+            <!-- Top bar -->
+            <header class="game-header">
+                <div class="header-left">
+                    <span class="round-badge">Round {{ roundNumber() }}</span>
+                </div>
+                <div class="header-center">
+                    <div class="logo-title-sm">🎯 How Far Off?</div>
+                </div>
+                <div class="header-right">
+                    <button class="ghost-btn" (click)="resetGame()">🏁 End</button>
+                </div>
+            </header>
+
+            @if (!hfoRevealed() && !hfoTransition()) {
+            <div class="turn-banner" [style.background-color]="currentHfoTeam().color + '14'" [style.border-left-color]="currentHfoTeam().color" [style.--team-color]="currentHfoTeam().color">
+                <span class="turn-dot" [style.background-color]="currentHfoTeam().color"></span>
+                <span class="turn-label">{{ currentHfoTeam().name }}'s Turn — Enter Your Guess 🤔</span>
+            </div>
+            }
+            @if (hfoRevealed()) {
+            <div class="turn-banner hfo-banner">
+                <span class="turn-dot hfo-dot"></span>
+                <span class="turn-label">✨ Results are in!</span>
+            </div>
+            }
+
+            <!-- Question card (hidden during the pass-the-device transition) -->
+            @if (!hfoTransition()) {
+            <div class="glass-card hfo-question-card">
+                <span class="hfo-question-badge">❓ Question</span>
+                <p class="hfo-question-text">{{ hfoCurrentQuestion().question }}</p>
+            </div>
+            }
+
+            <!-- ════ GUESS ENTRY (current team only, hidden from others) ════ -->
+            @if (!hfoRevealed() && !hfoTransition()) {
+            <div class="control-panel">
+                <div class="glass-card guess-card">
+                    <div class="guess-header">
+                        <span class="guess-badge">🎯 {{ currentHfoTeam().name }}</span>
+                        <span class="guess-sub">Enter your guess, then pass the device on</span>
+                    </div>
+
+                    <div class="hfo-input-row">
+                        <input class="hfo-guess-input" type="number" inputmode="numeric" placeholder="Your guess..."
+                            [ngModel]="hfoDraftGuess()"
+                            (ngModelChange)="hfoDraftGuess.set($event === null || $event === '' ? null : +$event)" />
+                        @if (hfoCurrentQuestion().unit) {
+                        <span class="hfo-unit-label">{{ hfoCurrentQuestion().unit }}</span>
+                        }
+                    </div>
+
+                    <div class="hfo-progress-text">Team {{ hfoTurnIndex() + 1 }} of {{ teams().length }}</div>
+
+                    <button class="primary-btn lock-btn" [disabled]="hfoDraftGuess() === null"
+                        (click)="submitHfoGuess()">
+                        🔒 Submit Guess
+                    </button>
+                </div>
+            </div>
+            }
+
+            <!-- ════ PASS-THE-DEVICE TRANSITION ════ -->
+            @if (hfoTransition()) {
+            <div class="control-panel">
+                <div class="glass-card hfo-transition-card">
+                    <div class="hfo-transition-emoji">🔄</div>
+                    <h3 class="hfo-transition-title">Pass the device to the next team!</h3>
+
+                    <div class="hfo-transition-row">
+                        <span class="hfo-transition-label">Finished</span>
+                        <span class="hfo-transition-team">{{ currentHfoTeam().name }} ✅</span>
+                    </div>
+
+                    @if (nextHfoTeam()) {
+                    <div class="hfo-transition-row hfo-transition-next">
+                        <span class="hfo-transition-label">Next Up</span>
+                        <span class="hfo-transition-team">{{ nextHfoTeam()!.name }} 👀</span>
+                    </div>
+                    } @else {
+                    <div class="hfo-transition-row hfo-transition-next">
+                        <span class="hfo-transition-label">Last guess in!</span>
+                        <span class="hfo-transition-team">Ready to reveal 🎉</span>
+                    </div>
+                    }
+
+                    <button class="primary-btn next-btn" (click)="continueToNextHfoTeam()">
+                        Continue →
+                    </button>
+                </div>
+            </div>
+            }
+
+            <!-- ════ RANKED REVEAL ════ -->
+            @if (hfoRevealed()) {
+            <div class="control-panel">
+                <div class="glass-card reveal-card hfo-reveal-card">
+                    <div class="hfo-answer-banner">
+                        <span class="hfo-answer-label">Correct Answer</span>
+                        <span class="hfo-answer-value">
+                            {{ hfoCurrentQuestion().answer }}{{ hfoCurrentQuestion().unit ? ' ' +
+                            hfoCurrentQuestion().unit : '' }}
+                        </span>
+                    </div>
+
+                    <div class="hfo-results-list">
+                        @for (r of hfoResults(); track r.teamId) {
+                        <div class="hfo-result-row" [class.hfo-result-first]="r.placement === 1"
+                            [style.background-color]="r.color + '14'" [style.--team-color]="r.color">
+                            <span class="hfo-result-place">{{ r.placement }}{{ ordinal(r.placement) }}</span>
+                            <span class="hfo-result-dot" [style.background-color]="r.color"></span>
+                            <div class="hfo-result-body">
+                                <span class="hfo-result-name">{{ r.name }}</span>
+                                <span class="hfo-result-meta">
+                                    Guessed {{ r.guess }} · Off by {{ r.distance }}
+                                </span>
+                            </div>
+                            <span class="hfo-result-points">+{{ r.points }} pts</span>
+                        </div>
+                        }
+                    </div>
+
+                    <button class="primary-btn next-btn" (click)="hfoNextQuestion()">
+                        Next Question →
+                    </button>
+                </div>
+            </div>
+            }
+
+            <!-- Leaderboard always visible during gameplay -->
+            <div class="glass-card leaderboard-card">
+                <h3 class="lb-title">🏆 Leaderboard</h3>
+                <div class="lb-list">
+                    @for (team of sortedTeams(); track team.id; let i = $index) {
+                    <div class="lb-row" [class.lb-current]="!hfoRevealed() && team.id === currentHfoTeam().id"
+                        [style.background-color]="team.color + '14'" [style.--team-color]="team.color">
+                        <div class="lb-row-left">
+                            @if (teams().length < 2 || teams().length > 6) {
+                            <span class="lb-rank">{{ i + 1 }}</span>
+                            }
+                            <span class="team-dot" [style.background-color]="team.color"></span>
+                            <span class="lb-name">{{ team.name }}</span>
+                        </div>
+                        <div class="lb-row-right">
+                            <span class="lb-score">{{ team.score }} pts</span>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+
+        <!-- ════════════════════════════════════════════════════════════════
+       WAVELENGTH — SETUP SCREEN
+  ════════════════════════════════════════════════════════════════ -->
+        @if (gameMode() === 'wavelength' && phase() === 'setup') {
+        <div class="setup-screen">
+            <div class="setup-back-btn">
+                <button class="ghost-btn" (click)="backToMenu()">← Games</button>
+            </div>
+
+            <div class="logo-block">
+                <div class="logo-wave">〜</div>
+                <h1 class="logo-title">Wavelength</h1>
+                <p class="logo-sub">The party game of</p>
+            </div>
+
+            <div class="glass-card teams-card">
+                <h2 class="section-heading">🧑‍🤝‍🧑 Teams</h2>
+
+                <div class="team-list">
+                    @for (team of teams(); track trackTeam($index, team)) {
+                    <div class="team-row" [style.--team-color]="team.color" [class.is-editing]="editingTeamId() === team.id">
+                        @if (editingTeamId() === team.id) {
+                        <div class="team-edit-container">
+                            <input class="team-name-input" [(ngModel)]="editingName" (keyup.enter)="updateWlTeam()"
+                                (keyup.escape)="cancelEdit()" autofocus />
+                            <div class="team-edit-actions">
+                                <button class="team-edit-btn confirm-edit-btn" (click)="updateWlTeam()">✓ Save</button>
+                                <button class="team-edit-btn cancel-edit-btn" (click)="cancelEdit()">✕ Cancel</button>
+                            </div>
+                        </div>
+                        } @else {
+                        <div class="team-dot"></div>
+                        <span class="team-name">{{ team.name }}</span>
+                        <button class="icon-btn edit-btn" (click)="startEdit(team)" title="Rename">✏️</button>
+                        @if (teams().length > 2) {
+                        <button class="icon-btn del-btn" (click)="deleteWlTeam(team.id)" title="Delete">🗑️</button>
+                        }
+                        }
+                    </div>
+                    }
+                </div>
+
+                @if (teams().length < 6) { <button class="outline-btn add-team-btn" (click)="addWlTeam()">
+                    <span>＋</span> Add Team
+                    </button>
+                    }
+            </div>
+
+            <div class="glass-card category-builder-card">
+                <h2 class="section-heading">🃏 Category</h2>
+
+                <input class="team-name-input" placeholder="Left side (e.g. Cold)" [ngModel]="customLeft()"
+                    (ngModelChange)="customLeft.set($event)" />
+
+                <input class="team-name-input" placeholder="Right side (e.g. Hot)" [ngModel]="customRight()"
+                    (ngModelChange)="customRight.set($event)" />
+
+                <div class="category-buttons">
+                    <button class="outline-btn" (click)="randomCategory()">
+                        🎲 Random
+                    </button>
+
+                    <button class="outline-btn" (click)="useCustomCategory.set(true)">
+                        ✏️ Use These
+                    </button>
+                </div>
+            </div>
+
+            <button class="primary-btn start-btn" (click)="startGame()">🎉 Start Game!</button>
+        </div>
+        }
+
+        <!-- ════════════════════════════════════════════════════════════════
+       WAVELENGTH — GAME SCREENS (psychic / guessing / reveal)
+  ════════════════════════════════════════════════════════════════ -->
+        @if (gameMode() === 'wavelength' && phase() !== 'setup') {
+        <div class="game-screen">
+
+            <!-- Top bar -->
+            <header class="game-header">
+                <div class="header-left">
+                    <span class="round-badge">Round {{ roundNumber() }}</span>
+                </div>
+                <div class="header-center">
+                    <div class="logo-title-sm">〜 Wavelength</div>
+                </div>
+                <div class="header-right">
+                    <button class="ghost-btn" (click)="resetGame()">✕ Quit</button>
+                </div>
+            </header>
+
+            <!-- Turn banner -->
+            <div class="turn-banner" [style.background-color]="currentTeam().color + '14'" [style.border-left-color]="currentTeam().color" [style.--team-color]="currentTeam().color">
+                <span class="turn-dot" [style.background-color]="currentTeam().color"></span>
+                <span class="turn-label">
+                    {{ currentTeam().name }}'s Turn
+                    @if (phase() === 'psychic') { — Psychic 🔮 }
+                    @if (phase() === 'guessing') { — Guessers 🎯 }
+                    @if (phase() === 'reveal') { — Result! 🎊 }
+                </span>
+            </div>
+
+            <!-- Category strip -->
+            <div class="category-strip">
+                <span class="cat-left">{{ category()[0] }}</span>
+                <div class="cat-divider">
+                    <div class="cat-line"></div>
+                    <span class="cat-icon">↔</span>
+                    <div class="cat-line"></div>
+                </div>
+                <span class="cat-right">{{ category()[1] }}</span>
+            </div>
+
+            <!-- ── THE DIAL ────────────────────────────────────────────── -->
+            <div class="dial-wrapper" id="dial-area" (pointerdown)="onDialPointerDown($event)"
+                (pointermove)="onDialPointerMove($event)" (pointerup)="onDialPointerUp($event)"
+                [class.guessing-mode]="phase() === 'guessing' && !guessLocked()"
+                [class.locked]="guessLocked() || phase() !== 'guessing'">
+
+                <svg class="dial-svg" viewBox="0 0 500 280" xmlns="http://www.w3.org/2000/svg"
+                    preserveAspectRatio="xMidYMid meet">
+
+                    <defs>
+                        <filter id="hand-drawn-backing" x="-10%" y="-10%" width="120%" height="120%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="3" result="noise" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="4" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                            <feDropShadow dx="2" dy="5" stdDeviation="4" flood-color="#2a2521" flood-opacity="0.35" />
+                        </filter>
+                        <filter id="hand-drawn-needle" x="-15%" y="-15%" width="130%" height="130%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="3" result="noise" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="5" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                            <feDropShadow dx="1" dy="3" stdDeviation="2.5" flood-color="#2a2521" flood-opacity="0.4" />
+                        </filter>
+                        <filter id="hand-drawn-text" x="-5%" y="-5%" width="110%" height="110%">
+                            <feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" result="noise" />
+                            <feDisplacementMap in="SourceGraphic" in2="noise" scale="1.8" xChannelSelector="R" yChannelSelector="G" result="displaced" />
+                        </filter>
+                    </defs>
+
+                    <!-- Double-layered cut paper backing with drop shadow -->
+                    <path d="M 15 270 A 235 235 0 0 1 485 270 Z" fill="#ebd8c2" stroke="#2a2521" stroke-width="4.5" filter="url(#hand-drawn-backing)" />
+                    <path d="M 22 270 A 228 228 0 0 1 478 270 Z" fill="#fffdf5" stroke="#2a2521" stroke-width="3" filter="url(#hand-drawn-backing)" />
+                    
+                    <!-- Semicircle background tracks/cutouts -->
+                    <path d="M 28 270 A 222 222 0 0 1 472 270" fill="none" stroke="#ebdcb9" stroke-width="44" stroke-linecap="round" filter="url(#hand-drawn-backing)" />
+
+                    @if (targetRevealed()) {
+                    @for (band of scoreBands; track band.pts) {
+                    <!-- Individual cut colored paper segments -->
+                    <path [attr.d]="arcBand(band.lo, band.hi, 28, 222, 250, 270)" [attr.fill]="getBandColor(band.pts)"
+                        stroke="#2a2521" stroke-width="3.5" stroke-linejoin="round" filter="url(#hand-drawn-backing)" class="score-band" />
+                    }
+                    }
+
+                    <path d="M 28 270 A 222 222 0 0 1 472 270" fill="none" stroke="#2a2521" stroke-width="4" filter="url(#hand-drawn-backing)" />
+                    <!-- Inner compass arc (dashnote look) -->
+                    <path d="M 78 270 A 172 172 0 0 1 422 270" fill="none" stroke="#2a2521" stroke-width="3" stroke-dasharray="4 8" opacity="0.75" filter="url(#hand-drawn-backing)" />
+
+                    @if (targetRevealed()) {
+                    <!-- Secret psychic indicator styled as red marker scribbles -->
+                    <line [attr.x1]="posToXY(targetPosition(), 28, 250, 270).x"
+                        [attr.y1]="posToXY(targetPosition(), 28, 250, 270).y"
+                        [attr.x2]="posToXY(targetPosition(), 226, 250, 270).x"
+                        [attr.y2]="posToXY(targetPosition(), 226, 250, 270).y" stroke="#e74c3c" stroke-width="6"
+                        stroke-linecap="round" stroke-dasharray="3 5" class="target-needle" filter="url(#hand-drawn-needle)" />
+                    <circle [attr.cx]="posToXY(targetPosition(), 172, 250, 270).x"
+                        [attr.cy]="posToXY(targetPosition(), 172, 250, 270).y" r="9" fill="#e74c3c" stroke="#2a2521"
+                        stroke-width="3" class="target-dot" filter="url(#hand-drawn-needle)" />
+                    @if (phase() === 'psychic') {
+                    <text [attr.x]="posToXY(targetPosition(), 242, 250, 270).x"
+                        [attr.y]="posToXY(targetPosition(), 242, 250, 270).y" text-anchor="middle" fill="#e74c3c"
+                        font-size="14" font-family="'Caveat Brush', cursive" font-weight="900">TARGET</text>
+                    }
+                    }
+
+                    @if (phase() === 'guessing' || phase() === 'reveal') {
+                    <!-- Hand-cut physical pointer arrow rotated counter-clockwise -->
+                    <g [attr.transform]="'rotate(' + (-posToAngle(guessPosition())) + ', 250, 270)'" filter="url(#hand-drawn-needle)" class="guess-needle">
+                        <path d="M 250,265 C 310,264 370,265 425,264 L 425,256 L 472,270 L 425,284 L 425,276 C 370,275 310,276 250,275 Z"
+                              fill="#2ec4b6" stroke="#2a2521" stroke-width="4" stroke-linejoin="round" />
+                    </g>
+                    }
+
+                    <!-- Center Pivot: red plastic button/bottle cap -->
+                    <g filter="url(#hand-drawn-needle)">
+                        <circle cx="250" cy="270" r="17" fill="#e74c3c" stroke="#2a2521" stroke-width="4.5" />
+                        <circle cx="250" cy="270" r="13" fill="#c0392b" stroke="#2a2521" stroke-width="2" />
+                        <!-- Button thread stitches -->
+                        <path d="M 245,265 L 255,275 M 245,275 L 255,265" stroke="#fffdf5" stroke-width="3" stroke-linecap="round" />
+                    </g>
+
+                </svg>
+
+                @if (phase() === 'guessing' && !guessLocked()) {
+                <div class="drag-hint">← drag needle to guess →</div>
+                }
+            </div>
+
+            <!-- ════ PSYCHIC CONTROLS ════ -->
+            @if (phase() === 'psychic') {
+            <div class="control-panel">
+                <div class="glass-card psychic-card">
+                    <div class="psychic-header">
+                        <span class="psychic-badge">🔮 Psychic</span>
+                        <span class="psychic-sub">Only you can see the target!</span>
+                    </div>
+                    @if (!targetRevealed()) {
+                    <button class="primary-btn reveal-btn" (click)="revealTarget()">
+                        👁 Reveal Target Position
+                    </button>
+                    } @else {
+                    <div class="clue-section">
+                        <p class="clue-prompt">Think of a clue that hints at the target's position on the spectrum…</p>
+                        <button class="primary-btn hide-btn" (click)="hideForGuessers()">
+                            🙈 Hide For Guessers
+                        </button>
+                    </div>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- ════ GUESSING CONTROLS ════ -->
+            @if (phase() === 'guessing') {
+            <div class="control-panel">
+                <div class="glass-card guess-card">
+                    <div class="guess-header">
+                        <span class="guess-badge">🎯 Guessers</span>
+                        <span class="guess-sub">Drag the needle to your best guess!</span>
+                    </div>
+                    @if (!guessLocked()) {
+                    <button class="primary-btn lock-btn" (click)="lockGuess()">
+                        🔒 Lock Guess
+                    </button>
+                    } @else {
+                    <div class="locked-msg">Guess locked at {{ guessPosition() }}</div>
+                    <button class="primary-btn reveal-result-btn" (click)="revealResult()">
+                        ✨ Reveal Result!
+                    </button>
+                    }
+                </div>
+            </div>
+            }
+
+            <!-- ════ REVEAL CONTROLS ════ -->
+            @if (phase() === 'reveal') {
+            <div class="control-panel">
+                <div class="glass-card reveal-card" [class.score-4]="roundScore() === 4"
+                    [class.score-3]="roundScore() === 3">
+                    <div class="score-display">
+                        <div class="score-pts">{{ roundScore() }}</div>
+                        <div class="score-label">
+                            @switch (roundScore()) {
+                            @case (4) { 🎉 Perfect! }
+                            @case (3) { 🔥 Great! }
+                            @case (2) { 👍 Close! }
+                            @case (1) { 😬 Almost! }
+                            @default { 💀 Missed! }
+                            }
+                        </div>
+                        <div class="score-pts-label">points for {{ currentTeam().name }}</div>
+                    </div>
+
+                    <div class="positions-row">
+                        <div class="pos-item">
+                            <span class="pos-dot target-dot-sm"></span>
+                            Target: <strong>{{ targetPosition() }}</strong>
+                        </div>
+                        <div class="pos-item">
+                            <span class="pos-dot guess-dot-sm"></span>
+                            Guess: <strong>{{ guessPosition() }}</strong>
+                        </div>
+                    </div>
+
+                    <button class="primary-btn next-btn" (click)="nextTurn()">
+                        Next Team's Turn →
+                    </button>
+                </div>
+            </div>
+            }
+
+            <!-- Leaderboard always visible during gameplay -->
+            <div class="glass-card leaderboard-card">
+                <h3 class="lb-title">🏆 Leaderboard</h3>
+                <div class="lb-list">
+                    @for (team of sortedTeams(); track team.id; let i = $index) {
+                    <div class="lb-row" [class.lb-current]="team.id === currentTeam().id"
+                        [style.background-color]="team.color + '14'" [style.--team-color]="team.color">
+                        <div class="lb-row-left">
+                            @if (teams().length < 2 || teams().length > 6) {
+                            <span class="lb-rank">{{ i + 1 }}</span>
+                            }
+                            <span class="team-dot" [style.background-color]="team.color"></span>
+                            <span class="lb-name">{{ team.name }}</span>
+                        </div>
+                        <div class="lb-row-right">
+                            <span class="lb-score">{{ team.score }} pts</span>
+                        </div>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+    </div><!-- /.wl-content -->
+</div>

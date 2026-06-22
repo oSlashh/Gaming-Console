@@ -54,11 +54,11 @@ export class GamePage {
       route: '/guess',
     },
     {
-      id: 6,
-      name: 'newgame',
-      description: 'newgame',
-      route: '',
-    },
+  id: 6,
+  name: 'Party Games',
+  description: 'A collection of fun and engaging party games to play with friends.',
+  route: '/wavelength'
+}
     
   ];
 
