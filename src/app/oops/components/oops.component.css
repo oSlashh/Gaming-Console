@@ -1159,3 +1159,6 @@ h2 {
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
+.mode-back-button {
+  margin-top: 1.25rem;
+}

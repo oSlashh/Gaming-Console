@@ -99,6 +99,10 @@
         <small>{{ mode.short }}</small>
       </button>
     </div>
+
+    <button class="secondary-button mode-back-button" type="button" (click)="goToGamePage()">
+    Back
+    </button>
   </section>
 
   <section *ngIf="phase === 'instructions' && selectedMode" class="screen">

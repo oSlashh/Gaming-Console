@@ -1,9 +1,26 @@
-import { Component } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  NgZone,
+  OnDestroy,
+  ViewChild,
+  HostListener
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../services/user.service';
 
+type Particle = {
+  x: number;
+  y: number;
+  baseX: number;
+  baseY: number;
+  size: number;
+  alpha: number;
+  drift: number;
+};
 
 @Component({
   selector: 'app-login',
@@ -12,48 +29,236 @@ import { UserService } from '../services/user.service';
   templateUrl: './login.html',
   styleUrls: ['./login.css'],
 })
-export class Login {
-  loginForm: FormGroup;
+export class Login implements AfterViewInit, OnDestroy {
+  @ViewChild('particleCanvas') particleCanvas?: ElementRef<HTMLCanvasElement>;
 
-  constructor(private fb: FormBuilder, private router: Router, private userService: UserService) {
+  loginForm: FormGroup;
+  isPortalOpen = false;
+  portalActivating = false;
+  private particles: Particle[] = [];
+  private pointer = { x: -9999, y: -9999, active: false };
+  private animationFrame = 0;
+  private resizeObserver?: ResizeObserver;
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private userService: UserService,
+    private zone: NgZone
+  ) {
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
   }
 
-  login() {
+  trackPointer(event: PointerEvent): void {
+    const target = event.currentTarget as HTMLElement;
+    const rect = target.getBoundingClientRect();
 
-  if (this.loginForm.invalid) {
-    this.loginForm.markAllAsTouched();
-    alert('Please fill in all fields correctly!');
-    return;
+    this.pointer.x = event.clientX - rect.left;
+    this.pointer.y = event.clientY - rect.top;
+    this.pointer.active = true;
   }
 
-  const { email, password } = this.loginForm.value;
+  releasePointer(): void {
+    this.pointer.active = false;
+  }
+  private resetPointer(): void {
+    this.pointer = {
+      x: -9999,
+      y: -9999,
+      active: false
+    };
+  }
 
-  this.userService.getUsers().subscribe({
-    next: (users: any[]) => {
+  ngAfterViewInit(): void {
+    if (!this.particleCanvas || typeof window === 'undefined') {
+      return;
+    }
 
-      const user = users.find(
-        u => u.email === email &&
-             u.password === password
-      );
+    this.zone.runOutsideAngular(() => {
+      this.setupParticles();
 
-      if (!user) {
-        alert('Invalid credentials or user not registered.');
-        return;
+      this.resizeObserver = new ResizeObserver(() => {
+      this.setupParticles();
+    });
+
+    const container =
+      this.particleCanvas!.nativeElement.parentElement;
+
+    if (container) {
+      this.resizeObserver.observe(container);
+    }
+      this.animateParticles();
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.animationFrame) {
+      cancelAnimationFrame(this.animationFrame);
+    }
+
+    this.resizeObserver?.disconnect();
+  }
+  @HostListener('window:resize')
+  onWindowResize(): void {
+    this.resetPointer();
+    this.setupParticles();
+  }
+
+  private setupParticles(): void {
+    this.resetPointer();
+
+    const canvas = this.particleCanvas?.nativeElement;
+
+    if (!canvas) {
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    const ratio = Math.min(window.devicePixelRatio || 1, 2);
+
+    canvas.width = Math.floor(rect.width * ratio);
+    canvas.height = Math.floor(rect.height * ratio);
+
+    const total =
+    rect.width < 768
+      ? 100
+      : 280;
+
+    this.particles = Array.from({ length: total }, () => {
+      const x = Math.random() * rect.width;
+      const y = Math.random() * rect.height;
+
+      return {
+        x,
+        y,
+        baseX: x,
+        baseY: y,
+        size:
+          rect.width < 768
+            ? Math.random() * 0.6 + 0.3
+            : Math.random() * 1.2 + 0.4,
+        alpha: Math.random() * 0.55 + 0.25,
+        drift: Math.random() * Math.PI * 2
+      };
+    });
+  }
+
+  private animateParticles(): void {
+    const canvas = this.particleCanvas?.nativeElement;
+    const context = canvas?.getContext('2d');
+
+    if (!canvas || !context) {
+      return;
+    }
+
+    const rect = canvas.getBoundingClientRect();
+    context.setTransform(1, 0, 0, 1, 0, 0);
+
+    context.clearRect(
+      0,
+      0,
+      canvas.width,
+      canvas.height
+    );
+
+    const ratio = canvas.width / rect.width || 1;
+
+    context.setTransform(
+      ratio,
+      0,
+      0,
+      ratio,
+      0,
+      0
+    );
+
+    for (const particle of this.particles) {
+      const driftX = Math.cos(particle.drift) * 0.16;
+      const driftY = Math.sin(particle.drift) * 0.16;
+      particle.baseX += driftX;
+      particle.baseY += driftY;
+
+      if (particle.baseX < -10) particle.baseX = rect.width + 10;
+      if (particle.baseX > rect.width + 10) particle.baseX = -10;
+      if (particle.baseY < -10) particle.baseY = rect.height + 10;
+      if (particle.baseY > rect.height + 10) particle.baseY = -10;
+
+      let targetX = particle.baseX;
+      let targetY = particle.baseY;
+
+      if (this.pointer.active) {
+        const dx = particle.baseX - this.pointer.x;
+        const dy = particle.baseY - this.pointer.y;
+        const distance = Math.sqrt(dx * dx + dy * dy);
+        const radius =
+          rect.width < 768
+            ? 70
+            : 118;
+
+        if (distance < radius) {
+          const force = (radius - distance) / radius;
+          const angle = Math.atan2(dy, dx);
+          targetX += Math.cos(angle) * force * 72;
+          targetY += Math.sin(angle) * force * 72;
+        }
       }
 
-      alert('Login successful!');
-      this.router.navigate(['/game-page']);
-    },
+      particle.x += (targetX - particle.x) * 0.08;
+      particle.y += (targetY - particle.y) * 0.08;
 
-    error: (err: any) => {
-      console.error(err);
-      alert('Unable to connect to server');
+      context.beginPath();
+      context.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+      context.fillStyle = `rgba(170, 248, 255, ${particle.alpha})`;
+      context.shadowColor = 'rgba(57, 236, 255, .7)';
+      context.shadowBlur = 8;
+      context.fill();
     }
-  });
+
+    this.animationFrame = requestAnimationFrame(() => this.animateParticles());
+  }
+
+  login() {
+    if (this.loginForm.invalid) {
+      this.loginForm.markAllAsTouched();
+      alert('Please fill in all fields correctly!');
+      return;
+    }
+
+    const { email, password } = this.loginForm.value;
+
+    this.userService.getUsers().subscribe({
+      next: (users: any[]) => {
+        const user = users.find(
+          u => u.email === email &&
+               u.password === password
+        );
+
+        if (!user) {
+          alert('Invalid credentials or user not registered.');
+          return;
+        }
+        console.log('Before activation');
+
+        this.isPortalOpen = true;
+        cancelAnimationFrame(this.animationFrame);
+
+        document
+          .querySelector('.login-world')
+          ?.classList.add('portal-active');
+
+        setTimeout(() => {
+          this.router.navigate(['/game-page']);
+        }, 2800);
+      },
+
+      error: (err: any) => {
+        console.error(err);
+        alert('Unable to connect to server');
+      }
+    });
   }
 
   goHome(): void {

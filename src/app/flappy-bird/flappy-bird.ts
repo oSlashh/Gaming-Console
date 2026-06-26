@@ -14,8 +14,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   private ctx!: CanvasRenderingContext2D | null;
   private rafId: number | null = null;
-  private pipes: { x: number; gapY: number }[] = [];
-  private pipeTimer = 0;
+  private pipes: { x: number; gapY: number; passed: boolean }[] = [];
   private lastTime = 0;
   private countdownInterval: any = null;
   private tenMinTimer: any = null;
@@ -111,7 +110,6 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   initGame() {
     this.bird = { x: this.width * 0.2, y: this.height / 2, vy: 0, radius: 14 };
     this.pipes = [];
-    this.pipeTimer = 0;
     this.score = 0;
     this.resetEvolutionState();
     this.screen = 'instructions';
@@ -253,11 +251,117 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   resetGameState() {
     this.bird = { x: this.width * 0.2, y: this.height / 2, vy: 0, radius: 14 };
     this.pipes = [];
-    this.pipeTimer = 0;
     this.score = 0;
     this.lives = 3;
     this.invincibilityTime = 0;
     this.resetEvolutionState();
+  }
+
+  private clamp(value: number, min: number, max: number) {
+    if (max < min) {
+      return min;
+    }
+
+    return Math.min(max, Math.max(min, value));
+  }
+
+  private getGroundHeight() {
+    return 100;
+  }
+
+  private getPipeWidth() {
+    return Math.round(this.clamp(this.width * 0.065, 52, 70));
+  }
+
+  private getPipeGapSize() {
+    const playableHeight = Math.max(1, this.height - this.getGroundHeight());
+    return Math.round(this.clamp(playableHeight * 0.24, 120, 160));
+  }
+
+  private getPipeSpacing() {
+    return Math.round(
+      this.clamp(this.getPipeGapSize() * 2.6, 280, 420)
+    );
+  }
+
+  private getPipeSpeed() {
+    return this.clamp(this.width * 0.00235, 2.2, 3.4);
+  }
+
+  private getGapBounds() {
+    const groundHeight = this.getGroundHeight();
+    const gapSize = this.getPipeGapSize();
+    const margin = this.clamp(this.height * 0.1, 36, 80);
+    const minGapY = gapSize / 2 + margin;
+    const maxGapY = this.height - groundHeight - gapSize / 2 - margin;
+
+    if (maxGapY < minGapY) {
+      const center = (this.height - groundHeight) / 2;
+      return { minGapY: center, maxGapY: center };
+    }
+
+    return { minGapY, maxGapY };
+  }
+
+  private createGapY() {
+    const { minGapY, maxGapY } = this.getGapBounds();
+    return minGapY + Math.random() * (maxGapY - minGapY);
+  }
+
+  private spawnNextPipe() {
+    const pipeW = this.getPipeWidth();
+    const spacing = this.getPipeSpacing();
+    const lastPipe = this.pipes[this.pipes.length - 1];
+    const x = lastPipe ? lastPipe.x + spacing : this.width + pipeW;
+    const gapY = this.createGapY();
+
+    this.pipes.push({ x, gapY, passed: false });
+  }
+
+  private shouldSpawnPipe() {
+    if (!this.pipes.length) {
+      return true;
+    }
+
+    const lastPipe = this.pipes[this.pipes.length - 1];
+    return lastPipe.x <= this.width - this.getPipeSpacing();
+  }
+
+  private normalizePipeLayout() {
+    const spacing = this.getPipeSpacing();
+    const { minGapY, maxGapY } = this.getGapBounds();
+    
+
+    this.pipes.sort((a, b) => a.x - b.x);
+
+    for (let i = 0; i < this.pipes.length; i += 1) {
+      this.pipes[i].gapY = this.clamp(this.pipes[i].gapY, minGapY, maxGapY);
+
+      if (i > 0 && this.pipes[i].x < this.pipes[i - 1].x + spacing) {
+        this.pipes[i].x = this.pipes[i - 1].x + spacing;
+      }
+    }
+  }
+
+  private spawnRecoveryPipes() {
+    const spacing = this.getPipeSpacing();
+    const startX = Math.max(
+      this.width * 0.48,
+      this.bird.x + spacing * 0.85
+    );
+    const pipeCount = 3;
+    this.pipes = [];
+
+    for (let i = 0; i < pipeCount; i += 1) {
+      const gapY = this.createGapY();
+      this.pipes.push({
+        x: startX + spacing * i,
+        gapY,
+        passed: false
+      });
+    }
+
+    this.normalizePipeLayout();
   }
 
   startLoop() {
@@ -292,26 +396,25 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.bird.y += this.bird.vy * dtScale;
     this.invincibilityTime -= dtScale;
 
-    this.pipeTimer += 0.8 * dtScale;
-
-    if (this.pipeTimer > 110) {
-      this.pipeTimer = 0;
-      const gapSize = 190;
-      const minGapY = gapSize + 80;
-      const maxGapY = this.height - 120 - gapSize;
-      const gapY = minGapY + Math.random() * (maxGapY - minGapY);
-      this.pipes.push({ x: this.width + 40, gapY });
+    if (this.shouldSpawnPipe()) {
+      this.spawnNextPipe();
     }
 
-    for (const p of this.pipes) p.x -= 3.2 * dtScale;
+    for (const p of this.pipes) {
+      p.x -= this.getPipeSpeed() * dtScale;
 
-    if (this.pipes.length && this.pipes[0].x < -80) {
+      if (!p.passed && p.x + this.getPipeWidth() / 2 < this.bird.x) {
+        p.passed = true;
+        this.score++;
+        this.updateBirdEvolution();
+      }
+    }
+
+    if (this.pipes.length && this.pipes[0].x < -this.getPipeWidth()) {
       this.pipes.shift();
-      this.score += 1;
-      this.updateBirdEvolution();
     }
 
-    if (this.bird.y + this.bird.radius > this.height - 100) {
+    if (this.bird.y + this.bird.radius > this.height - this.getGroundHeight()) {
       if (this.invincibilityTime <= 0) {
         this.loseLife();
       }
@@ -329,8 +432,8 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
       const bx = this.bird.x;
       const by = this.bird.y;
       const r = this.bird.radius;
-      const pipeW = 70;
-      const gapSize = 160;
+      const pipeW = this.getPipeWidth();
+      const gapSize = this.getPipeGapSize();
 
       if (
         bx + r > p.x && bx - r < p.x + pipeW &&
@@ -400,22 +503,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     } else {
       this.invincibilityTime = 1.0;
       this.bird = { x: this.width * 0.2, y: this.height / 2, vy: 0, radius: 14 };
-      this.pipes = [];
-
-      const immediateX = Math.max(120, this.width * 0.45);
-      const gapSize = 190;
-      const minGapY = gapSize + 80;
-      const maxGapY = this.height - 120 - gapSize;
-      const gapY1 = minGapY + Math.random() * (maxGapY - minGapY);
-      const spacing = Math.round(Math.max(260, Math.min(420, this.width * 0.28)));
-      const gapY2 = Math.min(maxGapY, Math.max(minGapY, gapY1 + (Math.random() - 0.5) * 60));
-      const gapY3 = Math.min(maxGapY, Math.max(minGapY, gapY2 + (Math.random() - 0.5) * 60));
-
-      this.pipes.push({ x: immediateX, gapY: gapY1 });
-      this.pipes.push({ x: immediateX + spacing, gapY: gapY2 });
-      this.pipes.push({ x: immediateX + spacing * 2, gapY: gapY3 });
-
-      this.pipeTimer = 0;
+      this.spawnRecoveryPipes();
       this.cdr.detectChanges();
     }
   }
@@ -593,11 +681,11 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   }
 
   drawPipe(ctx: CanvasRenderingContext2D, x: number, gapY: number) {
-    const pipeW = 70;
-    const gapSize = 160;
+    const pipeW = this.getPipeWidth();
+    const gapSize = this.getPipeGapSize();
     const topH = gapY - gapSize / 2;
     const bottomY = gapY + gapSize / 2;
-    const bottomH = this.height - bottomY - 100;
+    const bottomH = this.height - bottomY - this.getGroundHeight();
 
     const drawSinglePipe = (px: number, py: number, w: number, h: number, flip: boolean) => {
       const grad = ctx.createLinearGradient(px, py, px + w, py);
@@ -673,11 +761,35 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   @HostListener('window:resize')
   handleResize() {
+    const oldWidth = this.width || window.innerWidth;
+    const oldHeight = this.height || window.innerHeight;
     const canvas = this.canvasRef.nativeElement;
+
     this.width = window.innerWidth;
     this.height = window.innerHeight;
     canvas.width = this.width;
     canvas.height = this.height;
+
+    if (oldWidth > 0 && oldHeight > 0) {
+      const xScale = this.width / oldWidth;
+      const yScale = this.height / oldHeight;
+      const groundHeight = this.getGroundHeight();
+
+      this.bird = {
+        ...this.bird,
+        x: this.clamp(this.bird.x * xScale, this.bird.radius, this.width - this.bird.radius),
+        y: this.clamp(this.bird.y * yScale, this.bird.radius, this.height - groundHeight - this.bird.radius),
+      };
+
+      this.pipes = this.pipes.map((pipe) => ({
+        x: pipe.x * xScale,
+        gapY: pipe.gapY * yScale,
+        passed: pipe.passed,
+      }));
+
+      this.normalizePipeLayout();
+    }
+
     this.draw();
   }
 

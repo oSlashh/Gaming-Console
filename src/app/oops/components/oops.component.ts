@@ -356,6 +356,9 @@ export class OopsComponent implements OnDestroy {
     this.selectedMode = null;
     this.phase = 'modeSelect';
   }
+  goToGamePage(): void {
+  this.router.navigateByUrl('/game-page');
+  }
 
   setPlayerCount(count: number): void {
 
