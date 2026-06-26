@@ -1,33 +1,91 @@
-<div class="login-container">
+<div
+  class="login-world"
+  [class.portal-active]="portalActivating"
+  (pointermove)="trackPointer($event)"
+  (pointerleave)="releasePointer()"
+>
+  <canvas
+    #particleCanvas
+    class="particle-canvas"
+    aria-hidden="true"
+  ></canvas>
 
-  <div class="login-card">
+  <div class="nebula-drift"></div>
+  <div class="space-overlay"></div>
 
-    <button class="back-btn" (click)="goHome()">←</button>
+  <div class="portal-scene">
+    <div class="portal-wrapper">
+      <img class="portal-outer" src="/portal.png" alt="" />
 
-    <h1>Gaming Console</h1>
-    <p class="subtitle">Sign in to continue</p>
+      <div class="portal-core"></div>
 
-    <form [formGroup]="loginForm" (ngSubmit)="login()">
+      <img class="portal-inner" src="/portal.png" alt="" />
 
-      <label for="email">Email or Username</label>
-      <input type="text" id="email" formControlName="email" placeholder="Enter your email or username">
-      <div *ngIf="loginForm.get('email')?.touched && loginForm.get('email')?.invalid" class="error">
-        <div *ngIf="loginForm.get('email')?.errors?.['required']">Email is required.</div>
-        <div *ngIf="loginForm.get('email')?.errors?.['email']">Enter a valid email address.</div>
+      <div class="portal-glow"></div>
+      <div class="portal-vortex"></div>
+      <div class="portal-shockwave"></div>
+
+      <div class="portal-content">
+        <h1 class="portal-title">Door To Nexus</h1>
+
+        <p class="portal-subtitle">
+          Enter your credentials to access the realm
+        </p>
+
+        <form
+          [formGroup]="loginForm"
+          (ngSubmit)="login()"
+          class="portal-form"
+        >
+          <label class="input-shell">
+            <span>Email</span>
+            <input
+              type="email"
+              placeholder="traveler@gmail.com"
+              formControlName="email"
+              class="portal-input"
+            />
+          </label>
+
+          <label class="input-shell">
+            <span>Password</span>
+            <input
+              type="password"
+              placeholder="Access key"
+              formControlName="password"
+              class="portal-input"
+            />
+          </label>
+
+          <button
+            type="submit"
+            class="enter-btn"
+            [disabled]="portalActivating"
+          >
+            <span>{{ portalActivating ? 'OPENING RIFT' : 'ENTER NEXUS' }}</span>
+          </button>
+        </form>
+
+        <div class="register-section">
+          New traveler?
+          <a routerLink="/register">Create Account</a>
+        </div>
       </div>
+    </div>
 
-      <label for="password">Password</label>
-      <input type="password" id="password" formControlName="password" placeholder="Enter your password">
-      <div *ngIf="loginForm.get('password')?.touched && loginForm.get('password')?.invalid" class="error">
-        <div *ngIf="loginForm.get('password')?.errors?.['required']">Password is required.</div>
-        <div *ngIf="loginForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</div>
-      </div>
-
-      <button class="login-btn" type="submit">Login</button>
-    </form>
-
-    <p class="register-text">Don't have an account? <a routerLink="/register">Register</a></p>
-
+    <img
+      class="floating-island"
+      src="/floating-island.png"
+      alt="Floating island"
+    />
   </div>
-</div>
 
+  <button
+    class="back-btn"
+    (click)="goHome()"
+    type="button"
+  >
+    <span aria-hidden="true">&larr;</span>
+    Back
+  </button>
+</div>
