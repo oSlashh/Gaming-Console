@@ -354,9 +354,12 @@ export class ImagePuzzleComponent
       return;
     }
 
-    this.router.navigate([
-      '/game-page'
-    ]);
+    this.router.navigate(['/game-hub-phaser'], {
+      state: {
+        returnFrom: 'image-puzzle',
+        playReturnAnimation: true
+      }
+    });
   }
 
   chooseImage(option: ImageOption): void {
@@ -774,9 +777,14 @@ export class ImagePuzzleComponent
     this.clearSavedState();
     this.clearHistory();
     this.statusMessage.set(
-      'Time has expired. Redirecting to game page.'
+      'Time has expired. Redirecting to game hub.'
     );
-    this.router.navigate(['/game-page']);
+    this.router.navigate(['/game-hub-phaser'], {
+      state: {
+        returnFrom: 'image-puzzle',
+        playReturnAnimation: true
+      }
+    });
   }
 
   private persistState(): void {

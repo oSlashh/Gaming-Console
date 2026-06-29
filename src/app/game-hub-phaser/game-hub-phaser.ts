@@ -37,7 +37,7 @@ const ISLANDS: IslandData[] = [
   { key: 'nexus', name: 'The Nexus', subtitle: 'Nexus Hearth', xPct: 0.5, yPct: 0.45, isCenter: true, themeColor: 0x00e5ff, spriteKey: 'island-nexus', floatSpeed: 0.25, floatPhase: 3.0, floatAmp: 3.5, description: 'Central gateway connecting all worlds.' },
   { key: 'oops', name: 'Oops!', subtitle: 'Chaos Caster', xPct: 0.27, yPct: 0.64, isCenter: false, themeColor: 0xd32f2f, spriteKey: 'island-oops', floatSpeed: 0.52, floatPhase: 4.0, floatAmp: 5.5, players: '2–6', status: 'Available', description: 'Outwit your friends in a chaotic game of spells and mishaps.' },
   { key: 'puzzle', name: 'Image Puzzle', subtitle: 'Sharded Memories', xPct: 0.73, yPct: 0.64, isCenter: false, themeColor: 0x00b0ff, spriteKey: 'island-image-puzzle', floatSpeed: 0.41, floatPhase: 5.0, floatAmp: 4, players: '1–4', status: 'Available', description: 'Reconstruct broken fragments to unlock ancient memories.' },
-  { key: 'howfaroff', name: 'Higher or Lower', subtitle: 'Estimation Battle', xPct: 0.5, yPct: 0.79, isCenter: false, themeColor: 0xb0bec5, spriteKey: 'island-higher-lower', floatSpeed: 0.35, floatPhase: 6.0, floatAmp: 4.8, players: '2–8', status: 'Available', description: 'Bet on higher or lower numbers in this high-stakes game of prediction.' }
+  { key: 'howfaroff', name: 'Guess Guess', subtitle: 'Estimation Battle', xPct: 0.5, yPct: 0.79, isCenter: false, themeColor: 0xb0bec5, spriteKey: 'island-higher-lower', floatSpeed: 0.35, floatPhase: 6.0, floatAmp: 4.8, players: '2–8', status: 'Available', description: 'Bet on higher or lower numbers in this high-stakes game of prediction.' }
 ];
 
 const CHORDS = [

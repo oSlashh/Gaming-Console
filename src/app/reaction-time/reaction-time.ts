@@ -244,7 +244,12 @@ export class ReactionTimeGameComponent implements OnInit, OnDestroy {
     this._clearSessionTimer();
     this._startTimestamp = null;
     this.phase.set('home');
-    this._router.navigate(['/game-page']);
+    this._router.navigate(['/game-hub-phaser'], {
+      state: {
+        returnFrom: 'reaction-time',
+        playReturnAnimation: true
+      }
+    });
   }
 
   // ── Private helpers ────────────────────────────────────────────────────────
@@ -266,9 +271,14 @@ export class ReactionTimeGameComponent implements OnInit, OnDestroy {
     this._clearSessionTimer();
     this._startTimestamp = null;
     this.phase.set('sessionended');
-    // Navigate to game-page after a brief delay to show the message
+    // Navigate to game-hub-phaser after a brief delay to show the message
     this._sessionEndNavTimer = setTimeout(() => {
-      this._router.navigate(['/game-page']);
+      this._router.navigate(['/game-hub-phaser'], {
+        state: {
+          returnFrom: 'reaction-time',
+          playReturnAnimation: true
+        }
+      });
     }, 2500);
   }
 

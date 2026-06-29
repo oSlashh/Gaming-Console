@@ -17,6 +17,11 @@ export class ImagePuzzleInfoComponent {
   }
 
   goBack(): void {
-    this.router.navigate(['/game-page']);
+    this.router.navigate(['/game-hub-phaser'], {
+      state: {
+        returnFrom: 'image-puzzle',
+        playReturnAnimation: true
+      }
+    });
   }
 }

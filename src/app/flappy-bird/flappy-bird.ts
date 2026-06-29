@@ -146,7 +146,12 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
         if (this.remaining <= 0) {
           this.cleanup();
-          this.router.navigate(['/game-page']);
+          this.router.navigate(['/game-hub-phaser'], {
+            state: {
+              returnFrom: 'flappy-escape',
+              playReturnAnimation: true
+            }
+          });
         }
       });
     }, 1000);
@@ -160,7 +165,12 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
         if (this.timeWarningCountdown < 0) {
           clearInterval(warningInterval);
           this.cleanup();
-          this.router.navigate(['/game-page']);
+          this.router.navigate(['/game-hub-phaser'], {
+            state: {
+              returnFrom: 'flappy-escape',
+              playReturnAnimation: true
+            }
+          });
         }
 
         this.cdr.detectChanges();
@@ -175,7 +185,12 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   goBackFromInstructions() {
     this.cleanup();
-    this.router.navigate(['/game-page']);
+    this.router.navigate(['/game-hub-phaser'], {
+      state: {
+        returnFrom: 'flappy-escape',
+        playReturnAnimation: true
+      }
+    });
   }
 
   goBackToInstructions() {
@@ -804,7 +819,12 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
     if (ok) {
       this.cleanup();
-      this.router.navigate(['/game-page']);
+      this.router.navigate(['/game-hub-phaser'], {
+        state: {
+          returnFrom: 'flappy-escape',
+          playReturnAnimation: true
+        }
+      });
     }
   }
 }
