@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <!-- Robe -->
+  <polygon points="32,24 16,56 48,56" fill="#5c449c" stroke="#1d123b" stroke-width="2"/>
+  <!-- Head -->
+  <circle cx="32" cy="22" r="8" fill="#ffd1a9" stroke="#1d123b" stroke-width="2"/>
+  <!-- Hat -->
+  <polygon points="32,2 18,16 46,16" fill="#3f2b75" stroke="#1d123b" stroke-width="2"/>
+  <ellipse cx="32" cy="16" rx="14" ry="3" fill="#1d123b"/>
+  <!-- Staff -->
+  <line x1="46" y1="12" x2="46" y2="58" stroke="#795548" stroke-width="3" stroke-linecap="round"/>
+  <circle cx="46" cy="8" r="5" fill="#00e5ff" stroke="#00b0ff" stroke-width="1.5"/>
+</svg>

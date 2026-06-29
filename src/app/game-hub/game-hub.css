@@ -1,0 +1,517 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Outfit:wght@400;600&display=swap');
+
+/* Main Container - Full Viewport & No Scroll */
+.game-hub-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 50%, #151138 0%, #0b0821 55%, #04030a 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+/* Background Atmosphere (Static Stars & Nebulae) */
+.sky-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: 
+    radial-gradient(circle at 15% 20%, rgba(103, 80, 164, 0.22) 0%, transparent 45%),
+    radial-gradient(circle at 85% 80%, rgba(0, 229, 255, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 50% 10%, rgba(244, 67, 54, 0.08) 0%, transparent 40%);
+  z-index: 1;
+}
+
+.stars-layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background-image: 
+    radial-gradient(white 1px, transparent 0),
+    radial-gradient(white 1.5px, transparent 0);
+  background-size: 90px 90px, 160px 160px;
+  background-position: 0 0, 50px 70px;
+  opacity: 0.2;
+  z-index: 2;
+}
+
+/* Celestial Moon/Planet in Midground */
+.celestial-body {
+  position: absolute;
+  top: 10%;
+  left: 78%;
+  width: 90px;
+  height: 90px;
+  background: transparent;
+  border-radius: 50%;
+  box-shadow: -18px 18px 0 0 rgba(225, 235, 255, 0.12);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* 24 Static Celestial Sparkles */
+.sparkles-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 3;
+}
+
+.sparkle {
+  position: absolute;
+  font-family: 'Cinzel', serif;
+  color: rgba(255, 255, 255, 0.35);
+  text-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+  pointer-events: none;
+}
+
+.sp-1  { top: 10%; left: 15%; font-size: 7px; color: rgba(144, 202, 249, 0.4); }
+.sp-2  { top: 15%; left: 35%; font-size: 10px; color: rgba(206, 147, 216, 0.5); }
+.sp-3  { top: 8%;  left: 60%; font-size: 8px; }
+.sp-4  { top: 22%; left: 8%;  font-size: 11px; }
+.sp-5  { top: 35%; left: 12%; font-size: 6px; }
+.sp-6  { top: 45%; left: 5%;  font-size: 9px; color: rgba(128, 222, 234, 0.4); }
+.sp-7  { top: 55%; left: 18%; font-size: 7px; }
+.sp-8  { top: 68%; left: 10%; font-size: 10px; }
+.sp-9  { top: 80%; left: 15%; font-size: 8px; }
+.sp-10 { top: 92%; left: 28%; font-size: 11px; }
+.sp-11 { top: 78%; left: 40%; font-size: 7px; color: rgba(255, 224, 178, 0.4); }
+.sp-12 { top: 88%; left: 65%; font-size: 9px; }
+.sp-13 { top: 75%; left: 88%; font-size: 6px; }
+.sp-14 { top: 60%; left: 92%; font-size: 10px; }
+.sp-15 { top: 45%; left: 82%; font-size: 8px; }
+.sp-16 { top: 38%; left: 95%; font-size: 7px; color: rgba(165, 214, 167, 0.4); }
+.sp-17 { top: 25%; left: 85%; font-size: 11px; }
+.sp-18 { top: 5%;  left: 88%; font-size: 9px; }
+.sp-19 { top: 3%;  left: 45%; font-size: 6px; }
+.sp-20 { top: 18%; left: 52%; font-size: 8px; }
+.sp-21 { top: 30%; left: 30%; font-size: 7px; }
+.sp-22 { top: 62%; left: 70%; font-size: 10px; }
+.sp-23 { top: 48%; left: 60%; font-size: 8px; }
+.sp-24 { top: 90%; left: 48%; font-size: 7px; }
+
+/* -------------------------------------------------------------------------- */
+/* Base Island Layout & Sizing                                                */
+/* -------------------------------------------------------------------------- */
+.hub-island {
+  position: absolute;
+  width: 240px;
+  height: 260px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  box-sizing: border-box;
+}
+
+/* Coordinates remain viewport-safe */
+.center-island {
+  left: 50%;
+  top: 50%;
+  width: 280px;
+  height: 290px;
+  z-index: 15;
+}
+
+.top-island         { left: 50%; top: 15%; }
+.top-right-island   { left: 78%; top: 30%; }
+.bottom-right-island{ left: 78%; top: 70%; }
+.bottom-island      { left: 50%; top: 85%; }
+.bottom-left-island { left: 22%; top: 70%; }
+.top-left-island    { left: 22%; top: 30%; }
+
+/* -------------------------------------------------------------------------- */
+/* Modular Floating Island Visual Layers                                      */
+/* -------------------------------------------------------------------------- */
+.island-graphic {
+  position: relative;
+  width: 200px;
+  height: 50px;
+  z-index: 4;
+  box-sizing: border-box;
+}
+
+.center-island-graphic {
+  width: 260px;
+  height: 64px;
+}
+
+/* 1. Grass Top Surface */
+.island-graphic .grass-surface {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: linear-gradient(to bottom, #4c8a2b 0%, #3a6b20 100%);
+  border: 3px solid #5d9e3b;
+  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.2);
+  z-index: 5;
+  box-sizing: border-box;
+}
+
+/* 2. Dirt Layer beneath grass */
+.island-graphic .dirt-layer {
+  position: absolute;
+  top: 24px;
+  left: 4%;
+  width: 92%;
+  height: 28px;
+  background: linear-gradient(to bottom, #593e2a, #3f2a1c);
+  border-radius: 0 0 50% 50% / 0 0 40% 40%;
+  z-index: 4;
+  box-shadow: 0 3px 0 #2b1c13;
+  box-sizing: border-box;
+}
+
+/* 3. Pointed Hanging Rock Formations */
+.island-graphic .rock-formations {
+  position: absolute;
+  top: 48px;
+  left: 15%;
+  width: 70%;
+  height: 38px;
+  background: linear-gradient(to bottom, #302d33, #1f1d21);
+  clip-path: polygon(
+    0% 0%, 
+    100% 0%, 
+    88% 85%, 
+    74% 25%, 
+    55% 100%, 
+    40% 30%, 
+    22% 90%, 
+    10% 20%
+  );
+  z-index: 3;
+}
+
+/* Theme overrides for specific islands */
+.wavelength-island-graphic .grass-surface {
+  background: linear-gradient(to bottom, #3b2b73 0%, #291e55 100%);
+  border-color: #4b359c;
+}
+.wavelength-island-graphic .dirt-layer {
+  background: linear-gradient(to bottom, #2b1f47, #1d1433);
+  box-shadow: 0 3px 0 #120c22;
+}
+
+.reaction-island-graphic .grass-surface {
+  background: linear-gradient(to bottom, #7d5721 0%, #5d4017 100%);
+  border-color: #9e7131;
+}
+.reaction-island-graphic .dirt-layer {
+  background: linear-gradient(to bottom, #4f3412, #38240b);
+  box-shadow: 0 3px 0 #211504;
+}
+
+.puzzle-island-graphic .grass-surface {
+  background: linear-gradient(to bottom, #1d5c36 0%, #154528 100%);
+  border-color: #27804a;
+}
+.puzzle-island-graphic .dirt-layer {
+  background: linear-gradient(to bottom, #123d23, #0b2917);
+  box-shadow: 0 3px 0 #05160b;
+}
+
+.how-far-off-island-graphic .grass-surface {
+  background: linear-gradient(to bottom, #7a2b2b 0%, #5c2020 100%);
+  border-color: #a33838;
+}
+.how-far-off-island-graphic .dirt-layer {
+  background: linear-gradient(to bottom, #4f1c1c, #381313);
+  box-shadow: 0 3px 0 #240b0b;
+}
+
+.oops-island-graphic .grass-surface {
+  background: linear-gradient(to bottom, #59206b 0%, #421850 100%);
+  border-color: #7d2fa1;
+}
+.oops-island-graphic .dirt-layer {
+  background: linear-gradient(to bottom, #3b1447, #290d33);
+  box-shadow: 0 3px 0 #1b0722;
+}
+
+.flappy-island-graphic .grass-surface {
+  background: linear-gradient(to bottom, #1c6278 0%, #14495a 100%);
+  border-color: #288ba8;
+}
+.flappy-island-graphic .dirt-layer {
+  background: linear-gradient(to bottom, #124050, #0c2d38);
+  box-shadow: 0 3px 0 #061c24;
+}
+
+/* -------------------------------------------------------------------------- */
+/* The Nexus (Center Island Pavers & Details)                                  */
+/* -------------------------------------------------------------------------- */
+.center-island-graphic .grass-surface {
+  /* Paver look instead of grassy moss */
+  background: linear-gradient(to bottom, #60606d 0%, #464650 100%);
+  border-color: #79798a;
+  box-shadow: inset 0 2px 5px rgba(255, 255, 255, 0.15);
+}
+
+.center-island-graphic .dirt-layer {
+  top: 30px;
+  height: 34px;
+  background: linear-gradient(to bottom, #3b3b42, #29292e);
+  box-shadow: 0 4px 0 #1c1c20;
+}
+
+.center-island-graphic .rock-formations {
+  top: 60px;
+  height: 48px;
+  background: linear-gradient(to bottom, #242429, #151518);
+  clip-path: polygon(
+    0% 0%, 
+    100% 0%, 
+    90% 75%, 
+    75% 20%, 
+    60% 95%, 
+    45% 30%, 
+    30% 90%, 
+    12% 15%
+  );
+}
+
+/* -------------------------------------------------------------------------- */
+/* Island Details (Campfire, Crystals, Rocks)                                */
+/* -------------------------------------------------------------------------- */
+.island-details {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 6;
+}
+
+/* Magic Crystal Placeholder */
+.magic-crystal {
+  position: absolute;
+  right: 48px;
+  top: -14px;
+  width: 12px;
+  height: 24px;
+  background: linear-gradient(135deg, #00e5ff, #00838f);
+  clip-path: polygon(50% 0%, 100% 30%, 100% 70%, 50% 100%, 0% 70%, 0% 30%);
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.4);
+}
+
+/* Campfire Placeholder */
+.campfire {
+  position: absolute;
+  left: 45px;
+  top: -12px;
+  width: 24px;
+  height: 24px;
+}
+
+.campfire-logs {
+  position: absolute;
+  bottom: 0;
+  width: 24px;
+  height: 6px;
+  background: #5d4037;
+  border-radius: 2px;
+  transform: rotate(-15deg);
+}
+
+.campfire-logs::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 24px;
+  height: 6px;
+  background: #4e342e;
+  border-radius: 2px;
+  transform: rotate(30deg);
+}
+
+.campfire-flame {
+  position: absolute;
+  bottom: 4px;
+  left: 5px;
+  width: 14px;
+  height: 18px;
+  background: radial-gradient(circle, #ffeb3b 15%, #ff9800 55%, #f44336 90%);
+  border-radius: 50% 50% 20% 20% / 60% 60% 40% 40%;
+}
+
+/* Surrounding Small Crystals */
+.island-crystal {
+  position: absolute;
+  right: 32px;
+  top: -8px;
+  width: 8px;
+  height: 16px;
+  clip-path: polygon(50% 0%, 100% 30%, 100% 70%, 50% 100%, 0% 70%, 0% 30%);
+}
+
+.crystal-purple { background: linear-gradient(135deg, #b09cd4, #5c449c); }
+.crystal-gold   { background: linear-gradient(135deg, #ffd54f, #ff8f00); }
+.crystal-emerald{ background: linear-gradient(135deg, #81c784, #2e7d32); }
+.crystal-crimson{ background: linear-gradient(135deg, #ef5350, #c62828); }
+.crystal-violet { background: linear-gradient(135deg, #ba68c8, #6a1b9a); }
+.crystal-cyan   { background: linear-gradient(135deg, #4dd0e1, #00838f); }
+
+/* -------------------------------------------------------------------------- */
+/* Player Character Sprite                                                    */
+/* -------------------------------------------------------------------------- */
+.player-sprite {
+  position: absolute;
+  bottom: 58px; /* Elevated to sit cleanly on center pavers */
+  width: 64px;
+  height: 64px;
+  z-index: 8;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.adventurer-svg {
+  width: 100%;
+  height: 100%;
+  filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.6));
+}
+
+/* -------------------------------------------------------------------------- */
+/* Portal Gate Graphics (Ancient Stone Arch & Inner Void)                     */
+/* -------------------------------------------------------------------------- */
+.portal-graphic {
+  position: absolute;
+  bottom: 45px;
+  width: 84px;
+  height: 110px;
+  border-radius: 42px 42px 0 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+
+  /* Stone gate frame details */
+  background: #171521;
+  border: 6px solid #42404e;
+  outline: 2px solid #0f0e13;
+  box-shadow: 
+    inset 0 0 20px rgba(0, 0, 0, 0.95),
+    0 5px 12px rgba(0, 0, 0, 0.6);
+}
+
+.portal-seal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.lock-icon {
+  width: 20px;
+  height: 20px;
+  fill: #7d7d8a;
+  margin-bottom: 6px;
+}
+
+.portal-status {
+  font-family: 'Outfit', sans-serif;
+  font-size: 8px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  color: #7d7d8a;
+  text-transform: uppercase;
+}
+
+/* Locked portal state inner textures */
+.reaction-portal, .puzzle-portal, .oops-portal, .flappy-portal {
+  background: radial-gradient(circle at center, rgba(30, 28, 41, 0.6) 0%, #111017 100%);
+}
+
+/* Dormant portal state with faint energy glows */
+.wavelength-portal {
+  border-color: #513d94;
+  background: radial-gradient(circle at center, rgba(103, 80, 164, 0.25) 0%, #151320 85%);
+  box-shadow: 
+    inset 0 0 20px rgba(103, 80, 164, 0.4),
+    0 5px 12px rgba(0, 0, 0, 0.6);
+}
+.wavelength-portal .lock-icon { fill: #b09cd4; }
+.wavelength-portal .portal-status { color: #b09cd4; }
+
+.how-far-off-portal {
+  border-color: #8c3232;
+  background: radial-gradient(circle at center, rgba(229, 57, 53, 0.25) 0%, #1c1111 85%);
+  box-shadow: 
+    inset 0 0 20px rgba(229, 57, 53, 0.4),
+    0 5px 12px rgba(0, 0, 0, 0.6);
+}
+.how-far-off-portal .lock-icon { fill: #e57373; }
+.how-far-off-portal .portal-status { color: #e57373; }
+
+/* -------------------------------------------------------------------------- */
+/* Typography Pass                                                            */
+/* -------------------------------------------------------------------------- */
+.island-label-container {
+  margin-top: 52px; /* Clears the dirt and pointed rocks */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.island-title {
+  font-family: 'Cinzel', serif;
+  font-size: 15px;
+  font-weight: 800;
+  color: #ffffff;
+  text-shadow: 
+    0 1px 0px #0a0815,
+    0 2px 4px rgba(0, 0, 0, 0.95);
+  letter-spacing: 0.5px;
+  white-space: nowrap;
+}
+
+.island-subtitle {
+  font-family: 'Outfit', sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  color: #a5a5b5;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin-top: 4px;
+  text-shadow: 0 1.5px 3px rgba(0, 0, 0, 0.85);
+  white-space: nowrap;
+}
+
+/* Distinct Center Title */
+.center-island .island-title {
+  color: #00e5ff;
+  text-shadow: 
+    0 0 8px rgba(0, 229, 255, 0.4),
+    0 2px 4px rgba(0, 0, 0, 0.95);
+}
+.center-island .island-subtitle {
+  color: #80deea;
+}
