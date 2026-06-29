@@ -1,0 +1,228 @@
+<div class="game-hub-container">
+  <!-- Sky Background Layers -->
+  <div class="sky-background"></div>
+  <div class="stars-layer"></div>
+  <div class="celestial-body"></div> <!-- Crescent moon/planet in midground -->
+
+  <!-- Manual Sparkles (Exactly 24 static sparkles positioned via CSS) -->
+  <div class="sparkles-container">
+    <span class="sparkle sp-1">✦</span>
+    <span class="sparkle sp-2">✦</span>
+    <span class="sparkle sp-3">✦</span>
+    <span class="sparkle sp-4">✦</span>
+    <span class="sparkle sp-5">✦</span>
+    <span class="sparkle sp-6">✦</span>
+    <span class="sparkle sp-7">✦</span>
+    <span class="sparkle sp-8">✦</span>
+    <span class="sparkle sp-9">✦</span>
+    <span class="sparkle sp-10">✦</span>
+    <span class="sparkle sp-11">✦</span>
+    <span class="sparkle sp-12">✦</span>
+    <span class="sparkle sp-13">✦</span>
+    <span class="sparkle sp-14">✦</span>
+    <span class="sparkle sp-15">✦</span>
+    <span class="sparkle sp-16">✦</span>
+    <span class="sparkle sp-17">✦</span>
+    <span class="sparkle sp-18">✦</span>
+    <span class="sparkle sp-19">✦</span>
+    <span class="sparkle sp-20">✦</span>
+    <span class="sparkle sp-21">✦</span>
+    <span class="sparkle sp-22">✦</span>
+    <span class="sparkle sp-23">✦</span>
+    <span class="sparkle sp-24">✦</span>
+  </div>
+
+  <!-- Central Player Island: The Nexus -->
+  <div class="hub-island center-island">
+    <!-- Slightly elevated player position: wrapper height handles this visually -->
+    <div class="player-sprite">
+      <!-- High-fidelity inline SVG placeholder for adventurer -->
+      <svg viewBox="0 0 64 64" class="adventurer-svg">
+        <!-- Cape -->
+        <path d="M16 48 L48 48 L40 28 L24 28 Z" fill="#3f2b75" stroke="#1d123b" stroke-width="2"/>
+        <path d="M20 48 L44 48 L38 24 L26 24 Z" fill="#5c449c" stroke="#1d123b" stroke-width="2"/>
+        <!-- Robe/Tunic -->
+        <rect x="25" y="30" width="14" height="18" rx="2" fill="#b09cd4" stroke="#1d123b" stroke-width="2"/>
+        <!-- Boots -->
+        <rect x="24" y="48" width="7" height="4" rx="1" fill="#151515"/>
+        <rect x="33" y="48" width="7" height="4" rx="1" fill="#151515"/>
+        <!-- Head -->
+        <circle cx="32" cy="22" r="8" fill="#ffd1a9" stroke="#1d123b" stroke-width="2"/>
+        <!-- Eyes -->
+        <circle cx="29" cy="22" r="1.5" fill="#151515"/>
+        <circle cx="35" cy="22" r="1.5" fill="#151515"/>
+        <!-- Wizard Hat -->
+        <path d="M20 16 C20 16 32 2 32 2 C32 2 44 16 44 16 Z" fill="#3f2b75" stroke="#1d123b" stroke-width="2"/>
+        <ellipse cx="32" cy="16" rx="13" ry="2.5" fill="#1d123b"/>
+        <!-- Magical Staff -->
+        <path d="M44 14 L44 50" stroke="#795548" stroke-width="2" stroke-linecap="round"/>
+        <circle cx="44" cy="10" r="4.5" fill="#00e5ff" stroke="#00b0ff" stroke-width="1.5"/>
+      </svg>
+    </div>
+    
+    <div class="island-graphic center-island-graphic">
+      <div class="grass-surface"></div>
+      <div class="dirt-layer"></div>
+      <div class="rock-formations"></div>
+      <div class="island-details">
+        <!-- Magic crystal -->
+        <div class="magic-crystal nexus-crystal"></div>
+        <!-- Campfire -->
+        <div class="campfire">
+          <div class="campfire-logs"></div>
+          <div class="campfire-flame"></div>
+        </div>
+      </div>
+    </div>
+    <div class="island-label-container">
+      <div class="island-title">The Nexus</div>
+      <div class="island-subtitle">Nexus Hearth</div>
+    </div>
+  </div>
+
+  <!-- Surrounding Game Islands -->
+  
+  <!-- 1. Wavelength (Top) -->
+  <div class="hub-island top-island">
+    <div class="portal-graphic wavelength-portal">
+      <div class="portal-seal">
+        <svg viewBox="0 0 24 24" class="lock-icon">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        <span class="portal-status">DORMANT</span>
+      </div>
+    </div>
+    <div class="island-graphic wavelength-island-graphic">
+      <div class="grass-surface"></div>
+      <div class="dirt-layer"></div>
+      <div class="rock-formations"></div>
+      <div class="island-details">
+        <div class="island-crystal crystal-purple"></div>
+      </div>
+    </div>
+    <div class="island-label-container">
+      <div class="island-title">Wavelength</div>
+      <div class="island-subtitle">Mind Reading Challenge</div>
+    </div>
+  </div>
+
+  <!-- 2. Reaction (Top Right) -->
+  <div class="hub-island top-right-island">
+    <div class="portal-graphic reaction-portal">
+      <div class="portal-seal">
+        <svg viewBox="0 0 24 24" class="lock-icon">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        <span class="portal-status">LOCKED</span>
+      </div>
+    </div>
+    <div class="island-graphic reaction-island-graphic">
+      <div class="grass-surface"></div>
+      <div class="dirt-layer"></div>
+      <div class="rock-formations"></div>
+      <div class="island-details">
+        <div class="island-crystal crystal-gold"></div>
+      </div>
+    </div>
+    <div class="island-label-container">
+      <div class="island-title">Reaction Time</div>
+      <div class="island-subtitle">Reflex Trial</div>
+    </div>
+  </div>
+
+  <!-- 3. Puzzle (Bottom Right) -->
+  <div class="hub-island bottom-right-island">
+    <div class="portal-graphic puzzle-portal">
+      <div class="portal-seal">
+        <svg viewBox="0 0 24 24" class="lock-icon">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        <span class="portal-status">LOCKED</span>
+      </div>
+    </div>
+    <div class="island-graphic puzzle-island-graphic">
+      <div class="grass-surface"></div>
+      <div class="dirt-layer"></div>
+      <div class="rock-formations"></div>
+      <div class="island-details">
+        <div class="island-crystal crystal-emerald"></div>
+      </div>
+    </div>
+    <div class="island-label-container">
+      <div class="island-title">Image Puzzle</div>
+      <div class="island-subtitle">Sharded Memories</div>
+    </div>
+  </div>
+
+  <!-- 4. How Far Off (Bottom) -->
+  <div class="hub-island bottom-island">
+    <div class="portal-graphic how-far-off-portal">
+      <div class="portal-seal">
+        <svg viewBox="0 0 24 24" class="lock-icon">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        <span class="portal-status">DORMANT</span>
+      </div>
+    </div>
+    <div class="island-graphic how-far-off-island-graphic">
+      <div class="grass-surface"></div>
+      <div class="dirt-layer"></div>
+      <div class="rock-formations"></div>
+      <div class="island-details">
+        <div class="island-crystal crystal-crimson"></div>
+      </div>
+    </div>
+    <div class="island-label-container">
+      <div class="island-title">How Far Off?</div>
+      <div class="island-subtitle">Estimation Battle</div>
+    </div>
+  </div>
+
+  <!-- 5. Oops (Bottom Left) -->
+  <div class="hub-island bottom-left-island">
+    <div class="portal-graphic oops-portal">
+      <div class="portal-seal">
+        <svg viewBox="0 0 24 24" class="lock-icon">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        <span class="portal-status">LOCKED</span>
+      </div>
+    </div>
+    <div class="island-graphic oops-island-graphic">
+      <div class="grass-surface"></div>
+      <div class="dirt-layer"></div>
+      <div class="rock-formations"></div>
+      <div class="island-details">
+        <div class="island-crystal crystal-violet"></div>
+      </div>
+    </div>
+    <div class="island-label-container">
+      <div class="island-title">Oops!</div>
+      <div class="island-subtitle">Chaos Caster</div>
+    </div>
+  </div>
+
+  <!-- 6. Flappy (Top Left) -->
+  <div class="hub-island top-left-island">
+    <div class="portal-graphic flappy-portal">
+      <div class="portal-seal">
+        <svg viewBox="0 0 24 24" class="lock-icon">
+          <path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/>
+        </svg>
+        <span class="portal-status">LOCKED</span>
+      </div>
+    </div>
+    <div class="island-graphic flappy-island-graphic">
+      <div class="grass-surface"></div>
+      <div class="dirt-layer"></div>
+      <div class="rock-formations"></div>
+      <div class="island-details">
+        <div class="island-crystal crystal-cyan"></div>
+      </div>
+    </div>
+    <div class="island-label-container">
+      <div class="island-title">Flappy Bird</div>
+      <div class="island-subtitle">Skyward Voyage</div>
+    </div>
+  </div>
+</div>

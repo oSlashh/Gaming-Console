@@ -873,7 +873,7 @@
             <div class="logo-block">
                 <div class="logo-wave">〜</div>
                 <h1 class="logo-title">Wavelength</h1>
-                <p class="logo-sub">The party game of</p>
+                <p class="logo-sub">The party game of Psychics!</p>
             </div>
 
             <div class="setup-cards-row">
@@ -889,8 +889,10 @@
                                 <input class="team-name-input" [(ngModel)]="editingName" (keyup.enter)="updateWlTeam()"
                                     (keyup.escape)="cancelEdit()" autofocus />
                                 <div class="team-edit-actions">
-                                    <button class="team-edit-btn confirm-edit-btn" (click)="updateWlTeam()">✓ Save</button>
-                                    <button class="team-edit-btn cancel-edit-btn" (click)="cancelEdit()">✕ Cancel</button>
+                                    <button class="team-edit-btn confirm-edit-btn" (click)="updateWlTeam()">✓
+                                        Save</button>
+                                    <button class="team-edit-btn cancel-edit-btn" (click)="cancelEdit()">✕
+                                        Cancel</button>
                                 </div>
                             </div>
                             } @else {

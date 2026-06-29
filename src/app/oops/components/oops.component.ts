@@ -356,8 +356,14 @@ export class OopsComponent implements OnDestroy {
     this.selectedMode = null;
     this.phase = 'modeSelect';
   }
+
   goToGamePage(): void {
-  this.router.navigateByUrl('/game-page');
+    this.router.navigateByUrl('/game-hub-phaser', {
+      state: {
+        returnFrom: 'oops',
+        playReturnAnimation: true
+      }
+    });
   }
 
   setPlayerCount(count: number): void {
@@ -659,7 +665,12 @@ export class OopsComponent implements OnDestroy {
     this.clearSuspenseTimers();
     this.stopRevealSuspense();
     this.stopVotingMusic();
-    this.router.navigateByUrl('/game-page');
+    this.router.navigateByUrl('/game-hub-phaser', {
+      state: {
+        returnFrom: 'oops',
+        playReturnAnimation: true
+      }
+    });
   }
 
   ngOnDestroy(): void {
@@ -761,7 +772,12 @@ private startTimer(): void {
       this.stopTimer();
 
       setTimeout(() => {
-        this.router.navigateByUrl('/game-page');
+        this.router.navigateByUrl('/game-hub-phaser', {
+          state: {
+            returnFrom: 'oops',
+            playReturnAnimation: true
+          }
+        });
       }, 900);
     }
 

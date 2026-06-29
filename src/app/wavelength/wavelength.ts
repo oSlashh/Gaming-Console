@@ -894,6 +894,11 @@ useCustomCategory = signal(false);
   trackTeam(_: number, t: Team) { return t.id; }
   quitGame() {
     this.fullyResetState();
-    this.router.navigate(['/game-page']);
+    this.router.navigate(['/game-hub-phaser'], {
+      state: {
+        returnFrom: 'wavelength',
+        playReturnAnimation: true
+      }
+    });
   }
 }

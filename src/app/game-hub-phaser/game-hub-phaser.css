@@ -1,0 +1,30 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;800&family=Outfit:wght@400;600&display=swap');
+
+:host {
+  display: block;
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  background: #04030a !important;
+}
+
+#phaser-game-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background: #04030a !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+
+#phaser-game-container canvas {
+  display: block;
+  image-rendering: pixelated;
+}

@@ -484,7 +484,12 @@ export class GuessGuessComponent implements OnInit, OnDestroy {
   this.phase = 'setup';
 }
   returnToGamePage(): void {
-    this.router.navigate(['/game-page']);
+    this.router.navigate(['/game-hub-phaser'], {
+      state: {
+        returnFrom: 'higher-or-lower',
+        playReturnAnimation: true
+      }
+    });
   }
 
   backToInstructions(): void {

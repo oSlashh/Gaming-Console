@@ -48,6 +48,15 @@ export const routes: Routes = [
     loadComponent: () => import('./guess/guess').then((m) => m.GuessGuessComponent),
   },
   {
+    path: 'game-hub',
+    loadComponent: () => import('./game-hub/game-hub').then((m) => m.GameHubComponent),
+  },
+  {
+    path: 'game-hub-phaser',
+    loadComponent: () => import('./game-hub-phaser/game-hub-phaser').then((m) => m.GameHubPhaserComponent),
+  },
+
+  {
     path: '**',
     redirectTo: '',
   },
