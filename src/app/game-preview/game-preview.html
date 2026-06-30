@@ -1,0 +1,134 @@
+<section class="preview-shell">
+  <div class="sky sky-one"></div>
+  <div class="sky sky-two"></div>
+  <div class="nebula nebula-one"></div>
+  <div class="nebula nebula-two"></div>
+  <div class="fog fog-one"></div>
+  <div class="fog fog-two"></div>
+
+  <div class="stars stars-large"></div>
+  <div class="stars stars-small"></div>
+
+  <div class="particle-field" aria-hidden="true">
+    <span class="particle p1"></span>
+    <span class="particle p2"></span>
+    <span class="particle p3"></span>
+    <span class="particle p4"></span>
+    <span class="particle p5"></span>
+    <span class="particle p6"></span>
+    <span class="particle p7"></span>
+    <span class="particle p8"></span>
+  </div>
+
+  <button type="button" class="back-button" (click)="goBack()" aria-label="Back to game hub">
+    ‹ Hub
+  </button>
+
+  <nav class="liquid-nav" aria-label="Game previews">
+    <div
+      class="liquid-blob"
+      [class.blob-forward]="liquidDirection === 'forward'"
+      [class.blob-backward]="liquidDirection === 'backward'"
+      aria-hidden="true"
+    ></div>
+
+    <button
+      *ngFor="let game of games; trackBy: trackGame"
+      type="button"
+      class="nav-orb"
+      [class.is-active]="game.slug === activeGame.slug"
+      [style.--item-theme]="game.color"
+      (click)="selectGame(game)"
+      [attr.aria-current]="game.slug === activeGame.slug ? 'page' : null"
+      [attr.aria-label]="'Preview ' + game.title"
+    >
+
+        <img
+            class="nav-island"
+            [src]="'assets/game-hub/islands/' + game.spriteKey + '.png'"
+            [alt]="game.title"
+        >
+
+        <span class="nav-name">
+            {{ game.shortTitle }}
+        </span>
+
+    </button>
+  </nav>
+
+  <main class="showcase" [class]="contentPhase">
+    <section
+      class="carousel"
+      (touchstart)="onTouchStart($event)"
+      (touchend)="onTouchEnd($event)"
+      aria-label="Game screenshots"
+    >
+      <div class="carousel-aura"></div>
+
+      <div class="screen-stage">
+        <article
+          *ngFor="let screenshot of activeGame.screenshots; let i = index; trackBy: trackScreenshot"
+          class="screen"
+          [class.is-visible]="i === slideIndex"
+          [attr.aria-hidden]="i === slideIndex ? 'false' : 'true'"
+        >
+          <img class="screen-image" [src]="screenshot.src" [alt]="screenshot.alt" />
+        </article>
+      </div>
+
+      <button
+        type="button"
+        class="carousel-button previous"
+        (click)="previousSlide()"
+        [attr.aria-label]="'Previous screenshot for ' + activeGame.title"
+      >
+        ‹
+      </button>
+
+      <button
+        type="button"
+        class="carousel-button next"
+        (click)="nextSlide()"
+        [attr.aria-label]="'Next screenshot for ' + activeGame.title"
+      >
+        ›
+      </button>
+
+      <div class="dots" aria-label="Choose screenshot">
+        <button
+          *ngFor="let screenshot of activeGame.screenshots; let i = index; trackBy: trackScreenshot"
+          type="button"
+          class="dot"
+          [class.is-active]="i === slideIndex"
+          (click)="setSlide(i)"
+          [attr.aria-label]="'Show screenshot ' + (i + 1)"
+        ></button>
+      </div>
+    </section>
+
+    <section class="game-panel" aria-live="polite">
+      <div class="title-block">
+        <p class="eyebrow">{{ activeGame.subtitle }}</p>
+        <h1>{{ activeGame.title }}</h1>
+      </div>
+
+      <p class="description">
+        {{ activeGame.description }}
+      </p>
+
+      <div class="stats">
+        <div *ngFor="let stat of stats" class="stat">
+          <span>{{ stat.label }}</span>
+          <strong>{{ stat.value }}</strong>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="button" class="play-button" (click)="playGame()">
+          <span class="play-spark"></span>
+          <span>Play Now</span>
+        </button>
+      </div>
+    </section>
+  </main>
+</section>
