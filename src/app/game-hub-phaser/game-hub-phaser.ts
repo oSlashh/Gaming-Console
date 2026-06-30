@@ -1130,7 +1130,9 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
         private cinematicAmbienceAlphaFactor: number = 1.0;
         private hoveredIslandKey: string | null = null;
 
-        private isProfileMenuOpen: boolean = false;
+         private isProfileMenuOpen: boolean = false;
+         private backgroundInitialized: boolean = false;
+         private vignetteImg: Phaser.GameObjects.Image | null = null;
         private isProfileStarSpinning: boolean = false;
         private profileSystemContainer!: Phaser.GameObjects.Container;
         private profileStarContainer!: Phaser.GameObjects.Container;
@@ -1516,7 +1518,14 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             cam.setZoom(1.0);
           }
 
-          this.backgroundLayer.removeAll(true);
+          if (this.vignetteImg) {
+            this.vignetteImg.destroy();
+            this.vignetteImg = null;
+          }
+
+          if (!this.backgroundInitialized) {
+            this.backgroundLayer.removeAll(true);
+          }
           this.decorationLayer.removeAll(true);
           this.islandLayer.removeAll(true);
           this.portalLayer.removeAll(true);
@@ -1532,230 +1541,229 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           this.glowObjs = [];
           this.shadowObjs = [];
           this.leyLineParticles = [];
-          this.nebulaClouds = [];
-          this.bgClouds = [];
           this.runeRingObj = null;
 
-          // Solid background matching page color (Phase 1) - extended to cover travel range
-          const bgG = this.add.graphics();
-          bgG.fillStyle(0x04030a, 1);
-          bgG.fillRect(-width * 0.5, -height * 0.5, width * 2.0, height * 2.0);
-          this.backgroundLayer.add(bgG);
+          if (!this.backgroundInitialized) {
+            this.nebulaClouds = [];
+            this.bgClouds = [];
 
-          // Deep Space Celestial Moon (Parallax 2% - Phase 3)
-          const moonImg = this.add.image(width * 0.90, height * 0.10, 'moon');
-          moonImg.setDisplaySize(900, 900);
-          moonImg.setAlpha(0.14);
-          moonImg.setScrollFactor(0.02);
-          this.backgroundLayer.add(moonImg);
+            // Solid background matching page color (Phase 1)
+            const bgG = this.add.graphics();
+            bgG.fillStyle(0x04030a, 1);
+            bgG.fillRect(0, 0, width, height);
+            this.backgroundLayer.add(bgG);
 
-          // Nebula Clouds (Parallax 5% - Phase 3)
-          const purpleCloud = this.add.image(width * 0.35, height * 0.35, 'nebula-purple');
-          purpleCloud.setDisplaySize(width * 0.8, width * 0.8);
-          purpleCloud.setAlpha(0.08);
-          purpleCloud.setScrollFactor(0.05);
-          this.backgroundLayer.add(purpleCloud);
-          this.nebulaClouds = [{
-            img: purpleCloud,
-            speed: 0.015,
-            phase: 0.0,
-            baseX: width * 0.35
-          }];
+            // Deep Space Celestial Moon (Parallax 2% - Phase 3)
+            const moonImg = this.add.image(width * 0.90, height * 0.10, 'moon');
+            moonImg.setDisplaySize(900, 900);
+            moonImg.setAlpha(0.14);
+            moonImg.setScrollFactor(0.02);
+            this.backgroundLayer.add(moonImg);
 
-          const cyanCloud = this.add.image(width * 0.65, height * 0.60, 'nebula-cyan');
-          cyanCloud.setDisplaySize(width * 0.7, width * 0.7);
-          cyanCloud.setAlpha(0.06);
-          cyanCloud.setScrollFactor(0.05);
-          this.backgroundLayer.add(cyanCloud);
-          this.nebulaClouds.push({
-            img: cyanCloud,
-            speed: 0.010,
-            phase: 1.5,
-            baseX: width * 0.65
-          });
+            // Nebula Clouds (Parallax 5% - Phase 3)
+            const purpleCloud = this.add.image(width * 0.35, height * 0.35, 'nebula-purple');
+            purpleCloud.setDisplaySize(width * 0.8, width * 0.8);
+            purpleCloud.setAlpha(0.08);
+            purpleCloud.setScrollFactor(0.05);
+            this.backgroundLayer.add(purpleCloud);
+            this.nebulaClouds = [{
+              img: purpleCloud,
+              speed: 0.015,
+              phase: 0.0,
+              baseX: width * 0.35
+            }];
 
-          const blueCloud = this.add.image(width * 0.50, height * 0.20, 'nebula-blue');
-          blueCloud.setDisplaySize(width * 0.75, width * 0.75);
-          blueCloud.setAlpha(0.06);
-          blueCloud.setScrollFactor(0.05);
-          this.backgroundLayer.add(blueCloud);
-          this.nebulaClouds.push({
-            img: blueCloud,
-            speed: 0.012,
-            phase: 3.0,
-            baseX: width * 0.50
-          });
-
-          // Define 4x extended space boundaries for seamless background coverage during pans/zooms
-          const minX = -width * 0.5;
-          const maxX = width * 1.5;
-          const minY = -height * 0.5;
-          const maxY = height * 1.5;
-
-          // --------------------------------------------------
-          // LAYER 1: Very distant stars (10% scroll factor - Phase 2 & 3)
-          // --------------------------------------------------
-          this.distantStars = [];
-          for (let i = 0; i < 480; i++) {
-            const x = minX + Math.random() * (maxX - minX);
-            const y = minY + Math.random() * (maxY - minY);
-            const starImg = this.add.image(x, y, 'star');
-            const size = 0.1 + Math.random() * 0.2;
-            const alpha = 0.08 + Math.random() * 0.25;
-            starImg.setScale(size);
-            starImg.setAlpha(alpha);
-            starImg.setScrollFactor(0.1);
-            this.backgroundLayer.add(starImg);
-            this.distantStars.push({
-              img: starImg,
-              baseAlpha: alpha,
-              speed: 0.4 + Math.random() * 0.6,
-              phase: Math.random() * Math.PI * 2
+            const cyanCloud = this.add.image(width * 0.65, height * 0.60, 'nebula-cyan');
+            cyanCloud.setDisplaySize(width * 0.7, width * 0.7);
+            cyanCloud.setAlpha(0.06);
+            cyanCloud.setScrollFactor(0.05);
+            this.backgroundLayer.add(cyanCloud);
+            this.nebulaClouds.push({
+              img: cyanCloud,
+              speed: 0.010,
+              phase: 1.5,
+              baseX: width * 0.65
             });
-          }
 
-          // --------------------------------------------------
-          // LAYER 2: Small drifting particles (30% scroll factor - Phase 2 & 3)
-          // --------------------------------------------------
-          this.driftingParticles = [];
-          for (let i = 0; i < 180; i++) {
-            const x = minX + Math.random() * (maxX - minX);
-            const y = minY + Math.random() * (maxY - minY);
-            const pImg = this.add.image(x, y, 'star');
-            const size = 0.25 + Math.random() * 0.25;
-            const alpha = 0.12 + Math.random() * 0.25;
-            pImg.setScale(size);
-            pImg.setAlpha(alpha);
-            pImg.setScrollFactor(0.3);
-            this.backgroundLayer.add(pImg);
-            this.driftingParticles.push({
-              img: pImg,
-              speedX: -3 - Math.random() * 6,
-              speedY: -5 - Math.random() * 10,
-              baseAlpha: alpha,
-              speed: 0.6 + Math.random() * 0.8,
-              phase: Math.random() * Math.PI * 2
+            const blueCloud = this.add.image(width * 0.50, height * 0.20, 'nebula-blue');
+            blueCloud.setDisplaySize(width * 0.75, width * 0.75);
+            blueCloud.setAlpha(0.06);
+            blueCloud.setScrollFactor(0.05);
+            this.backgroundLayer.add(blueCloud);
+            this.nebulaClouds.push({
+              img: blueCloud,
+              speed: 0.012,
+              phase: 3.0,
+              baseX: width * 0.50
             });
-          }
 
-          // --------------------------------------------------
-          // LAYER 3: Slow floating dust (50% scroll factor - Phase 2 & 3)
-          // --------------------------------------------------
-          this.floatingDust = [];
-          for (let i = 0; i < 100; i++) {
-            const x = minX + Math.random() * (maxX - minX);
-            const y = minY + Math.random() * (maxY - minY);
-            const dImg = this.add.image(x, y, 'glow');
-            const size = 0.04 + Math.random() * 0.06;
-            const alpha = 0.02 + Math.random() * 0.03;
-            dImg.setScale(size);
-            dImg.setAlpha(alpha);
-            dImg.setScrollFactor(0.5);
-            this.backgroundLayer.add(dImg);
-            this.floatingDust.push({
-              img: dImg,
-              speedX: -1 - Math.random() * 3,
-              speedY: -2 - Math.random() * 5,
-              baseAlpha: alpha,
-              speed: 0.3 + Math.random() * 0.5,
-              phase: Math.random() * Math.PI * 2
+            // --------------------------------------------------
+            // LAYER 1: Very distant stars (10% scroll factor - Phase 2 & 3)
+            // --------------------------------------------------
+            this.distantStars = [];
+            for (let i = 0; i < 120; i++) {
+              const x = Math.random() * width;
+              const y = Math.random() * height;
+              const starImg = this.add.image(x, y, 'star');
+              const size = 0.1 + Math.random() * 0.2;
+              const alpha = 0.08 + Math.random() * 0.25;
+              starImg.setScale(size);
+              starImg.setAlpha(alpha);
+              starImg.setScrollFactor(0.1);
+              this.backgroundLayer.add(starImg);
+              this.distantStars.push({
+                img: starImg,
+                baseAlpha: alpha,
+                speed: 0.4 + Math.random() * 0.6,
+                phase: Math.random() * Math.PI * 2
+              });
+            }
+
+            // --------------------------------------------------
+            // LAYER 2: Small drifting particles (30% scroll factor - Phase 2 & 3)
+            // --------------------------------------------------
+            this.driftingParticles = [];
+            for (let i = 0; i < 45; i++) {
+              const x = Math.random() * width;
+              const y = Math.random() * height;
+              const pImg = this.add.image(x, y, 'star');
+              const size = 0.25 + Math.random() * 0.25;
+              const alpha = 0.12 + Math.random() * 0.25;
+              pImg.setScale(size);
+              pImg.setAlpha(alpha);
+              pImg.setScrollFactor(0.3);
+              this.backgroundLayer.add(pImg);
+              this.driftingParticles.push({
+                img: pImg,
+                speedX: -3 - Math.random() * 6,
+                speedY: -5 - Math.random() * 10,
+                baseAlpha: alpha,
+                speed: 0.6 + Math.random() * 0.8,
+                phase: Math.random() * Math.PI * 2
+              });
+            }
+
+            // --------------------------------------------------
+            // LAYER 3: Slow floating dust (50% scroll factor - Phase 2 & 3)
+            // --------------------------------------------------
+            this.floatingDust = [];
+            for (let i = 0; i < 25; i++) {
+              const x = Math.random() * width;
+              const y = Math.random() * height;
+              const dImg = this.add.image(x, y, 'glow');
+              const size = 0.04 + Math.random() * 0.06;
+              const alpha = 0.02 + Math.random() * 0.03;
+              dImg.setScale(size);
+              dImg.setAlpha(alpha);
+              dImg.setScrollFactor(0.5);
+              this.backgroundLayer.add(dImg);
+              this.floatingDust.push({
+                img: dImg,
+                speedX: -1 - Math.random() * 3,
+                speedY: -2 - Math.random() * 5,
+                baseAlpha: alpha,
+                speed: 0.3 + Math.random() * 0.5,
+                phase: Math.random() * Math.PI * 2
+              });
+            }
+
+            // --------------------------------------------------
+            // LAYER 4: Occasional glowing motes (50% scroll factor - Phase 2 & 3)
+            // --------------------------------------------------
+            this.glowingMotes = [];
+            const moteColors = [0x7e57c2, 0x00e5ff, 0xffa000, 0x2e7d32, 0xd32f2f];
+            for (let i = 0; i < 12; i++) {
+              const x = Math.random() * width;
+              const y = Math.random() * height;
+              const mImg = this.add.image(x, y, 'glow');
+              const size = 0.12 + Math.random() * 0.15;
+              const alpha = 0.03 + Math.random() * 0.06;
+              mImg.setScale(size);
+              mImg.setAlpha(alpha);
+              mImg.setTint(moteColors[Math.floor(Math.random() * moteColors.length)]);
+              mImg.setScrollFactor(0.5);
+              mImg.setBlendMode(Phaser.BlendModes.ADD);
+              this.backgroundLayer.add(mImg);
+              this.glowingMotes.push({
+                img: mImg,
+                speedX: -2 - Math.random() * 4,
+                speedY: -3 - Math.random() * 7,
+                baseAlpha: alpha,
+                speed: 0.5 + Math.random() * 0.7,
+                phase: Math.random() * Math.PI * 2,
+                color: moteColors[Math.floor(Math.random() * moteColors.length)]
+              });
+            }
+
+            // --------------------------------------------------
+            // AMBIENT MAGIC: Rare foreground elements (80% scroll factor - Phase 4)
+            // --------------------------------------------------
+            this.ambientMagic = [];
+            for (let i = 0; i < 6; i++) {
+              const x = Math.random() * width;
+              const y = Math.random() * height;
+              const amImg = this.add.image(x, y, 'star');
+              const size = 0.35 + Math.random() * 0.35;
+              const alpha = 0.05 + Math.random() * 0.15;
+              amImg.setScale(size);
+              amImg.setAlpha(alpha);
+              amImg.setScrollFactor(0.8);
+              amImg.setTint(moteColors[Math.floor(Math.random() * moteColors.length)]);
+              amImg.setBlendMode(Phaser.BlendModes.ADD);
+              this.backgroundLayer.add(amImg);
+              this.ambientMagic.push({
+                img: amImg,
+                speedX: -4 - Math.random() * 8,
+                speedY: -8 - Math.random() * 12,
+                rotSpeed: 0.02 + Math.random() * 0.04,
+                baseAlpha: alpha,
+                speed: 0.8 + Math.random() * 1.2,
+                phase: Math.random() * Math.PI * 2
+              });
+            }
+
+            // Parallax Midground Clouds (15% scroll factor - Phase 3)
+            const cloud1 = this.add.image(width * 0.20, height * 0.50, 'cloud');
+            cloud1.setDisplaySize(width * 0.40, width * 0.20);
+            cloud1.setAlpha(0.08);
+            cloud1.setScrollFactor(0.15);
+            this.backgroundLayer.add(cloud1);
+            this.bgClouds.push({
+              img: cloud1,
+              speed: 0.012,
+              phase: 0.0,
+              baseX: width * 0.20,
+              baseY: height * 0.50
             });
-          }
 
-          // --------------------------------------------------
-          // LAYER 4: Occasional glowing motes (50% scroll factor - Phase 2 & 3)
-          // --------------------------------------------------
-          this.glowingMotes = [];
-          const moteColors = [0x7e57c2, 0x00e5ff, 0xffa000, 0x2e7d32, 0xd32f2f];
-          for (let i = 0; i < 48; i++) {
-            const x = minX + Math.random() * (maxX - minX);
-            const y = minY + Math.random() * (maxY - minY);
-            const mImg = this.add.image(x, y, 'glow');
-            const size = 0.12 + Math.random() * 0.15;
-            const alpha = 0.03 + Math.random() * 0.06;
-            mImg.setScale(size);
-            mImg.setAlpha(alpha);
-            mImg.setTint(moteColors[Math.floor(Math.random() * moteColors.length)]);
-            mImg.setScrollFactor(0.5);
-            mImg.setBlendMode(Phaser.BlendModes.ADD);
-            this.backgroundLayer.add(mImg);
-            this.glowingMotes.push({
-              img: mImg,
-              speedX: -2 - Math.random() * 4,
-              speedY: -3 - Math.random() * 7,
-              baseAlpha: alpha,
-              speed: 0.5 + Math.random() * 0.7,
-              phase: Math.random() * Math.PI * 2,
-              color: moteColors[Math.floor(Math.random() * moteColors.length)]
+            const cloud2 = this.add.image(width * 0.80, height * 0.50, 'cloud');
+            cloud2.setDisplaySize(width * 0.35, width * 0.175);
+            cloud2.setAlpha(0.07);
+            cloud2.setScrollFactor(0.15);
+            this.backgroundLayer.add(cloud2);
+            this.bgClouds.push({
+              img: cloud2,
+              speed: 0.008,
+              phase: 2.0,
+              baseX: width * 0.80,
+              baseY: height * 0.50
             });
-          }
 
-          // --------------------------------------------------
-          // AMBIENT MAGIC: Rare foreground elements (80% scroll factor - Phase 4)
-          // --------------------------------------------------
-          this.ambientMagic = [];
-          for (let i = 0; i < 24; i++) {
-            const x = minX + Math.random() * (maxX - minX);
-            const y = minY + Math.random() * (maxY - minY);
-            const amImg = this.add.image(x, y, 'star');
-            const size = 0.35 + Math.random() * 0.35;
-            const alpha = 0.05 + Math.random() * 0.15;
-            amImg.setScale(size);
-            amImg.setAlpha(alpha);
-            amImg.setScrollFactor(0.8);
-            amImg.setTint(moteColors[Math.floor(Math.random() * moteColors.length)]);
-            amImg.setBlendMode(Phaser.BlendModes.ADD);
-            this.decorationLayer.add(amImg);
-            this.ambientMagic.push({
-              img: amImg,
-              speedX: -4 - Math.random() * 8,
-              speedY: -8 - Math.random() * 12,
-              rotSpeed: 0.02 + Math.random() * 0.04,
-              baseAlpha: alpha,
-              speed: 0.8 + Math.random() * 1.2,
-              phase: Math.random() * Math.PI * 2
+            const cloud3 = this.add.image(width * 0.50, height * 0.12, 'cloud');
+            cloud3.setDisplaySize(width * 0.30, width * 0.15);
+            cloud3.setAlpha(0.06);
+            cloud3.setScrollFactor(0.15);
+            this.backgroundLayer.add(cloud3);
+            this.bgClouds.push({
+              img: cloud3,
+              speed: 0.010,
+              phase: 4.0,
+              baseX: width * 0.50,
+              baseY: height * 0.12
             });
+
+            this.backgroundInitialized = true;
           }
-
-          // Parallax Midground Clouds (15% scroll factor - Phase 3)
-          const cloud1 = this.add.image(width * 0.20, height * 0.50, 'cloud');
-          cloud1.setDisplaySize(width * 0.40, width * 0.20);
-          cloud1.setAlpha(0.08);
-          cloud1.setScrollFactor(0.15);
-          this.decorationLayer.add(cloud1);
-          this.bgClouds.push({
-            img: cloud1,
-            speed: 0.012,
-            phase: 0.0,
-            baseX: width * 0.20,
-            baseY: height * 0.50
-          });
-
-          const cloud2 = this.add.image(width * 0.80, height * 0.50, 'cloud');
-          cloud2.setDisplaySize(width * 0.35, width * 0.175);
-          cloud2.setAlpha(0.07);
-          cloud2.setScrollFactor(0.15);
-          this.decorationLayer.add(cloud2);
-          this.bgClouds.push({
-            img: cloud2,
-            speed: 0.008,
-            phase: 2.0,
-            baseX: width * 0.80,
-            baseY: height * 0.50
-          });
-
-          const cloud3 = this.add.image(width * 0.50, height * 0.12, 'cloud');
-          cloud3.setDisplaySize(width * 0.30, width * 0.15);
-          cloud3.setAlpha(0.06);
-          cloud3.setScrollFactor(0.15);
-          this.decorationLayer.add(cloud3);
-          this.bgClouds.push({
-            img: cloud3,
-            speed: 0.010,
-            phase: 4.0,
-            baseX: width * 0.50,
-            baseY: height * 0.12
-          });
 
           const nexusData = ISLANDS.find(i => i.isCenter)!;
           const nexusX = width * nexusData.xPct;
@@ -2420,11 +2428,11 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             });
           });
 
-          const vignetteImg = this.add.image(width / 2, height / 2, 'vignette');
-          vignetteImg.setDisplaySize(width, height);
-          vignetteImg.setAlpha(0.60);
-          vignetteImg.setScrollFactor(0);
-          vignetteImg.setDepth(9990);
+          this.vignetteImg = this.add.image(width / 2, height / 2, 'vignette');
+          this.vignetteImg.setDisplaySize(width, height);
+          this.vignetteImg.setAlpha(0.60);
+          this.vignetteImg.setScrollFactor(0);
+          this.vignetteImg.setDepth(9990);
 
           if (this.selectedIslandKey) {
             const selectedData = ISLANDS.find(i => i.key === this.selectedIslandKey);
@@ -3884,20 +3892,16 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             star.img.setAlpha(Math.max(0.05, star.baseAlpha + shimmer * 0.12));
           });
 
-          // Helper to wrap particles within extended world bounds with padding
+          // Helper to wrap particles within screen bounds with padding
           const wrapPadding = 40;
-          const minX = -width * 0.5;
-          const maxX = width * 1.5;
-          const minY = -height * 0.5;
-          const maxY = height * 1.5;
           const wrapParticle = (img: Phaser.GameObjects.Image, speedX: number, speedY: number) => {
             img.x += speedX * dt;
             img.y += speedY * dt;
 
-            if (img.x < minX - wrapPadding) img.x = maxX + wrapPadding;
-            if (img.x > maxX + wrapPadding) img.x = minX - wrapPadding;
-            if (img.y < minY - wrapPadding) img.y = maxY + wrapPadding;
-            if (img.y > maxY + wrapPadding) img.y = minY - wrapPadding;
+            if (img.x < -wrapPadding) img.x = width + wrapPadding;
+            if (img.x > width + wrapPadding) img.x = -wrapPadding;
+            if (img.y < -wrapPadding) img.y = height + wrapPadding;
+            if (img.y > height + wrapPadding) img.y = -wrapPadding;
           };
 
           // 2. Drifting Particles (Layer 2 - 30% Parallax)
@@ -4677,6 +4681,7 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
         width: '100%',
         height: '100%',
         parent: 'phaser-game-container',
+        backgroundColor: '#04030a',
         scale: {
           mode: Phaser.Scale.RESIZE,
           autoCenter: Phaser.Scale.CENTER_BOTH
