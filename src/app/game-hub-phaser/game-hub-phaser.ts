@@ -1509,6 +1509,13 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           const width = this.scale.width;
           const height = this.scale.height;
 
+          // Reset main camera scroll and zoom to initial states for robustness
+          const cam = this.cameras.main;
+          if (cam) {
+            cam.setScroll(0, 0);
+            cam.setZoom(1.0);
+          }
+
           this.backgroundLayer.removeAll(true);
           this.decorationLayer.removeAll(true);
           this.islandLayer.removeAll(true);
@@ -2619,10 +2626,6 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
 
                 // 6. Begin slowly pulling the camera backward to the Nexus overview
                 // (delayed by 800ms: 300ms overlay fade-out + 50ms pause + 300ms portal pulse + 150ms post-pulse pause)
-                const nexusData = ISLANDS.find(i => i.isCenter)!;
-                const defaultOverviewX = width * nexusData.xPct;
-                const defaultOverviewY = height * nexusData.yPct;
-
                 const camState = { t: 0 };
                 this.tweens.add({
                   targets: camState,
@@ -2642,8 +2645,8 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
                     const currentPortalWorldX = selectedItem.container.x + currentPortalSpriteX * selectedItem.container.scaleX;
                     const currentPortalWorldY = selectedItem.container.y + currentPortalSpriteY * selectedItem.container.scaleY;
 
-                    const endScrollX = defaultOverviewX - cam.width / 2;
-                    const endScrollY = defaultOverviewY - cam.height / 2;
+                    const endScrollX = 0;
+                    const endScrollY = 0;
                     const startScrollX = currentPortalWorldX - cam.width / 2;
                     const startScrollY = currentPortalWorldY - cam.height / 2;
 
@@ -2755,14 +2758,6 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
                             this.isTransitioning = false;
                             this.isReturning = false;
                             this.cinematicAmbienceAlphaFactor = 1.0;
-
-                            // Synchronize Phaser input plugin with final camera transform.
-                            // Toggling input.enabled forces the input manager to re-evaluate
-                            // all interactive object hit regions relative to the current camera
-                            // state (zoom=1.0, scroll at nexus center), eliminating any
-                            // hover/click offset accumulated during the cinematic pan/zoom.
-                            this.input.enabled = false;
-                            this.input.enabled = true;
 
                             // Restore companion star to its fully idle, interactive state
                             this.forceResetProfileState();
@@ -3040,7 +3035,7 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             fontStyle: 'bold',
             color: '#ffffff'
           }).setOrigin(0.5);
-          
+
           const authButtonZone = this.add.zone(-160, 388, 180, 36);
           authButtonZone.setInteractive({ useHandCursor: true });
 
@@ -3135,18 +3130,18 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             if (!this.isProfileMenuOpen) return;
             // Panel region in screen-space: star is at (systemTargetScreenX, 60), panel extends ~335px to the left
             const starSX = this.systemTargetScreenX;
-            const panelLeft   = starSX - 335;
-            const panelRight  = starSX + 30;
-            const panelTop    = 60 - 55;
+            const panelLeft = starSX - 335;
+            const panelRight = starSX + 30;
+            const panelTop = 60 - 55;
             const panelBottom = 60 + 445;
-            const starLeft    = starSX - 30;
-            const starRight   = starSX + 30;
-            const starTop     = 60 - 30;
-            const starBottom  = 60 + 30;
+            const starLeft = starSX - 30;
+            const starRight = starSX + 30;
+            const starTop = 60 - 30;
+            const starBottom = 60 + 30;
             const px = pointer.x;
             const py = pointer.y;
             const inPanel = px >= panelLeft && px <= panelRight && py >= panelTop && py <= panelBottom;
-            const inStar  = px >= starLeft  && px <= starRight  && py >= starTop  && py <= starBottom;
+            const inStar = px >= starLeft && px <= starRight && py >= starTop && py <= starBottom;
             if (!inPanel && !inStar) {
               this.closeProfilePanel();
             }
@@ -4233,15 +4228,12 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           }
 
           // Pan camera back to Nexus at default zoom
-          const nexusData = ISLANDS.find(i => i.isCenter)!;
-          const nexusX = this.scale.width * nexusData.xPct;
-          const nexusY = this.scale.height * nexusData.yPct;
           const cam = this.cameras.main;
           const camData = { scrollX: cam.scrollX, scrollY: cam.scrollY, zoom: cam.zoom };
           this.tweens.add({
             targets: camData,
-            scrollX: nexusX - cam.width / 2,
-            scrollY: nexusY - cam.height / 2,
+            scrollX: 0,
+            scrollY: 0,
             zoom: 1.0,
             duration: 700,
             ease: 'Sine.easeInOut',
@@ -4250,9 +4242,6 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             },
             onComplete: () => {
               component.audioManager.fadeCameraWhoosh();
-              // Re-sync Phaser input hit regions to the restored camera transform
-              this.input.enabled = false;
-              this.input.enabled = true;
               this.forceResetProfileState();
             },
             onUpdate: () => {
