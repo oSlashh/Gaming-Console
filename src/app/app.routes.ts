@@ -3,6 +3,11 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   {
     path: '',
+    redirectTo: 'game-hub-phaser',
+    pathMatch: 'full',
+  },
+  {
+    path: 'home2',
     loadComponent: () => import('./home2/home2').then((m) => m.Home2),
   },
   {
