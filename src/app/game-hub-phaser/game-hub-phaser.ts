@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Userdetails } from '../userdetails';
 import type * as PhaserType from 'phaser';
 
-interface IslandData {
+export interface IslandData {
   key: string;
   name: string;
   subtitle: string;
@@ -30,7 +30,7 @@ interface Star {
   phase: number;
 }
 
-const ISLANDS: IslandData[] = [
+export const ISLANDS: IslandData[] = [
   { key: 'wavelength', name: 'Wavelength', subtitle: 'Mind Reading Challenge', xPct: 0.5, yPct: 0.18, isCenter: false, themeColor: 0x7e57c2, spriteKey: 'island-wavelength', floatSpeed: 0.30, floatPhase: 0.0, floatAmp: 4, players: '4–12', status: 'Available', description: 'Tune into the correct mental wavelength and guess your teammate\'s thoughts.' },
   { key: 'flappy', name: 'Flappy Escape', subtitle: 'Skyward Voyage', xPct: 0.27, yPct: 0.34, isCenter: false, themeColor: 0xffa000, spriteKey: 'island-flappy', floatSpeed: 0.45, floatPhase: 1.0, floatAmp: 5, players: '1–2', status: 'Available', description: 'Flap through deadly sky obstacles and escape the temple.' },
   { key: 'reaction', name: 'Reaction Time', subtitle: 'Reflex Trial', xPct: 0.73, yPct: 0.34, isCenter: false, themeColor: 0xff7043, spriteKey: 'island-reaction', floatSpeed: 0.38, floatPhase: 2.0, floatAmp: 4.5, players: '1–2', status: 'Available', description: 'Test your reflexes and match the triggers in record time.' },
@@ -4349,17 +4349,17 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           // Play Now Button
           const btnBg = this.add.graphics();
           btnBg.fillStyle(data.themeColor, 0.9);
-          btnBg.fillRoundedRect(175 - 75, 130, 150, 32, 6);
+          btnBg.fillRoundedRect(105 - 60, 130, 120, 32, 6);
           this.infoCard.add(btnBg);
 
           // Semi-transparent hover highlight
           const btnHover = this.add.graphics();
           btnHover.fillStyle(0xffffff, 0.2);
-          btnHover.fillRoundedRect(175 - 75, 130, 150, 32, 6);
+          btnHover.fillRoundedRect(105 - 60, 130, 120, 32, 6);
           btnHover.setAlpha(0);
           this.infoCard.add(btnHover);
 
-          const btnTxt = this.add.text(175, 146, 'PLAY NOW', {
+          const btnTxt = this.add.text(105, 146, 'PLAY NOW', {
             fontFamily: 'Outfit, Arial, sans-serif',
             fontSize: '12px',
             fontStyle: 'bold',
@@ -4368,7 +4368,7 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           btnTxt.setOrigin(0.5);
           this.infoCard.add(btnTxt);
 
-          const btnZone = this.add.zone(175, 146, 150, 32);
+          const btnZone = this.add.zone(105, 146, 120, 32);
           btnZone.setInteractive({ useHandCursor: true });
           this.infoCard.add(btnZone);
 
@@ -4404,7 +4404,61 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             this.playPortalEntryAnimation(data);
           });
 
-          this.islandLayer.add(this.infoCard);
+          // Preview Button
+          const prevBtnBg = this.add.graphics();
+          prevBtnBg.fillStyle(0x1a152e, 0.8);
+          prevBtnBg.lineStyle(1.5, data.themeColor, 0.9);
+          prevBtnBg.fillRoundedRect(245 - 60, 130, 120, 32, 6);
+          prevBtnBg.strokeRoundedRect(245 - 60, 130, 120, 32, 6);
+          this.infoCard.add(prevBtnBg);
+
+          const prevBtnHover = this.add.graphics();
+          prevBtnHover.fillStyle(0xffffff, 0.1);
+          prevBtnHover.fillRoundedRect(245 - 60, 130, 120, 32, 6);
+          prevBtnHover.setAlpha(0);
+          this.infoCard.add(prevBtnHover);
+
+          const prevBtnTxt = this.add.text(245, 146, 'PREVIEW', {
+            fontFamily: 'Outfit, Arial, sans-serif',
+            fontSize: '12px',
+            fontStyle: 'bold',
+            color: '#ffffff'
+          });
+          prevBtnTxt.setOrigin(0.5);
+          this.infoCard.add(prevBtnTxt);
+
+          const prevBtnZone = this.add.zone(245, 146, 120, 32);
+          prevBtnZone.setInteractive({ useHandCursor: true });
+          this.infoCard.add(prevBtnZone);
+
+          prevBtnZone.on('pointerover', () => {
+            component.audioManager.playPlayNowHover();
+            this.sys.canvas.style.cursor = 'pointer';
+            this.tweens.add({
+              targets: prevBtnHover,
+              alpha: 1,
+              duration: 100
+            });
+          });
+
+          prevBtnZone.on('pointerout', () => {
+            this.sys.canvas.style.cursor = 'default';
+            this.tweens.add({
+              targets: prevBtnHover,
+              alpha: 0,
+              duration: 100
+            });
+          });
+
+          prevBtnZone.on('pointerdown', () => {
+            prevBtnZone.destroy();
+            component.audioManager.playPlayNowClick();
+            component.ngZone.run(() => {
+              component.router.navigate([`/preview/${data.key}`]);
+            });
+          });
+
+          this.uiLayer.add(this.infoCard);
         }
 
         private playPortalEntryAnimation(data: IslandData) {

@@ -19,8 +19,8 @@ export const routes: Routes = [
     loadComponent: () => import('./registration/registration').then((m) => m.Registration),
   },
   {
-    path: 'game-page',
-    loadComponent: () => import('./game-page/game-page').then((m) => m.GamePage),
+    path: 'game-hub-phaser',
+    loadComponent: () => import('./game-hub-phaser/game-hub-phaser').then((m) => m.GameHubPhaserComponent),
   },
   {
     path: 'flappy-bird',
@@ -38,12 +38,12 @@ export const routes: Routes = [
     path: 'reaction-time',
     loadComponent: () => import('./reaction-time/reaction-time').then((m) => m.ReactionTimeGameComponent),
   },
-    {
-  path: 'wavelength',
-  loadComponent: () =>
-    import('./wavelength/wavelength')
-      .then(m => (m as any).WavelengthComponent)
-},
+  {
+    path: 'wavelength',
+    loadComponent: () =>
+      import('./wavelength/wavelength')
+        .then(m => (m as any).WavelengthComponent)
+  },
   {
     path: 'oops',
     loadComponent: () => import('./oops/components/oops.component').then((m) => m.OopsComponent),
@@ -53,12 +53,8 @@ export const routes: Routes = [
     loadComponent: () => import('./guess/guess').then((m) => m.GuessGuessComponent),
   },
   {
-    path: 'game-hub',
-    loadComponent: () => import('./game-hub/game-hub').then((m) => m.GameHubComponent),
-  },
-  {
-    path: 'game-hub-phaser',
-    loadComponent: () => import('./game-hub-phaser/game-hub-phaser').then((m) => m.GameHubPhaserComponent),
+    path: 'preview/:game',
+    loadComponent: () => import('./game-preview/game-preview').then((m) => m.GamePreviewComponent),
   },
 
   {
