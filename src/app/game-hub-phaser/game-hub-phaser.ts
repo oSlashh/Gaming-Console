@@ -1536,10 +1536,10 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           this.bgClouds = [];
           this.runeRingObj = null;
 
-          // Solid background matching page color (Phase 1)
+          // Solid background matching page color (Phase 1) - extended to cover travel range
           const bgG = this.add.graphics();
           bgG.fillStyle(0x04030a, 1);
-          bgG.fillRect(0, 0, width, height);
+          bgG.fillRect(-width * 0.5, -height * 0.5, width * 2.0, height * 2.0);
           this.backgroundLayer.add(bgG);
 
           // Deep Space Celestial Moon (Parallax 2% - Phase 3)
@@ -1586,13 +1586,19 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             baseX: width * 0.50
           });
 
+          // Define 4x extended space boundaries for seamless background coverage during pans/zooms
+          const minX = -width * 0.5;
+          const maxX = width * 1.5;
+          const minY = -height * 0.5;
+          const maxY = height * 1.5;
+
           // --------------------------------------------------
           // LAYER 1: Very distant stars (10% scroll factor - Phase 2 & 3)
           // --------------------------------------------------
           this.distantStars = [];
-          for (let i = 0; i < 120; i++) {
-            const x = Math.random() * width;
-            const y = Math.random() * height;
+          for (let i = 0; i < 480; i++) {
+            const x = minX + Math.random() * (maxX - minX);
+            const y = minY + Math.random() * (maxY - minY);
             const starImg = this.add.image(x, y, 'star');
             const size = 0.1 + Math.random() * 0.2;
             const alpha = 0.08 + Math.random() * 0.25;
@@ -1612,9 +1618,9 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           // LAYER 2: Small drifting particles (30% scroll factor - Phase 2 & 3)
           // --------------------------------------------------
           this.driftingParticles = [];
-          for (let i = 0; i < 45; i++) {
-            const x = Math.random() * width;
-            const y = Math.random() * height;
+          for (let i = 0; i < 180; i++) {
+            const x = minX + Math.random() * (maxX - minX);
+            const y = minY + Math.random() * (maxY - minY);
             const pImg = this.add.image(x, y, 'star');
             const size = 0.25 + Math.random() * 0.25;
             const alpha = 0.12 + Math.random() * 0.25;
@@ -1636,9 +1642,9 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           // LAYER 3: Slow floating dust (50% scroll factor - Phase 2 & 3)
           // --------------------------------------------------
           this.floatingDust = [];
-          for (let i = 0; i < 25; i++) {
-            const x = Math.random() * width;
-            const y = Math.random() * height;
+          for (let i = 0; i < 100; i++) {
+            const x = minX + Math.random() * (maxX - minX);
+            const y = minY + Math.random() * (maxY - minY);
             const dImg = this.add.image(x, y, 'glow');
             const size = 0.04 + Math.random() * 0.06;
             const alpha = 0.02 + Math.random() * 0.03;
@@ -1661,9 +1667,9 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           // --------------------------------------------------
           this.glowingMotes = [];
           const moteColors = [0x7e57c2, 0x00e5ff, 0xffa000, 0x2e7d32, 0xd32f2f];
-          for (let i = 0; i < 12; i++) {
-            const x = Math.random() * width;
-            const y = Math.random() * height;
+          for (let i = 0; i < 48; i++) {
+            const x = minX + Math.random() * (maxX - minX);
+            const y = minY + Math.random() * (maxY - minY);
             const mImg = this.add.image(x, y, 'glow');
             const size = 0.12 + Math.random() * 0.15;
             const alpha = 0.03 + Math.random() * 0.06;
@@ -1688,9 +1694,9 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           // AMBIENT MAGIC: Rare foreground elements (80% scroll factor - Phase 4)
           // --------------------------------------------------
           this.ambientMagic = [];
-          for (let i = 0; i < 6; i++) {
-            const x = Math.random() * width;
-            const y = Math.random() * height;
+          for (let i = 0; i < 24; i++) {
+            const x = minX + Math.random() * (maxX - minX);
+            const y = minY + Math.random() * (maxY - minY);
             const amImg = this.add.image(x, y, 'star');
             const size = 0.35 + Math.random() * 0.35;
             const alpha = 0.05 + Math.random() * 0.15;
@@ -2376,11 +2382,12 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
               strokeThickness: data.isCenter ? 4.5 : 3.0,
               shadow: { color: '#000000', blur: data.isCenter ? 8 : 6, stroke: true, fill: true }
             };
-            const txt = this.add.text(x, y + labelOffsetY, data.name, titleStyle);
-            txt.setOrigin(0.5);
-            this.uiLayer.add(txt);
 
             this.islandLayer.add(container);
+
+            const txt = this.add.text(x, y + labelOffsetY, data.name, titleStyle);
+            txt.setOrigin(0.5);
+            this.islandLayer.add(txt);
 
             this.islandContainers.push({
               container,
@@ -2416,7 +2423,8 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           const vignetteImg = this.add.image(width / 2, height / 2, 'vignette');
           vignetteImg.setDisplaySize(width, height);
           vignetteImg.setAlpha(0.60);
-          this.uiLayer.add(vignetteImg);
+          vignetteImg.setScrollFactor(0);
+          vignetteImg.setDepth(9990);
 
           if (this.selectedIslandKey) {
             const selectedData = ISLANDS.find(i => i.key === this.selectedIslandKey);
@@ -2484,7 +2492,6 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
                 blackOverlay.fillRect(0, 0, width, height);
                 blackOverlay.setScrollFactor(0);
                 blackOverlay.setDepth(9999);
-                this.uiLayer.add(blackOverlay);
 
                 // Fade to reveal portal over 300ms (Issue 1: Quick and fluid)
                 this.tweens.add({
@@ -3877,16 +3884,20 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             star.img.setAlpha(Math.max(0.05, star.baseAlpha + shimmer * 0.12));
           });
 
-          // Helper to wrap particles within screen bounds with padding
+          // Helper to wrap particles within extended world bounds with padding
           const wrapPadding = 40;
+          const minX = -width * 0.5;
+          const maxX = width * 1.5;
+          const minY = -height * 0.5;
+          const maxY = height * 1.5;
           const wrapParticle = (img: Phaser.GameObjects.Image, speedX: number, speedY: number) => {
             img.x += speedX * dt;
             img.y += speedY * dt;
 
-            if (img.x < -wrapPadding) img.x = width + wrapPadding;
-            if (img.x > width + wrapPadding) img.x = -wrapPadding;
-            if (img.y < -wrapPadding) img.y = height + wrapPadding;
-            if (img.y > height + wrapPadding) img.y = -wrapPadding;
+            if (img.x < minX - wrapPadding) img.x = maxX + wrapPadding;
+            if (img.x > maxX + wrapPadding) img.x = minX - wrapPadding;
+            if (img.y < minY - wrapPadding) img.y = maxY + wrapPadding;
+            if (img.y > maxY + wrapPadding) img.y = minY - wrapPadding;
           };
 
           // 2. Drifting Particles (Layer 2 - 30% Parallax)
@@ -4389,7 +4400,7 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             this.playPortalEntryAnimation(data);
           });
 
-          this.uiLayer.add(this.infoCard);
+          this.islandLayer.add(this.infoCard);
         }
 
         private playPortalEntryAnimation(data: IslandData) {
@@ -4589,7 +4600,6 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             portalFill.setScrollFactor(0);
             portalFill.setAlpha(0);
             portalFill.setDepth(9999);
-            this.uiLayer.add(portalFill);
 
             this.tweens.add({
               targets: portalFill,
@@ -4605,7 +4615,6 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
                 whiteOverlay.setScrollFactor(0);
                 whiteOverlay.setAlpha(0);
                 whiteOverlay.setDepth(9999);
-                this.uiLayer.add(whiteOverlay);
 
                 this.tweens.add({
                   targets: whiteOverlay,
@@ -4618,7 +4627,6 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
                     blackOverlay.setScrollFactor(0);
                     blackOverlay.setAlpha(0);
                     blackOverlay.setDepth(9999);
-                    this.uiLayer.add(blackOverlay);
 
                     this.tweens.add({
                       targets: blackOverlay,
