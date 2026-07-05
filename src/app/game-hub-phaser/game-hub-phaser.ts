@@ -2,8 +2,11 @@ import { Component, AfterViewInit, OnDestroy, Inject, PLATFORM_ID, NgZone } from
 import { isPlatformBrowser, CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Userdetails } from '../userdetails';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase.config';
 import type * as PhaserType from 'phaser';
-
+import { signOut } from 'firebase/auth';
+import { FirestoreService } from '../services/firestore.service';
 export interface IslandData {
   key: string;
   name: string;
@@ -1044,17 +1047,51 @@ export class HubAudioManager {
   styleUrls: ['./game-hub-phaser.css']
 })
 export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
+
   private game: PhaserType.Game | null = null;
+
   audioManager: HubAudioManager;
 
+  isLoggedIn = false;
+
+  userName = 'Guest';
+
   constructor(
-    @Inject(PLATFORM_ID) private platformId: Object,
-    private ngZone: NgZone,
-    private router: Router,
-    public userDetails: Userdetails
-  ) {
-    this.audioManager = new HubAudioManager(isPlatformBrowser(this.platformId));
+  @Inject(PLATFORM_ID) private platformId: Object,
+  private ngZone: NgZone,
+  private router: Router,
+  public userDetails: Userdetails,
+  private firestoreService: FirestoreService
+) {
+  this.audioManager = new HubAudioManager(
+    isPlatformBrowser(this.platformId)
+  );
+
+  if (isPlatformBrowser(this.platformId)) {
+
+    onAuthStateChanged(auth, (user) => {
+
+      if (user) {
+
+        this.isLoggedIn = true;
+
+        this.userName =
+          user.displayName ??
+          user.email?.split('@')[0] ??
+          'Player';
+
+      } else {
+
+        this.isLoggedIn = false;
+
+        this.userName = 'Guest';
+
+      }
+
+    });
+
   }
+}
 
   async ngAfterViewInit(): Promise<void> {
     if (isPlatformBrowser(this.platformId)) {
@@ -1174,24 +1211,24 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           }
         }
 
-        preload() {
-          this.load.setPath('assets/game-hub/');
-          this.load.on('loaderror', (fileObj: any) => {
-            console.warn(`[Preloader Warning] Failed to load asset: ${fileObj.key} from ${fileObj.url}`);
-          });
+          preload() {
+            this.load.setPath('assets/game-hub/');
+            this.load.on('loaderror', (fileObj: any) => {
+              console.warn(`[Preloader Warning] Failed to load asset: ${fileObj.key} from ${fileObj.url}`);
+            });
 
-          this.load.image('island-nexus', 'islands/island-nexus.png');
-          this.load.image('island-wavelength', 'islands/island-wavelength.png');
-          this.load.image('island-reaction', 'islands/island-reaction.png');
-          this.load.image('island-image-puzzle', 'islands/island-image-puzzle.png');
-          this.load.image('island-oops', 'islands/island-oops.png');
-          this.load.image('island-higher-lower', 'islands/island-higher-lower.png');
-          this.load.image('island-flappy', 'islands/island-flappy.png');
-          this.load.image('wizard-idle', 'characters/wizard-idle.png');
-          this.load.image('celestial-star', 'ui/celestial-star.png');
-        }
+            this.load.image('island-nexus', 'islands/island-nexus.png');
+            this.load.image('island-wavelength', 'islands/island-wavelength.png');
+            this.load.image('island-reaction', 'islands/island-reaction.png');
+            this.load.image('island-image-puzzle', 'islands/island-image-puzzle.png');
+            this.load.image('island-oops', 'islands/island-oops.png');
+            this.load.image('island-higher-lower', 'islands/island-higher-lower.png');
+            this.load.image('island-flappy', 'islands/island-flappy.png');
+            this.load.image('wizard-idle', 'characters/wizard-idle.png');
+            this.load.image('celestial-star', 'ui/celestial-star.png');
+          }
 
-        create() {
+          create() {
           if (!this.textures.exists('star')) {
             const starCanvas = this.textures.createCanvas('star', 8, 8);
             if (starCanvas) {
@@ -1204,6 +1241,11 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
               starCtx.arc(4, 4, 4, 0, Math.PI * 2);
               starCtx.fill();
               starCanvas.refresh();
+              this.scale.on('resize', (gameSize: Phaser.Structs.Size) => {
+
+  this.cameras.main.setSize(gameSize.width, gameSize.height);
+
+});
             }
           }
 
@@ -2898,8 +2940,8 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           const panelBg = this.add.graphics();
           panelBg.fillStyle(0x0a0714, 0.85);
           panelBg.lineStyle(2, 0xffd700, 0.4);
-          panelBg.fillRoundedRect(-335, -40, 350, 480, 16);
-          panelBg.strokeRoundedRect(-335, -40, 350, 480, 16);
+          panelBg.fillRoundedRect(-335, -40, 370, 760, 16);
+          panelBg.strokeRoundedRect(-335, -40, 370, 760, 16);
           this.profilePanelContainer.add([panelGlow, panelBg]);
 
           // Profile Section inside Panel
@@ -2990,18 +3032,21 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           this.profilePanelContainer.add(statsLabel);
 
           const games = [
-            { key: 'wavelength', name: 'Wavelength', color: 0x7e57c2 },
-            { key: 'flappy', name: 'Flappy Escape', color: 0xffa000 },
+             { key: 'flappy', name: 'Flappy Escape', color: 0xffa000 },
+             { key: 'puzzle', name: 'Image Puzzle', color: 0x00b0ff },
             { key: 'reaction', name: 'Reaction Time', color: 0xff7043 },
-            { key: 'puzzle', name: 'Image Puzzle', color: 0x00b0ff },
-            { key: 'howfaroff', name: 'Higher or Lower', color: 0xb0bec5 },
-            { key: 'oops', name: 'Oops!', color: 0xd32f2f }
+            { key: 'oops', name: 'Oops!', color: 0xd32f2f },
+            { key: 'howfaroff', name: 'Guess Guess', color: 0xb0bec5 },
+            { key: 'wavelength', name: 'Wavelength', color: 0x7e57c2 },
           ];
 
           const playCountTextObjects: Record<string, Phaser.GameObjects.Text> = {};
 
-          games.forEach((game, index) => {
-            const yPos = 216 + index * 26;
+          let currentY = 216;
+
+games.forEach((game) => {
+
+  const yPos = currentY;
             const circle = this.add.graphics().fillStyle(game.color, 1.0).fillCircle(-265, yPos + 6, 5);
             const nameText = this.add.text(-251, yPos, game.name, {
               fontFamily: 'Outfit, Arial, sans-serif',
@@ -3009,13 +3054,15 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
               fontStyle: 'bold',
               color: '#ffffff'
             });
-            const playsText = this.add.text(-27, yPos, '0 plays', {
-              fontFamily: 'Outfit, Arial, sans-serif',
-              fontSize: '13px',
-              color: '#b3accf'
-            }).setOrigin(1, 0);
+                    const playsText = this.add.text(-40, yPos, '', {
+  fontFamily: 'Outfit, Arial, sans-serif',
+  fontSize: '11px',
+  color: '#b3accf',
+  align: 'right',
+  lineSpacing: 5
+}).setOrigin(1, 0);
 
-            const rowZone = this.add.zone(-146, yPos + 8, 260, 22);
+            const rowZone = this.add.zone(-146, yPos + 28, 280,60);
             rowZone.setInteractive({ useHandCursor: true });
 
             this.profilePanelContainer.add([circle, nameText, playsText, rowZone]);
@@ -3040,18 +3087,30 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
                 }
               });
             });
-          });
+            const gamesWithBestScore = [
+  'flappy',
+  'puzzle',
+  'reaction'
+];
+
+if (gamesWithBestScore.includes(game.key)) {
+  currentY += 82;
+} else {
+  currentY += 56;
+}
+
+});
 
           // Logout / Login button
           const authButtonBg = this.add.graphics();
-          const authButtonTxt = this.add.text(-160, 388, 'LOGOUT', {
+          const authButtonTxt = this.add.text(-160, 680, 'LOGOUT', {
             fontFamily: 'Outfit, Arial, sans-serif',
             fontSize: '13px',
             fontStyle: 'bold',
             color: '#ffffff'
           }).setOrigin(0.5);
 
-          const authButtonZone = this.add.zone(-160, 388, 180, 36);
+          const authButtonZone = this.add.zone(-160, 680, 180, 36);
           authButtonZone.setInteractive({ useHandCursor: true });
 
           this.profilePanelContainer.add([authButtonBg, authButtonTxt, authButtonZone]);
@@ -3065,8 +3124,8 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
               authButtonBg.fillStyle(0x00e5ff, 0.2);
               authButtonBg.lineStyle(1.5, 0x00e5ff, 0.8);
             }
-            authButtonBg.fillRoundedRect(-250, 370, 180, 36, 8);
-            authButtonBg.strokeRoundedRect(-250, 370, 180, 36, 8);
+            authButtonBg.fillRoundedRect(-250, 662, 180, 36, 8);
+            authButtonBg.strokeRoundedRect(-250, 662, 180, 36, 8);
             authButtonTxt.setText(isLoggedIn ? 'LOGOUT' : 'LOGIN / REGISTER');
           };
 
@@ -3080,45 +3139,171 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             authButtonBg.setAlpha(1.0);
           });
           authButtonZone.on('pointerdown', () => {
-            component.audioManager.playUIButtonClick();
-            const user = component.userDetails.getUserDetails();
-            if (user) {
-              component.userDetails.setUserDetails(null);
-              this.updateAuthStatus();
-            } else {
-              component.ngZone.run(() => {
-                component.router.navigate(['/login']);
-              });
-            }
+
+  component.audioManager.playUIButtonClick();
+
+  const user = auth.currentUser;
+
+  if (user) {
+
+    signOut(auth).then(() => {
+
+      this.updateAuthStatus();
+
+    });
+
+  } else {
+
+    component.ngZone.run(() => {
+
+      component.router.navigate(['/login']);
+
+    });
+
+  }
           });
+          authButtonZone.on('pointerdown', () => {
+
+  component.audioManager.playUIButtonClick();
+
+  const user = auth.currentUser;
+
+  if (user) {
+
+    signOut(auth).then(() => {
+
+      this.updateAuthStatus();
+
+    });
+
+  } else {
+
+    component.ngZone.run(() => {
+
+      component.router.navigate(['/login']);
+
+    });
+
+  }
+
+});
 
           // Update Status function
-          this.updateAuthStatus = () => {
-            const user = component.userDetails.getUserDetails();
+          this.updateAuthStatus = async() => {
+            const user = auth.currentUser;
+            console.log('Firebase User:', auth.currentUser);
             if (user) {
-              avatarText.setText(user.name.charAt(0).toUpperCase());
-              usernameText.setText(user.name);
-              emailText.setText(user.email);
-              emailText.setColor('#b3accf');
-              drawAuthButton(true);
-            } else {
-              avatarText.setText('?');
-              usernameText.setText('Guest Traveler');
-              emailText.setText('Log in to save progress');
-              emailText.setColor('#7e73a6');
-              drawAuthButton(false);
-            }
 
-            games.forEach(game => {
-              const wPlays = localStorage.getItem(`game-play-count-${game.key}`) || '0';
-              const playsObj = playCountTextObjects[game.key];
-              if (playsObj) {
-                playsObj.setText(wPlays + (wPlays === '1' ? ' play' : ' plays'));
-              }
-            });
-          };
+  const displayName =
+    user.displayName ||
+    user.email?.split('@')[0] ||
+    'Player';
+
+  avatarText.setText(displayName.charAt(0).toUpperCase());
+
+  usernameText.setText(displayName);
+
+  emailText.setText(user.email ?? '');
+
+  emailText.setColor('#b3accf');
+
+  drawAuthButton(true);
+
+} else {
+
+  avatarText.setText('?');
+
+  usernameText.setText('Guest Traveler');
+
+  emailText.setText('Log in to save progress');
+
+  emailText.setColor('#7e73a6');
+
+  drawAuthButton(false);
+
+}
+
+            if (user) {
+
+  const scores = await component.firestoreService.getUserScores(user.uid);
+
+  games.forEach(game => {
+
+    const playsObj = playCountTextObjects[game.key];
+
+    if (!playsObj) return;
+
+    const gameStats = scores[game.key];
+    console.log(game.key, gameStats);
+console.log("Scores Object:", scores);
+
+    console.log("Game Stats:", scores[game.key]);
+
+
+    if (gameStats) {
+
+  const lastPlayed = gameStats.lastPlayed
+    ? new Date(gameStats.lastPlayed).toLocaleDateString('en-IN')
+    : 'Never';
+
+  const bestScoreGames = [
+    'flappy',
+    'puzzle',
+    'reaction'
+  ];
+
+  if (bestScoreGames.includes(game.key)) {
+
+    playsObj.setText([
+      `⭐ Best Score : ${gameStats.bestScore}`,
+      `🎮 Games Played : ${gameStats.totalGames}`,
+      `📅 Last Played : ${lastPlayed}`
+    ].join('\n'));
+
+  } else {
+
+    playsObj.setText([
+      `🎮 Games Played : ${gameStats.totalGames}`,
+      `📅 Last Played : ${lastPlayed}`
+    ].join('\n'));
+
+  }
+
+} else {
+
+  const bestScoreGames = [
+    'flappy',
+    'puzzle',
+    'reaction'
+  ];
+
+  if (bestScoreGames.includes(game.key)) {
+
+    playsObj.setText([
+      `⭐ Best Score : 0`,
+      `🎮 Games Played : 0`,
+      `📅 Last Played : Never`
+    ].join('\n'));
+
+  } else {
+
+    playsObj.setText([
+      `🎮 Games Played : 0`,
+      `📅 Last Played : Never`
+    ].join('\n'));
+
+  }
+
+}
+  });
+}
+
+}
 
           this.updateAuthStatus();
+          onAuthStateChanged(auth, () => {
+    this.updateAuthStatus();
+});
 
           // Restore menu visibility/breathing status
           const currentAmbEnabled = component.audioManager.getAmbienceEnabled();
@@ -4372,39 +4557,37 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
           btnZone.setInteractive({ useHandCursor: true });
           this.infoCard.add(btnZone);
 
-          btnZone.on('pointerover', () => {
-            component.audioManager.playPlayNowHover();
-            this.sys.canvas.style.cursor = 'pointer';
-            this.tweens.add({
-              targets: btnHover,
-              alpha: 1,
-              duration: 100
-            });
-          });
+  btnZone.on('pointerover', () => {
+    component.audioManager.playPlayNowHover();
+    this.sys.canvas.style.cursor = 'pointer';
+    btnHover.setAlpha(1);
+  });
 
-          btnZone.on('pointerout', () => {
-            this.sys.canvas.style.cursor = 'default';
-            this.tweens.add({
-              targets: btnHover,
-              alpha: 0,
-              duration: 100
-            });
-          });
+  btnZone.on('pointerout', () => {
+    this.sys.canvas.style.cursor = 'default';
+    btnHover.setAlpha(0);
+  });
 
-          btnZone.on('pointerdown', () => {
-            btnZone.destroy();
-            component.audioManager.playPlayNowClick();
-            component.audioManager.playPortalTravelSequence();
+  btnZone.on('pointerdown', () => {
+  component.audioManager.playPlayNowClick();
 
-            const countKey = `game-play-count-${data.key}`;
-            const currentCount = parseInt(localStorage.getItem(countKey) || '0', 10);
-            localStorage.setItem(countKey, (currentCount + 1).toString());
+  if (!auth.currentUser) {
 
-            console.log(`[PLAY CLICKED] ${this.selectedIslandKey}`);
-            this.playPortalEntryAnimation(data);
-          });
+    component.ngZone.run(() => {
+      component.router.navigate(['/login']);
+    });
 
-          // Preview Button
+    return;
+  }
+
+  btnZone.destroy();
+
+  component.audioManager.playPortalTravelSequence();
+
+  this.playPortalEntryAnimation(data);
+
+});
+// Preview Button
           const prevBtnBg = this.add.graphics();
           prevBtnBg.fillStyle(0x1a152e, 0.8);
           prevBtnBg.lineStyle(1.5, data.themeColor, 0.9);
@@ -4460,8 +4643,7 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
 
           this.uiLayer.add(this.infoCard);
         }
-
-        private playPortalEntryAnimation(data: IslandData) {
+          private playPortalEntryAnimation(data: IslandData) {
           // Set the transitioning flag to true to lock ambient updates
           this.isTransitioning = true;
 
@@ -4732,8 +4914,8 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
 
       const config: PhaserType.Types.Core.GameConfig = {
         type: Phaser.AUTO,
-        width: '100%',
-        height: '100%',
+        width:  window.innerWidth,
+        height: window.innerHeight,
         parent: 'phaser-game-container',
         backgroundColor: '#04030a',
         scale: {
@@ -4750,6 +4932,7 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
       };
 
       this.game = new Phaser.Game(config);
+      this.game.scale.refresh();
     }
 
   }

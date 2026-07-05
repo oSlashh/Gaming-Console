@@ -3,9 +3,9 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  UserCredential
+  setPersistence,
+  browserLocalPersistence
 } from 'firebase/auth';
-
 import { auth } from '../firebase.config';
 
 @Injectable({
@@ -13,11 +13,7 @@ import { auth } from '../firebase.config';
 })
 export class AuthService {
 
-  register(
-    email: string,
-    password: string
-  ): Promise<UserCredential> {
-
+  register(email: string, password: string) {
     return createUserWithEmailAndPassword(
       auth,
       email,
@@ -25,20 +21,20 @@ export class AuthService {
     );
   }
 
-  login(
-    email: string,
-    password: string
-  ): Promise<UserCredential> {
+  async login(email: string, password: string) {
 
-    return signInWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-  }
+  await setPersistence(
+    auth,
+    browserLocalPersistence
+  );
 
-  logout(): Promise<void> {
-
+  return signInWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+}
+  logout() {
     return signOut(auth);
   }
 }

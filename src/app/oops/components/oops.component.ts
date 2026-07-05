@@ -11,9 +11,8 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { CLOSE_ENOUGH_PAIRS, SUS_WORDS } from '../word-data';
 import { HostListener } from '@angular/core';
-
-
-
+import { ScoreService } from '../../services/score.service';
+import { auth } from '../../firebase.config';
 type Phase =
   | 'modeSelect'
   | 'instructions'
@@ -218,7 +217,8 @@ export class OopsComponent implements OnDestroy {
   constructor(
     private router: Router,
     private zone: NgZone,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private scoreService: ScoreService
   ) {}
 
   get currentPlayer(): Player {
@@ -838,15 +838,14 @@ private startTimer(): void {
     );
 
     this.suspenseTimers.push(
-      window.setTimeout(() => {
-        this.calculateResult();
+      window.setTimeout(async() => {
+        await this.calculateResult();
         this.phase = 'results';
         this.cdr.detectChanges();
       }, 5000)
     );
   }
-
-  private calculateResult(): void {
+   private async calculateResult(): Promise<void> {
     const totals = new Map<number, number>();
 
     for (const player of this.players) {
@@ -885,6 +884,21 @@ private startTimer(): void {
       this.resultMessage = 'The wrong player was voted out.';
       this.playEscapedSound();
     }
+    const user = auth.currentUser;
+
+if (user) {
+  await this.scoreService.recordGamePlayed(
+    user.uid,
+    'oops'
+  );
+}
+if (user) {
+  await this.scoreService.saveScore(
+    user.uid,
+    'oops',
+    0
+  );
+}
   }
 
   private clearSuspenseTimers(): void {

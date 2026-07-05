@@ -7,7 +7,8 @@ import {
 
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-
+import { auth } from '../firebase.config';
+import { ScoreService } from '../services/score.service';
 interface ImageOption {
   id: string;
   label: string;
@@ -30,6 +31,7 @@ interface CompletionRecord {
   moves: number;
   accuracy: number;
   stars: number;
+  score: number;
 }
 
 @Component({
@@ -230,7 +232,9 @@ export class ImagePuzzleComponent
     15 * 1024 * 1024;
 
   constructor(
-    private readonly router: Router
+    private readonly router: Router,
+    private scoreService: ScoreService
+
   ) {}
 
   // ==========================
@@ -633,8 +637,15 @@ export class ImagePuzzleComponent
     return tiles.every((tile, index) => tile.index === index);
   }
 
-  private completePuzzle(): void {
+  private async completePuzzle():Promise<void> {
     this.isPaused.set(true);
+
+    const score =
+  (this.computeStars() * 1000) +
+  Math.round(this.completion() * 10) -
+  this.moves() -
+  this.elapsedSeconds();
+
     const record: CompletionRecord = {
       id: `win-${Date.now()}`,
       difficulty: this.difficulty(),
@@ -644,6 +655,7 @@ export class ImagePuzzleComponent
       moves: this.moves(),
       accuracy: this.completion(),
       stars: this.computeStars(),
+      score: Math.max(score, 0)
     };
     this.winRecord.set(record);
     this.winVisible.set(true);
@@ -653,6 +665,16 @@ export class ImagePuzzleComponent
     this.statusMessage.set(
       'Puzzle solved! View your achievement and play again.'
     );
+    const user = auth.currentUser;
+
+if (user) {
+
+  await this.scoreService.saveScore(
+    user.uid,
+    'puzzle',
+     record.score
+  );
+}
   }
 
   private computeStars(): number {

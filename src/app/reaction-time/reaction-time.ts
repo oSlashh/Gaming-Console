@@ -9,6 +9,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ScoreService } from '../services/score.service';
+import { auth } from '../firebase.config';
 
 // ─── Interfaces ───────────────────────────────────────────────────────────────
 
@@ -81,7 +83,7 @@ const SESSION_DURATION_S = 600;
 })
 export class ReactionTimeGameComponent implements OnInit, OnDestroy {
   private readonly _router = inject(Router);
-
+  private readonly scoreService = inject(ScoreService);
   // ── State signals ──────────────────────────────────────────────────────────
   readonly phase = signal<GamePhase>('home');
   readonly difficulty = signal<Difficulty>('easy');
@@ -172,7 +174,7 @@ export class ReactionTimeGameComponent implements OnInit, OnDestroy {
     this._scheduleGreen();
   }
 
-  handleSectionClick(sectionId: number): void {
+  async handleSectionClick(sectionId: number): Promise<void> {
     const p = this.phase();
 
     if (p === 'waiting') {
@@ -192,13 +194,13 @@ export class ReactionTimeGameComponent implements OnInit, OnDestroy {
       const elapsed = performance.now() - (this._startTimestamp ?? performance.now());
       const ms = Math.round(elapsed);
       this.reactionTime.set(ms);
-      this._updateBest(ms);
+      await this._updateBest(ms);
       this.phase.set('result');
     }
   }
 
   /** Called when the user clicks a section in Impossible mode */
-  handleImpossibleSectionClick(sectionId: number): void {
+  async handleImpossibleSectionClick(sectionId: number): Promise<void> {
     const p = this.phase();
     if (p !== 'waiting' && p !== 'ready') return;
 
@@ -385,12 +387,29 @@ export class ReactionTimeGameComponent implements OnInit, OnDestroy {
     }, hold);
   }
 
-  private _updateBest(ms: number): void {
+private async _updateBest(ms: number): Promise<void> {
     const d = this.difficulty();
     this.bestScores.update(scores => {
-      const prev = scores[d];
-      return { ...scores, [d]: prev === null || ms < prev ? ms : prev };
-    });
+  const prev = scores[d];
+  return {
+    ...scores,
+    [d]: prev === null || ms < prev ? ms : prev
+  };
+});
+const user = auth.currentUser;
+
+if (user) {
+
+  // Lower reaction time is better, so convert it to a higher score.
+  const score = Math.max(10000 - ms, 0);
+
+  await this.scoreService.saveScore(
+    user.uid,
+    'reaction',
+    score
+  );
+
+}
   }
 
   private _clearTimer(): void {

@@ -2,7 +2,8 @@ import { Component, OnInit, OnDestroy, ChangeDetectorRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-
+import { ScoreService } from '../services/score.service';
+import { auth } from '../firebase.config';
 // ─── Interfaces ──────────────────────────────────────────────────────────────
 
 export interface Player {
@@ -91,7 +92,7 @@ export class GuessGuessComponent implements OnInit, OnDestroy {
     spades: '♠'
   };
 
-  constructor(private router: Router, private cdr: ChangeDetectorRef) {}
+  constructor(private router: Router, private cdr: ChangeDetectorRef, private scoreService: ScoreService) {}
 
   ngOnInit(): void {
   this.playerCount = 2;
@@ -458,16 +459,26 @@ export class GuessGuessComponent implements OnInit, OnDestroy {
 
   // ─── End game ───────────────────────────────────────────────────────────────
 
-  triggerEndGame(reason: 'timer' | 'turns' | 'quit'): void {
-    this.endReason = reason;
-    this.clearTimer();
-    this.clearCountdown();
-    this.showEndModal = true;
-    this.showCountdown = false;
-  }
+  async triggerEndGame(reason: 'timer' | 'turns' | 'quit'): Promise<void> {
 
-  quitGame(): void {
-    this.triggerEndGame('quit');
+  this.endReason = reason;
+  this.clearTimer();
+  this.clearCountdown();
+  this.showEndModal = true;
+  this.showCountdown = false;
+
+  const user = auth.currentUser;
+
+  if (user) {
+    await this.scoreService.recordGamePlayed(
+      user.uid,
+      'howfaroff'
+    );
+  }
+}
+
+  async quitGame(): Promise<void> {
+    await this.triggerEndGame('quit');
   }
 
   get winner(): Player {

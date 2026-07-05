@@ -10,8 +10,11 @@ import {
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
-import { UserService } from '../services/user.service';
-
+import { AuthService } from '../services/auth.services';
+import { FirestoreService } from '../services/firestore.service';
+import { auth } from '../firebase.config';
+import { isPlatformBrowser } from '@angular/common';
+import { PLATFORM_ID, Inject } from '@angular/core';
 type Particle = {
   x: number;
   y: number;
@@ -39,18 +42,27 @@ export class Login implements AfterViewInit, OnDestroy {
   private pointer = { x: -9999, y: -9999, active: false };
   private animationFrame = 0;
   private resizeObserver?: ResizeObserver;
+  private portalSound!: HTMLAudioElement;
 
   constructor(
-    private fb: FormBuilder,
-    private router: Router,
-    private userService: UserService,
-    private zone: NgZone
-  ) {
-    this.loginForm = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
-    });
+  private fb: FormBuilder,
+  private router: Router,
+  private authService: AuthService,
+  private firestoreService: FirestoreService,
+  private zone: NgZone,
+  @Inject(PLATFORM_ID) private platformId: Object
+) {
+  this.loginForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required, Validators.minLength(6)]]
+  });
+
+  if (isPlatformBrowser(this.platformId)) {
+    this.portalSound = new Audio('/sounds/portal-activate.mpeg');
+    this.portalSound.preload = 'auto';
+    this.portalSound.volume = 0.8;
   }
+}
 
   trackPointer(event: PointerEvent): void {
     const target = event.currentTarget as HTMLElement;
@@ -219,47 +231,79 @@ export class Login implements AfterViewInit, OnDestroy {
 
     this.animationFrame = requestAnimationFrame(() => this.animateParticles());
   }
+   async login() {
 
-  login() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
-      alert('Please fill in all fields correctly!');
-      return;
+  if (this.loginForm.invalid) {
+    this.loginForm.markAllAsTouched();
+    alert('Please fill in all fields correctly!');
+    return;
+  }
+
+  const { email, password } = this.loginForm.value;
+
+  try {
+
+    await this.authService.login(
+      email,
+      password
+    );
+
+    const currentUser = auth.currentUser;
+
+    if (!currentUser) {
+      throw new Error('User not found');
     }
 
-    const { email, password } = this.loginForm.value;
+    const profile =
+      await this.firestoreService.getUser(
+        currentUser.uid
+      );
 
-    this.userService.getUsers().subscribe({
-      next: (users: any[]) => {
-        const user = users.find(
-          u => u.email === email &&
-               u.password === password
-        );
+    if (!profile) {
+      throw new Error('User profile not found.');
+    }
 
-        if (!user) {
-          alert('Invalid credentials or user not registered.');
-          return;
+    this.isPortalOpen = true;
+    if (this.portalSound) {
+          this.portalSound.currentTime = 0;
+
+          this.portalSound.play().catch(err => {
+            console.error('Failed to play portal sound:', err);
+          });
         }
-        console.log('Before activation');
+    cancelAnimationFrame(this.animationFrame);
 
-        this.isPortalOpen = true;
-        cancelAnimationFrame(this.animationFrame);
+    document
+      .querySelector('.login-world')
+      ?.classList.add('portal-active');
 
-        document
-          .querySelector('.login-world')
-          ?.classList.add('portal-active');
+    localStorage.setItem(
+      'loggedInUser',
+      JSON.stringify({
+        uid: currentUser.uid,
+        name: profile['name'],
+        email: profile['email']
+      })
+    );
 
-        setTimeout(() => {
-          this.router.navigate(['/game-page']);
-        }, 2800);
-      },
+    setTimeout(() => {
+      this.router.navigate(['/game-page']);
+    }, 2800);
 
-      error: (err: any) => {
-        console.error(err);
-        alert('Unable to connect to server');
-      }
-    });
+  } catch (error: any) {
+
+    if (error.code === 'auth/invalid-credential') {
+
+      alert('Invalid email or password.');
+
+    } else {
+
+      alert(error.message);
+    }
+
   }
+
+}
 
   goHome(): void {
     this.router.navigate(['/']);
