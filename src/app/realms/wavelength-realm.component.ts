@@ -6,9 +6,9 @@ import { Component } from '@angular/core';
   template: `
     <div class="realm-container">
       <div class="realm-left">
-        <h1 class="realm-title">Wavelength Realm</h1>
+        <h1 class="realm-title">Party Games Realm</h1>
         <p class="realm-desc">
-          Tune into the correct mental wavelength and guess your teammate's thoughts. Coordinate with your allies to synchronize your minds.
+          Tune into the correct mental frequency and guess your teammate's thoughts. Coordinate with your allies to synchronize your minds.
         </p>
         <div class="stats-card">
           <h3 class="stats-title">Realm Statistics</h3>
