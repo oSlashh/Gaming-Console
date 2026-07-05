@@ -34,7 +34,7 @@ interface Star {
 }
 
 export const ISLANDS: IslandData[] = [
-  { key: 'wavelength', name: 'Wavelength', subtitle: 'Mind Reading Challenge', xPct: 0.5, yPct: 0.18, isCenter: false, themeColor: 0x7e57c2, spriteKey: 'island-wavelength', floatSpeed: 0.30, floatPhase: 0.0, floatAmp: 4, players: '4–12', status: 'Available', description: 'Tune into the correct mental wavelength and guess your teammate\'s thoughts.' },
+  { key: 'wavelength', name: 'Party Games', subtitle: 'Mind Reading Challenge', xPct: 0.5, yPct: 0.18, isCenter: false, themeColor: 0x7e57c2, spriteKey: 'island-wavelength', floatSpeed: 0.30, floatPhase: 0.0, floatAmp: 4, players: '4–12', status: 'Available', description: 'Tune into the correct mental frequency and guess your teammate\'s thoughts.' },
   { key: 'flappy', name: 'Flappy Escape', subtitle: 'Skyward Voyage', xPct: 0.27, yPct: 0.34, isCenter: false, themeColor: 0xffa000, spriteKey: 'island-flappy', floatSpeed: 0.45, floatPhase: 1.0, floatAmp: 5, players: '1–2', status: 'Available', description: 'Flap through deadly sky obstacles and escape the temple.' },
   { key: 'reaction', name: 'Reaction Time', subtitle: 'Reflex Trial', xPct: 0.73, yPct: 0.34, isCenter: false, themeColor: 0xff7043, spriteKey: 'island-reaction', floatSpeed: 0.38, floatPhase: 2.0, floatAmp: 4.5, players: '1–2', status: 'Available', description: 'Test your reflexes and match the triggers in record time.' },
   { key: 'nexus', name: 'The Nexus', subtitle: 'Nexus Hearth', xPct: 0.5, yPct: 0.45, isCenter: true, themeColor: 0x00e5ff, spriteKey: 'island-nexus', floatSpeed: 0.25, floatPhase: 3.0, floatAmp: 3.5, description: 'Central gateway connecting all worlds.' },
@@ -3037,17 +3037,24 @@ export class GameHubPhaserComponent implements AfterViewInit, OnDestroy {
             { key: 'reaction', name: 'Reaction Time', color: 0xff7043 },
             { key: 'oops', name: 'Oops!', color: 0xd32f2f },
             { key: 'howfaroff', name: 'Guess Guess', color: 0xb0bec5 },
-            { key: 'wavelength', name: 'Wavelength', color: 0x7e57c2 },
+            { key: 'wavelength', name: 'Party Games', color: 0x7e57c2 },
           ];
 
           const playCountTextObjects: Record<string, Phaser.GameObjects.Text> = {};
+          const profileCircles: Record<string, Phaser.GameObjects.Graphics> = {};
+          const profileNameTexts: Record<string, Phaser.GameObjects.Text> = {};
+          const profileRowZones: Record<string, Phaser.GameObjects.Zone> = {};
 
           let currentY = 216;
 
 games.forEach((game) => {
 
   const yPos = currentY;
-            const circle = this.add.graphics().fillStyle(game.color, 1.0).fillCircle(-265, yPos + 6, 5);
+            const circle = this.add.graphics();
+            circle.fillStyle(game.color, 1.0);
+            circle.fillCircle(-265, 6, 5);
+            circle.y = yPos;
+
             const nameText = this.add.text(-251, yPos, game.name, {
               fontFamily: 'Outfit, Arial, sans-serif',
               fontSize: '13px',
@@ -3062,11 +3069,14 @@ games.forEach((game) => {
   lineSpacing: 5
 }).setOrigin(1, 0);
 
-            const rowZone = this.add.zone(-146, yPos + 28, 280,60);
+            const rowZone = this.add.zone(-146, yPos + 28, 280, 60);
             rowZone.setInteractive({ useHandCursor: true });
 
             this.profilePanelContainer.add([circle, nameText, playsText, rowZone]);
             playCountTextObjects[game.key] = playsText;
+            profileCircles[game.key] = circle;
+            profileNameTexts[game.key] = nameText;
+            profileRowZones[game.key] = rowZone;
 
             rowZone.on('pointerover', () => {
               this.sys.canvas.style.cursor = 'pointer';
@@ -3101,6 +3111,116 @@ if (gamesWithBestScore.includes(game.key)) {
 
 });
 
+          let currentButtonY = 680;
+
+          const drawAuthButton = (isLoggedIn: boolean) => {
+            authButtonBg.clear();
+            if (isLoggedIn) {
+              authButtonBg.fillStyle(0xd32f2f, 0.85);
+              authButtonBg.lineStyle(1.5, 0xff5252, 0.5);
+            } else {
+              authButtonBg.fillStyle(0x00e5ff, 0.2);
+              authButtonBg.lineStyle(1.5, 0x00e5ff, 0.8);
+            }
+            authButtonBg.fillRoundedRect(-250, currentButtonY - 18, 180, 36, 8);
+            authButtonBg.strokeRoundedRect(-250, currentButtonY - 18, 180, 36, 8);
+            authButtonTxt.setText(isLoggedIn ? 'LOGOUT' : 'LOGIN / REGISTER');
+            authButtonTxt.y = currentButtonY;
+            authButtonZone.y = currentButtonY;
+          };
+
+          const repositionProfileStats = (isLoggedIn: boolean) => {
+            let currentY = 216;
+            let lastGameY = 216;
+            games.forEach((game) => {
+              const yPos = currentY;
+              lastGameY = yPos;
+
+              const circleObj = profileCircles[game.key];
+              if (circleObj) {
+                circleObj.y = yPos;
+              }
+
+              const nameTextObj = profileNameTexts[game.key];
+              if (nameTextObj) {
+                nameTextObj.y = yPos;
+              }
+
+              const playsTextObj = playCountTextObjects[game.key];
+              if (playsTextObj) {
+                playsTextObj.y = yPos;
+                if (!isLoggedIn) {
+                  playsTextObj.setText('');
+                  playsTextObj.setVisible(false);
+                } else {
+                  playsTextObj.setVisible(true);
+                }
+              }
+
+              const rowZoneObj = profileRowZones[game.key];
+              if (rowZoneObj) {
+                if (isLoggedIn) {
+                  rowZoneObj.y = yPos + 28;
+                  rowZoneObj.setSize(280, 60);
+                  if (rowZoneObj.input && rowZoneObj.input.hitArea) {
+                    rowZoneObj.input.hitArea.setTo(0, 0, 280, 60);
+                  }
+                } else {
+                  rowZoneObj.y = yPos + 8;
+                  rowZoneObj.setSize(260, 22);
+                  if (rowZoneObj.input && rowZoneObj.input.hitArea) {
+                    rowZoneObj.input.hitArea.setTo(0, 0, 260, 22);
+                  }
+                }
+              }
+
+              if (isLoggedIn) {
+                const gamesWithBestScore = [
+                  'flappy',
+                  'puzzle',
+                  'reaction'
+                ];
+                if (gamesWithBestScore.includes(game.key)) {
+                  currentY += 82;
+                } else {
+                  currentY += 56;
+                }
+              } else {
+                currentY += 26;
+              }
+            });
+
+            // Calculate dynamic login/register button center Y relative to bottom of final game entry
+            const lastGameBottom = lastGameY + (isLoggedIn ? 60 : 22);
+            const buttonSpacing = isLoggedIn ? 28 : 32;
+            currentButtonY = lastGameBottom + buttonSpacing + 18;
+
+            // Draw auth button at dynamic center position
+            drawAuthButton(isLoggedIn);
+
+            // Redraw panelBg and resize panelGlow relative to panel bounds and padding
+            const panelTop = -40;
+            const buttonHeight = 36;
+            const panelBottomPadding = 22;
+            const buttonBottom = currentButtonY + 18;
+            const panelHeight = (buttonBottom + panelBottomPadding) - panelTop;
+
+            panelBg.clear();
+            panelBg.fillStyle(0x0a0714, 0.85);
+            panelBg.lineStyle(2, 0xffd700, 0.4);
+            panelBg.fillRoundedRect(-335, panelTop, 370, panelHeight, 16);
+            panelBg.strokeRoundedRect(-335, panelTop, 370, panelHeight, 16);
+
+            const panelCenterY = panelTop + panelHeight / 2;
+            panelGlow.y = panelCenterY;
+
+            const originalPanelHeight = 760;
+            const originalGlowHeight = 580;
+            const glowScaleRatio = originalGlowHeight / originalPanelHeight;
+            const glowHeight = panelHeight * glowScaleRatio;
+            panelGlow.setDisplaySize(450, glowHeight);
+          };
+
           // Logout / Login button
           const authButtonBg = this.add.graphics();
           const authButtonTxt = this.add.text(-160, 680, 'LOGOUT', {
@@ -3115,20 +3235,6 @@ if (gamesWithBestScore.includes(game.key)) {
 
           this.profilePanelContainer.add([authButtonBg, authButtonTxt, authButtonZone]);
 
-          const drawAuthButton = (isLoggedIn: boolean) => {
-            authButtonBg.clear();
-            if (isLoggedIn) {
-              authButtonBg.fillStyle(0xd32f2f, 0.85);
-              authButtonBg.lineStyle(1.5, 0xff5252, 0.5);
-            } else {
-              authButtonBg.fillStyle(0x00e5ff, 0.2);
-              authButtonBg.lineStyle(1.5, 0x00e5ff, 0.8);
-            }
-            authButtonBg.fillRoundedRect(-250, 662, 180, 36, 8);
-            authButtonBg.strokeRoundedRect(-250, 662, 180, 36, 8);
-            authButtonTxt.setText(isLoggedIn ? 'LOGOUT' : 'LOGIN / REGISTER');
-          };
-
           authButtonZone.on('pointerover', () => {
             this.sys.canvas.style.cursor = 'pointer';
             component.audioManager.playUIButtonHover();
@@ -3139,54 +3245,32 @@ if (gamesWithBestScore.includes(game.key)) {
             authButtonBg.setAlpha(1.0);
           });
           authButtonZone.on('pointerdown', () => {
+            component.audioManager.playUIButtonClick();
+            const user = auth.currentUser;
+            if (user) {
+              component.ngZone.run(() => {
+                localStorage.removeItem('loggedInUser');
+                component.userDetails.setUserDetails(null);
+                component.isLoggedIn = false;
+                component.userName = 'Guest';
+              });
 
-  component.audioManager.playUIButtonClick();
+              avatarText.setText('?');
+              usernameText.setText('Guest Traveler');
+              emailText.setText('Log in to save progress');
+              emailText.setColor('#7e73a6');
+              drawAuthButton(false);
+              repositionProfileStats(false);
 
-  const user = auth.currentUser;
-
-  if (user) {
-
-    signOut(auth).then(() => {
-
-      this.updateAuthStatus();
-
-    });
-
-  } else {
-
-    component.ngZone.run(() => {
-
-      component.router.navigate(['/login']);
-
-    });
-
-  }
+              signOut(auth).then(() => {
+                this.updateAuthStatus();
+              });
+            } else {
+              component.ngZone.run(() => {
+                component.router.navigate(['/login']);
+              });
+            }
           });
-          authButtonZone.on('pointerdown', () => {
-
-  component.audioManager.playUIButtonClick();
-
-  const user = auth.currentUser;
-
-  if (user) {
-
-    signOut(auth).then(() => {
-
-      this.updateAuthStatus();
-
-    });
-
-  } else {
-
-    component.ngZone.run(() => {
-
-      component.router.navigate(['/login']);
-
-    });
-
-  }
-
-});
 
           // Update Status function
           this.updateAuthStatus = async() => {
@@ -3210,6 +3294,13 @@ if (gamesWithBestScore.includes(game.key)) {
   drawAuthButton(true);
 
 } else {
+
+  component.ngZone.run(() => {
+    localStorage.removeItem('loggedInUser');
+    component.userDetails.setUserDetails(null);
+    component.isLoggedIn = false;
+    component.userName = 'Guest';
+  });
 
   avatarText.setText('?');
 
@@ -3296,6 +3387,11 @@ console.log("Scores Object:", scores);
 
 }
   });
+
+  repositionProfileStats(true);
+
+} else {
+  repositionProfileStats(false);
 }
 
 }

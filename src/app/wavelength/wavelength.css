@@ -5436,3 +5436,531 @@
     color: #eb5757 !important;
     border-color: #eb5757 !important;
 }
+
+/* ══════════════════════════════════════════════════
+   MOBILE RESPONSIVENESS OVERRIDES (WIDTH <= 768PX)
+   ══════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* 1. Fixed Centering Viewport for Mobile Desk Container */
+    .desk-container {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: center !important;
+        align-items: center !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+        pointer-events: none !important;
+        z-index: 10 !important;
+    }
+
+    .notebook-stage {
+        position: relative !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        justify-content: center !important;
+        align-items: center !important;
+        pointer-events: none !important;
+    }
+
+    /* 2. Open Notebook: occupy 88vw width and 75vh height, remaining centered and dominating */
+    .notebook.nb-state-open {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        transform: translate(-50%, -50%) rotate(-0.6deg) !important;
+        width: 88vw !important;
+        max-width: 600px !important;
+        height: 75vh !important;
+        height: 75dvh !important;
+        min-height: 480px !important;
+        margin: 0 !important;
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        pointer-events: auto !important;
+    }
+
+    /* 3. Closed Cover, Lifting, and Closing Covers centered and scaled */
+    .notebook.nb-state-closed,
+    .notebook.nb-state-lifting,
+    .notebook.nb-state-flying,
+    .notebook.nb-state-closing {
+        position: absolute !important;
+        left: 50% !important;
+        top: 50% !important;
+        width: 50vw !important;
+        max-width: 240px !important;
+        min-width: 160px !important;
+        height: auto !important;
+        aspect-ratio: 0.72 !important;
+        margin: 0 !important;
+        pointer-events: auto !important;
+    }
+
+    .notebook.nb-state-closed {
+        transform: translate(-50%, -50%) rotate(-20deg) !important;
+    }
+
+    .notebook.nb-state-closed:hover {
+        transform: translate(-50%, -50%) scale(1.05) rotate(-1.5deg) !important;
+    }
+
+    .notebook.nb-state-lifting {
+        transform: translate(-50%, calc(-50% - 20px)) scale(1.08) rotate(-2deg) !important;
+    }
+
+    .notebook.nb-state-flying {
+        width: 60vw !important;
+        max-width: 320px !important;
+        height: auto !important;
+        aspect-ratio: 0.72 !important;
+        transform: translate(-50%, -50%) rotate(-1.2deg) !important;
+    }
+
+    .notebook.nb-state-closing {
+        transform: translate(-50%, -50%) rotate(-20deg) !important;
+    }
+
+    .notebook-cover-closed {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 12px 24px 24px 12px !important;
+    }
+
+    /* 4. Notebook open cover layout - side-by-side pages */
+    .notebook-cover {
+        padding: 12px 14px !important;
+        flex: 1 !important;
+        height: 0 !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: row !important;
+        align-items: stretch !important;
+        border-radius: 16px !important;
+        border-width: 3px !important;
+    }
+
+    .notebook-page {
+        height: 100% !important;
+        min-height: 0 !important;
+    }
+
+    .notebook-page-inner {
+        inset: 8px !important;
+        border-width: 1.5px !important;
+        border-radius: 8px !important;
+    }
+
+    /* 5. Repositioning sticky flags to be tab-like flex row at the top */
+    .notebook-flags {
+        position: absolute !important;
+        top: -46px !important;
+        right: 8px !important;
+        left: 8px !important;
+        display: flex !important;
+        flex-direction: row !important;
+        justify-content: center !important;
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+        z-index: 100 !important;
+        width: auto !important;
+    }
+
+    .notebook-flag {
+        width: auto !important;
+        height: 34px !important;
+        padding: 0 12px !important;
+        border: 2px solid #3e1f08 !important;
+        border-radius: 6px 6px 0 0 !important;
+        box-shadow: 1px 1px 0px #3e1f08 !important;
+        font-size: 0.82rem !important;
+        transform: none !important;
+        justify-content: center !important;
+        align-items: center !important;
+        margin: 0 !important;
+    }
+
+    .notebook-flag:hover {
+        transform: translateY(-2px) !important;
+        box-shadow: 1.5px 2px 0px #3e1f08 !important;
+    }
+
+    .notebook-flag.active {
+        transform: translateY(-4px) !important;
+        box-shadow: 2px 2.5px 0px #3e1f08 !important;
+        border-left: 2px solid #3e1f08 !important;
+        border-bottom: none !important;
+        z-index: 101 !important;
+    }
+
+    /* 6. Page counter/nav buttons below the book */
+    .nb-nav-bar {
+        position: relative !important;
+        margin-top: 10px !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        z-index: 10 !important;
+    }
+
+    .nb-nav-btn {
+        padding: 6px 12px !important;
+        font-size: 0.85rem !important;
+    }
+
+    .nb-page-counter {
+        font-size: 0.88rem !important;
+        padding: 5px 10px !important;
+    }
+
+    /* 7. Page Content Tweaks & Scaling */
+    .nb-left, .nb-right {
+        padding: 10px 8px 10px 18px !important;
+    }
+
+    .nb-right {
+        padding: 10px 8px 10px 8px !important;
+    }
+
+    .nb-left-title {
+        font-size: 1.12rem !important;
+    }
+
+    .nb-right-title {
+        font-size: 1.15rem !important;
+    }
+
+    .nb-left-body {
+        font-size: 0.78rem !important;
+        line-height: 1.25 !important;
+        margin-bottom: 6px !important;
+    }
+
+    .nb-dash-list li {
+        font-size: 0.78rem !important;
+        margin-top: 3px !important;
+    }
+
+    .nb-checklist li {
+        font-size: 0.78rem !important;
+        margin-bottom: 3px !important;
+    }
+
+    .nb-sticky {
+        padding: 6px 8px !important;
+        font-size: 0.76rem !important;
+        margin: 6px 0 !important;
+    }
+
+    .nb-play-btn {
+        font-size: 0.88rem !important;
+        padding: 6px 12px !important;
+        margin-top: 6px !important;
+    }
+
+    .nb-right-sub {
+        font-size: 0.68rem !important;
+    }
+
+    /* Wavelength dial and logo graphics sizing */
+    .nb-dial-svg {
+        max-height: 120px !important;
+        max-width: 220px !important;
+    }
+
+    .nb-art-area {
+        max-width: 200px !important;
+        padding: 4px 4px 12px 4px !important;
+        margin: 4px auto !important;
+    }
+
+    .hfo-logo-wrapper .nb-target-svg {
+        max-width: 110px !important;
+        max-height: 110px !important;
+    }
+
+    .hfo-scribble {
+        margin: 0 auto 3px !important;
+    }
+
+    .hfo-scribble-text {
+        font-size: 0.76rem !important;
+    }
+
+    .nb-locked-card {
+        width: 100px !important;
+        padding: 6px !important;
+        margin: 8px auto !important;
+    }
+
+    .nb-lock-svg {
+        max-height: 70px !important;
+    }
+
+    .nb-blueprint {
+        margin: 6px auto !important;
+    }
+
+    .nb-blueprint-svg {
+        max-height: 80px !important;
+    }
+
+    .nb-chest-direct {
+        margin: 6px auto 4px !important;
+    }
+
+    .nb-chest-svg {
+        max-height: 70px !important;
+    }
+
+    .nb-chest-caption {
+        font-size: 0.85rem !important;
+    }
+
+    .nb-chest-caption p {
+        margin: 0 !important;
+    }
+
+    .nb-stamp {
+        font-size: 1rem !important;
+        padding: 3px 8px !important;
+    }
+
+    /* 8. Gameplay screen responsiveness adjustments (keeping dial centered and visible) */
+    .game-screen {
+        max-width: 100% !important;
+        padding: 0 10px 20px !important;
+    }
+
+    .game-header {
+        padding: 4px 2px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .logo-title-sm {
+        font-size: 1.35rem !important;
+    }
+
+    .round-badge {
+        font-size: 0.9rem !important;
+        padding: 3px 10px !important;
+    }
+
+    .ghost-btn {
+        padding: 3px 10px !important;
+        font-size: 0.78rem !important;
+    }
+
+    .turn-banner {
+        padding: 8px 12px !important;
+        margin-bottom: 10px !important;
+        font-size: 0.9rem !important;
+    }
+
+    .category-strip {
+        padding: 8px 12px !important;
+        margin-bottom: 10px !important;
+    }
+
+    .cat-left, .cat-right {
+        font-size: 1.1rem !important;
+    }
+
+    .cat-icon {
+        font-size: 1.45rem !important;
+    }
+
+    .dial-wrapper {
+        margin-bottom: 10px !important;
+    }
+
+    .drag-hint {
+        font-size: 0.74rem !important;
+        margin-top: 2px !important;
+    }
+
+    .control-panel {
+        width: 100% !important;
+        margin-bottom: 12px !important;
+    }
+
+    .glass-card.leaderboard-card {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 12px 14px !important;
+    }
+
+    .lb-title {
+        font-size: 1.35rem !important;
+        margin-bottom: 6px !important;
+    }
+
+    .lb-row {
+        padding: 5px 10px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .lb-name, .lb-score, .lb-rank {
+        font-size: 0.95rem !important;
+    }
+
+    /* How Far Off gameplay layout elements */
+    .game-screen .hfo-question-card {
+        padding: 14px 18px !important;
+        margin-bottom: 12px !important;
+    }
+
+    .game-screen .hfo-question-text {
+        font-size: 1.45rem !important;
+    }
+
+    .game-screen .hfo-guess-input {
+        font-size: 1.6rem !important;
+        padding: 6px 10px !important;
+        max-width: 110px !important;
+    }
+
+    .game-screen .hfo-unit-label {
+        font-size: 1.15rem !important;
+    }
+
+    .game-screen .hfo-answer-value {
+        font-size: 2.4rem !important;
+    }
+
+    .game-screen .hfo-result-row {
+        padding: 8px 12px !important;
+        margin-bottom: 6px !important;
+    }
+
+    .game-screen .hfo-result-place,
+    .game-screen .hfo-result-name,
+    .game-screen .hfo-result-points {
+        font-size: 1rem !important;
+    }
+
+    .game-screen .hfo-result-meta {
+        font-size: 0.9rem !important;
+    }
+
+    .game-screen .hfo-transition-card {
+        padding: 14px 18px !important;
+    }
+
+    .game-screen .hfo-transition-title {
+        font-size: 1.35rem !important;
+    }
+
+    /* Wavelength reveal card styling */
+    .game-screen .score-display .score-pts {
+        font-size: 4.2rem !important;
+    }
+
+    .game-screen .score-display .score-label {
+        font-size: 1.35rem !important;
+    }
+
+    .game-screen .score-display .score-pts-label {
+        font-size: 0.9rem !important;
+    }
+
+    .game-screen .positions-row .pos-item {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* ══════════════════════════════════════════════════
+   VERTICAL PAGE STACKING OVERRIDES (WIDTH <= 360PX)
+   ══════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+    /* Stack vertical open notebook cover layout and let container scroll */
+    .notebook.nb-state-open {
+        height: 80vh !important;
+        height: 80dvh !important;
+        min-height: initial !important;
+        width: 90vw !important;
+        overflow-y: auto !important;
+        display: block !important;
+    }
+
+    .notebook-cover {
+        flex-direction: column !important;
+        padding: 12px 14px !important;
+        gap: 16px !important;
+        height: auto !important;
+    }
+
+    .notebook-page {
+        height: auto !important;
+    }
+
+    .notebook-page--left {
+        border-radius: 12px 12px 4px 4px !important;
+        min-height: 240px !important;
+    }
+
+    .notebook-page--left::before {
+        border-radius: inherit !important;
+        transform: none !important;
+    }
+
+    .notebook-page--right {
+        border-radius: 4px 4px 12px 12px !important;
+        min-height: 310px !important;
+    }
+
+    .notebook-page--right::before {
+        border-radius: inherit !important;
+        transform: none !important;
+    }
+
+    .notebook-spine {
+        display: none !important;
+    }
+
+    /* Extra text compactness for tiny screens (e.g. 320px) */
+    .nb-left-title, .nb-right-title {
+        font-size: 1.15rem !important;
+    }
+
+    .nb-left-body {
+        font-size: 0.75rem !important;
+        line-height: 1.25 !important;
+    }
+
+    .nb-dash-list li, .nb-checklist li {
+        font-size: 0.78rem !important;
+    }
+
+    .nb-sticky {
+        font-size: 0.75rem !important;
+        padding: 6px 8px !important;
+    }
+
+    .nb-play-btn {
+        font-size: 0.88rem !important;
+        padding: 6px 12px !important;
+    }
+
+    .notebook-flags {
+        top: -42px !important;
+        gap: 4px !important;
+    }
+
+    .notebook-flag {
+        height: 30px !important;
+        padding: 0 8px !important;
+        font-size: 0.76rem !important;
+    }
+}

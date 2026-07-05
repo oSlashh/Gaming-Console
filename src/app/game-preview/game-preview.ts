@@ -99,8 +99,8 @@ export class GamePreviewComponent implements OnInit, OnDestroy {
     },
     {
       slug: 'wavelength',
-      title: 'Wavelength',
-      shortTitle: 'Wave',
+      title: 'Party Games',
+      shortTitle: 'Party',
       subtitle: 'Read the room, ride the signal, find the hidden frequency.',
       spriteKey:'island-wavelength',
       players: '2+',
@@ -114,11 +114,11 @@ export class GamePreviewComponent implements OnInit, OnDestroy {
       description:
         'A calm mind game of intuition and alignment where every answer becomes a shimmering point on an invisible spectrum.',
       screenshots: [
-        { src: 'game-previews/w1.png', alt: 'Wavelength gameplay screenshot 1' },
-        { src: 'game-previews/w2.png', alt: 'Wavelength gameplay screenshot 2' },
-        { src: 'game-previews/w3.png', alt: 'Wavelength gameplay screenshot 3' },
-        { src: 'game-previews/w4.png', alt: 'Wavelength gameplay screenshot 4' },
-        { src: 'game-previews/w5.png', alt: 'Wavelength gameplay screenshot 5' },
+        { src: 'game-previews/w1.png', alt: 'Party Games gameplay screenshot 1' },
+        { src: 'game-previews/w2.png', alt: 'Party Games gameplay screenshot 2' },
+        { src: 'game-previews/w3.png', alt: 'Party Games gameplay screenshot 3' },
+        { src: 'game-previews/w4.png', alt: 'Party Games gameplay screenshot 4' },
+        { src: 'game-previews/w5.png', alt: 'Party Games gameplay screenshot 5' },
       ],
     },
     {
