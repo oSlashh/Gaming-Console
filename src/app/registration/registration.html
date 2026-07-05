@@ -1,47 +1,146 @@
-<div class="registration-container">
+<div class="login-world">
+   
+  <div class="nebula-drift"></div>
+  <div class="space-overlay"></div>
 
-    <div class="registration-card">
+  <div class="portal-scene">
 
-        <button class="back-btn" (click)="goHome()">←</button>
+    <div class="portal-wrapper">
 
-        <h1>Create Account</h1>
-        <p class="subtitle">Join us today</p>
+      <img
+        class="portal-outer"
+        src="assets/portal1.png"
+        alt=""
+      >
 
-        <form [formGroup]="registrationForm" (ngSubmit)="submit()">
+      <div class="portal-core"></div>
 
-            <label>Full Name</label>
-            <input type="text" formControlName="name" placeholder="Enter your full name">
-            <div *ngIf="registrationForm.get('name')?.touched && registrationForm.get('name')?.invalid" class="error">Name is required.</div>
+      <img
+        class="portal-inner"
+        src="assets/portal1.png"
+        alt=""
+      >
 
-            <label>Email Address</label>
-            <input type="email" formControlName="email" placeholder="example@gmail.com">
-            <div *ngIf="registrationForm.get('email')?.touched && registrationForm.get('email')?.invalid" class="error">
-                <div *ngIf="registrationForm.get('email')?.errors?.['required']">Email is required.</div>
-                <div *ngIf="registrationForm.get('email')?.errors?.['email']">Enter a valid email.</div>
-            </div>
+      <div class="portal-glow"></div>
+      <div class="portal-vortex"></div>
 
-            <label>Password</label>
-            <input type="password" formControlName="password" placeholder="Create password">
-            <div *ngIf="registrationForm.get('password')?.touched && registrationForm.get('password')?.invalid" class="error">
-                <div *ngIf="registrationForm.get('password')?.errors?.['required']">Password is required.</div>
-                <div *ngIf="registrationForm.get('password')?.errors?.['minlength']">Password must be at least 6 characters.</div>
-            </div>
+      <div class="portal-content">
 
-            <label>Confirm Password</label>
-            <input type="password" formControlName="confirmPassword" placeholder="Confirm password">
-            <div *ngIf="registrationForm.errors?.['passwordMismatch'] && registrationForm.get('confirmPassword')?.touched" class="error">
-                Passwords do not match.
-            </div>
+        <h1 class="portal-title">
+          FORGE<br>YOUR<br>IDENTITY
+        </h1>
+ac
+        
 
-            <button class="registration-btn" type="submit">Register</button>
+        <form
+          [formGroup]="registerForm"
+          (ngSubmit)="register()"
+          class="portal-form"
+        >
+
+          <label class="input-shell">
+            <span>FULL NAME</span>
+            <input
+              type="text"
+              formControlName="name"
+              class="portal-input"
+              placeholder="Traveler Name"
+            >
+          </label>
+
+          <label class="input-shell">
+            <span>EMAIL</span>
+            <input
+              type="email"
+              formControlName="email"
+              class="portal-input"
+              placeholder="traveler@gmail.com"
+            >
+          </label>
+
+          <label class="input-shell">
+            <span>PASSWORD</span>
+            <input
+              type="password"
+              formControlName="password"
+              class="portal-input"
+              placeholder="Create Secret Key"
+            >
+          </label>
+
+          <label class="input-shell">
+            <span>CONFIRM PASSWORD</span>
+            <input
+              type="password"
+              formControlName="confirmPassword"
+              class="portal-input"
+              placeholder="Confirm Secret Key"
+            >
+          </label>
+
+          <button
+  type="submit"
+  class="enter-btn"
+  [disabled]="isLoading"
+>
+
+  <span *ngIf="!isLoading">
+    CREATE ACCOUNT
+  </span>
+
+  <span
+    *ngIf="isLoading"
+    class="loading-content"
+  >
+    <span class="spinner"></span>
+    Creating...
+  </span>
+
+</button>
 
         </form>
 
-        <p class="login-text">
-            Already have an account?
-            <a routerLink="/login">Login</a>
-        </p>
+        <div class="register-section">
+          Already a traveler?
+          <a routerLink="/login">
+            Enter Nexus
+          </a>
+        </div>
+
+      </div>
 
     </div>
 
+    <img
+      class="floating-island"
+      src="assets/floating-island1.png"
+      alt=""
+    >
+
+  </div>
+
+  <button
+    class="back-btn"
+    (click)="goBack()"
+    type="button"
+  >
+    ← Back
+  </button>
+
+</div>
+<div
+  class="success-overlay"
+  [class.show]="showSuccess"
+>
+  <div class="success-circle">
+
+  <span class="success-icon">
+    ✓
+  </span>
+
+  <div class="success-text">
+    Account Created
+  </div>
+
+</div>
 </div>

@@ -1,62 +1,194 @@
-import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
-import { UserService } from '../services/user.service';
+import { ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  ViewChild
+} from '@angular/core';
 
+import { CommonModule } from '@angular/common';
+
+import {
+  FormBuilder,
+  FormGroup,
+  Validators,
+  ReactiveFormsModule
+} from '@angular/forms';
+
+import {
+  Router,
+  RouterLink
+} from '@angular/router';
+
+import { AuthService } from '../services/auth.services';
+import { FirestoreService } from '../services/firestore.service';
+import { auth } from '../firebase.config';
+import { updateProfile } from 'firebase/auth';
 @Component({
   selector: 'app-registration',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink
+  ],
   templateUrl: './registration.html',
   styleUrls: ['./registration.css']
 })
 export class Registration {
-  registrationForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private router: Router, private userService: UserService) {
-    this.registrationForm = this.fb.group({
-      name: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
-      confirmPassword: ['', Validators.required]
-    }, { validators: this.passwordsMatch });
+  registerForm: FormGroup;
+
+  @ViewChild('cursorGlow')
+  cursorGlow!: ElementRef;
+  isLoading: boolean=false;
+  showSuccess: boolean=false;
+
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private cdr: ChangeDetectorRef,
+    private firestoreService: FirestoreService,
+  ) {
+
+    this.registerForm = this.fb.group(
+      {
+        name: [
+          '',
+          Validators.required
+        ],
+
+        email: [
+          '',
+          [
+            Validators.required,
+            Validators.email
+          ]
+        ],
+
+        password: [
+          '',
+          [
+            Validators.required,
+            Validators.minLength(6)
+          ]
+        ],
+
+        confirmPassword: [
+          '',
+          Validators.required
+        ]
+      },
+      {
+        validators: this.passwordsMatch
+      }
+    );
   }
 
-  passwordsMatch(group: FormGroup) {
-    const p = group.get('password')?.value;
-    const cp = group.get('confirmPassword')?.value;
-    return p === cp ? null : { passwordMismatch: true };
-  }
+  @HostListener('document:mousemove', ['$event'])
+  moveGlow(event: MouseEvent) {
 
-  submit() {
-    console.log(this.registrationForm.value);
-    console.log(this.registrationForm.get('name')?.value);
-
-    if (this.registrationForm.invalid) {
-      this.registrationForm.markAllAsTouched();
-      alert('Please fix errors before submitting.');
+    if (!this.cursorGlow) {
       return;
     }
 
-    const { name, email, password } = this.registrationForm.value;
-    this.userService.addUser({
-      name,
-      email,
-      password,
-      isActive: true,
-    }).subscribe({
-      next: () => {
-        alert('Registration Successful!');
-        this.router.navigate(['/login']);
-      },
-      error: (err: any) => {
-        console.error(err);
-        alert('Registration failed');
-      }
-    });
+    const glow = this.cursorGlow.nativeElement;
+
+    glow.style.left = event.clientX + 'px';
+    glow.style.top = event.clientY + 'px';
   }
-  goHome() {
+
+  passwordsMatch(group: FormGroup) {
+
+    const password =
+      group.get('password')?.value;
+
+    const confirmPassword =
+      group.get('confirmPassword')?.value;
+
+    return password === confirmPassword
+      ? null
+      : { passwordMismatch: true };
+  }
+
+  async register() {
+
+  if (this.registerForm.invalid) {
+    this.registerForm.markAllAsTouched();
+    return;
+  }
+
+  this.isLoading = true;
+
+  const {
+    name,
+    email,
+    password
+  } = this.registerForm.value;
+
+ try {
+
+  await this.authService.register(
+    email,
+    password
+  );
+
+  const user = auth.currentUser;
+
+if (user) {
+
+  // Save the full name in Firebase Authentication
+  await updateProfile(user, {
+    displayName: name.toUpperCase()
+  });
+
+  // Save the user in Firestore
+  await this.firestoreService.saveUser(
+    user.uid,
+    name,
+    email
+  );
+
+    localStorage.setItem(
+      'loggedInUser',
+      JSON.stringify({
+        uid: user.uid,
+        name,
+        email
+      })
+    );
+  }
+
+ this.showSuccess = true;
+
+this.cdr.detectChanges();
+
+await this.authService.logout();
+
+this.isLoading = false;
+
+setTimeout(() => {
+  this.router.navigate(['/login']);
+}, 1500);
+} catch (error: any) {
+
+  console.error(error);
+
+  this.isLoading = false;
+
+  if (error.code === 'auth/email-already-in-use') {
+    alert('This email is already registered.');
+  } else {
+    alert(error.message);
+  }
+}
+  }
+  goBack() {
     this.router.navigate(['/']);
+  }
+
+  get f() {
+    return this.registerForm.controls;
   }
 }

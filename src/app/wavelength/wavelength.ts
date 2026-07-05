@@ -4,6 +4,8 @@ import {
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ScoreService } from '../services/score.service';
+import { auth } from '../firebase.config';
 export interface Team {
   id: number;
   name: string;
@@ -459,7 +461,7 @@ export class WavelengthComponent implements AfterViewInit, OnDestroy {
     }
   }
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private scoreService: ScoreService) {
     if (typeof document !== 'undefined') {
       const linkId = 'wl-google-fonts';
       if (!document.getElementById(linkId)) {
@@ -892,8 +894,16 @@ useCustomCategory = signal(false);
     return `${tip.x},${tip.y} ${base.x + perpX},${base.y - perpY} ${base.x - perpX},${base.y + perpY}`;
   }
   trackTeam(_: number, t: Team) { return t.id; }
-  quitGame() {
+  async quitGame(): Promise<void> {
     this.fullyResetState();
+    const user = auth.currentUser;
+
+if (user) {
+  await this.scoreService.recordGamePlayed(
+    user.uid,
+    'wavelength'
+  );
+}
     this.router.navigate(['/game-hub-phaser'], {
       state: {
         returnFrom: 'wavelength',

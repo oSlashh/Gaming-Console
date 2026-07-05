@@ -170,6 +170,7 @@
   border-radius: var(--gg-radius-md);
   padding: 18px 20px;
   margin-bottom: 28px;
+  
 }
 
 .gg-rules-title {
@@ -420,92 +421,116 @@
 .gg-btn-icon {
   font-size: 0.9rem;
 }
-
 /* ── Game screen ───────────────────────────────────────────── */
+
 .gg-game-screen {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
 
   background:
-    linear-gradient(to bottom,
-      #f5deb3,
-      #e6c79c,
-      #d8b07d);
+    radial-gradient(circle at top,
+      #f8ddb0 0%,
+      #e7c08a 40%,
+      #c59252 100%);
+
+  overflow-x: hidden;
 }
 
-/* Top bar */
+/* ── Top bar ───────────────────────────────────────────────── */
+
 .gg-topbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 14px 28px;
-  background: rgba(255, 255, 255, 0.75);
-  border-bottom: 1px solid var(--gg-border);
-  border-bottom: 2px solid rgba(120, 80, 40, .25);
-  backdrop-filter: blur(10px);
+
+  padding: 16px 28px;
+
+  background: rgba(255,255,255,.35);
+
+  backdrop-filter: blur(16px);
+
+  border-bottom: 1px solid rgba(255,255,255,.4);
+
+  box-shadow:
+    0 4px 24px rgba(0,0,0,.08);
+
   position: sticky;
   top: 0;
-  z-index: 10;
+  z-index: 100;
 }
+
+/* Current player card */
 
 .gg-player-badge {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+
+  gap: 4px;
+
+  padding: 12px 18px;
+
+  border-radius: 16px;
+
+  background: rgba(255,255,255,.25);
+
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255,255,255,.3);
 }
 
 .gg-player-badge-label {
-  font-size: 0.68rem;
-  font-weight: 600;
+  font-size: .7rem;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
-  color: #3a2a18;
+  letter-spacing: .12em;
+
+  color: #6f4f24;
 }
 
 .gg-player-badge-name {
-  font-size: 1.05rem;
-  font-weight: 700;
-  color: #8b5e34;
+  font-size: 1.15rem;
+  font-weight: 800;
+
+  color: #3a2a18;
 }
 
 /* Timer */
+
 .gg-timer-wrap {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 8px 18px;
-  background: var(--gg-bg-panel);
-  border: 1px solid var(--gg-border);
+  gap: 10px;
+
+  padding: 12px 24px;
+
   border-radius: 999px;
-  transition: all var(--gg-transition);
+
+  background: rgba(255,255,255,.45);
+
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(255,255,255,.5);
+
+  box-shadow:
+    0 10px 24px rgba(0,0,0,.08);
+
+  transition: .3s ease;
 }
 
 .gg-timer-icon {
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .gg-timer-display {
-  font-size: 1.15rem;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  font-variant-numeric: tabular-nums;
+  font-size: 1.2rem;
+  font-weight: 900;
+
+  letter-spacing: .06em;
+
   color: #3a2a18;
-  transition: color var(--gg-transition);
 }
 
-.gg-timer--warning .gg-timer-display {
-  color: #f5a623;
-}
-
-.gg-timer--critical {
-  border-color: rgba(224, 82, 82, 0.6) !important;
-  animation: gg-timer-pulse 0.6s ease infinite;
-}
-
-.gg-timer--critical .gg-timer-display {
-  color: var(--gg-red) !important;
-}
 
 .gg-quit-btn {
   padding: 8px 16px;
@@ -530,78 +555,102 @@
   flex: 1;
   gap: 0;
 }
-
-/* Main panel */
 .gg-main-panel {
   flex: 1;
+
   display: flex;
   flex-direction: column;
 
   align-items: center;
-  justify-content: flex-start;
-  gap: 24px;
-  padding-top: 30px;
-  padding-bottom: 120px;
 
+  gap: 18px;
+
+  padding: 24px 40px 100px;
 }
 
-/* Stage indicator pips */
 .gg-stage-indicator {
   display: flex;
-  gap: 10px;
+  gap: 14px;
 }
 
 .gg-stage-pip {
-  width: 36px;
-  height: 36px;
+  width: 52px;
+  height: 52px;
+
   border-radius: 50%;
-  border: 2px solid var(--gg-border);
-  background: var(--gg-bg-panel);
+
+  background: rgba(255,255,255,.35);
+
+  backdrop-filter: blur(10px);
+
+  border: 2px solid rgba(255,255,255,.35);
+
   color: #3a2a18;
-  font-size: 0.82rem;
-  font-weight: 700;
+
+  font-size: 1rem;
+  font-weight: 800;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: all var(--gg-transition);
+
+  transition: all .3s ease;
 }
 
 .gg-stage-pip--done {
-  background: rgba(80, 200, 100, 0.15);
-  border-color: rgba(80, 200, 100, 0.5);
-  color: #50c864;
+  background: rgba(80,200,100,.15);
+
+  border-color: rgba(80,200,100,.45);
+
+  color: #1d9b3d;
 }
 
 .gg-stage-pip--active {
-  background: var(--gg-gold-dim);
-  border-color: var(--gg-gold);
-  color: var(--gg-gold);
-  box-shadow: var(--gg-gold-glow);
-  animation: gg-pip-pulse 1.8s ease infinite;
+  background:
+    linear-gradient(
+      135deg,
+      #f7dd70,
+      #d4af37
+    );
+
+  color: #111;
+
+  transform: scale(1.15);
+
+  box-shadow:
+    0 0 25px rgba(212,175,55,.5);
 }
 
-/* Stage header */
 .gg-stage-header {
   text-align: center;
 }
 
-.gg-stage-title {
-  font-size: 1.6rem;
-  font-weight: 800;
-  letter-spacing: -0.02em;
+.gg-stage-title{
+  font-size:1.3rem;
+  margin:0;
   color: #2d2215;
-  margin: 0 0 4px;
+
+  margin: 0;
 }
 
 .gg-stage-reward {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #3a2a18;
-  background: var(--gg-gold-dim);
-  border: 1px solid var(--gg-border-gold);
-  padding: 3px 12px;
+  display: inline-block;
+
+  margin-top: 8px;
+
+  padding: 6px 14px;
+
   border-radius: 999px;
+
+  background:
+    rgba(212,175,55,.15);
+
+  border:
+    1px solid rgba(212,175,55,.3);
+
+  font-weight: 700;
 }
+
 
 /* ── Cards ─────────────────────────────────────────────────── */
 .gg-cards-row {
@@ -610,32 +659,48 @@
   flex-wrap: wrap;
   justify-content: center;
 }
-
-/* Card 3D Perspective Slot */
 .gg-card-slot {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  perspective: 1000px;
+  gap: 12px;
+
+  perspective: 1200px;
+
+  animation: cardFloat 4s ease-in-out infinite;
 }
 
-.gg-card-label {
-  font-size: 0.92rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: #3a2a18;
+@keyframes cardFloat {
+  0%,100%{
+    transform: translateY(0);
+  }
+
+  50%{
+    transform: translateY(-10px);
+  }
 }
 
-/* Card 3D flip */
 .gg-card {
-  width: 220px;
-  height: 308px;
+  width: 280px;
+  height: 390px;
+
   position: relative;
+
   transform-style: preserve-3d;
-  transition: transform 0.9s cubic-bezier(.4, .2, .2, 1);
-  cursor: default;
+
+  transition:
+    transform .9s cubic-bezier(.4,.2,.2,1),
+    box-shadow .3s ease;
+
+  box-shadow:
+    0 25px 50px rgba(0,0,0,.25),
+    0 0 25px rgba(212,175,55,.15);
+}
+
+.gg-card:hover {
+  box-shadow:
+    0 30px 60px rgba(0,0,0,.3),
+    0 0 35px rgba(212,175,55,.25);
 }
 
 .gg-card-back,
@@ -675,11 +740,13 @@
   inset: 0;
 
   background: #fffef8;
-  border: 3px solid #d4c5a2;
+
+  border: 4px solid #e2d1ac;
+
+  border-radius: 18px;
+
   box-shadow:
-    0 8px 20px rgba(0, 0, 0, .15),
-    inset 0 0 10px rgba(0, 0, 0, .03);
-  border-radius: 16px;
+    0 12px 30px rgba(0,0,0,.15);
 
   transform: rotateY(180deg);
 
@@ -771,7 +838,7 @@
   width: 100%;
   max-width: 900px;
   position: static;
-  transform: none;
+  transform: translateY(0);
 
   padding-bottom: 30px;
 }
@@ -789,11 +856,12 @@
 
 .gg-guess-btn {
   flex: 1;
-  min-width: 180px;
+  min-width: 160px;
+  height: 58px;
   padding: 16px 22px;
   border-radius: var(--gg-radius-md);
   border: 2px solid transparent;
-  font-size: 1rem;
+  font-size: .95rem;
   font-weight: 700;
   cursor: pointer;
   display: flex;
@@ -945,38 +1013,53 @@
   transform: translateY(-2px);
 }
 
-/* Turn score */
 .gg-turn-score {
   display: flex;
   justify-content: center;
   align-items: center;
 
   gap: 10px;
-  margin-top: 2px;
-}
+  margin-top: 20px;
+  margin-bottom: 20px;
+  border-radius: 999px;
 
-.gg-turn-score-label {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: #3a2a18;
+  background: rgba(255,255,255,.35);
+
+  backdrop-filter: blur(12px);
+
+  border: 1px solid rgba(212,175,55,.3);
+
+  box-shadow:
+    0 10px 25px rgba(0,0,0,.08);
 }
 
 .gg-turn-score-value {
-  font-size: 1rem;
-  font-weight: 900;
-  color: #3a2a18;
-  text-shadow: 0 0 10px rgba(212, 175, 55, 0.4);
+  font-size: 1.1rem;
+
+  font-weight: 9000;
+
+  color: #3d341e;
 }
 
 /* ── Sidebar / Leaderboard ──────────────────────────────────── */
 .gg-sidebar {
-  width: 240px;
+  width: 210px;
+
   flex-shrink: 0;
-  background: rgba(255, 255, 255, 0.75);
-  border-left: 1px solid var(--gg-border);
+
+  background:
+    rgba(255,255,255,.35);
+
+  backdrop-filter: blur(15px);
+
+  border-left:
+    1px solid rgba(255,255,255,.4);
+
+  box-shadow:
+    -10px 0 30px rgba(0,0,0,.08);
+
   padding: 28px 20px;
+
   display: flex;
   flex-direction: column;
   gap: 16px;
@@ -999,19 +1082,49 @@
 
 .gg-lb-row {
   display: flex;
+
   align-items: center;
+
   gap: 10px;
-  padding: 10px 12px;
-  border-radius: var(--gg-radius-sm);
-  background: var(--gg-bg-panel);
-  border: 1px solid transparent;
-  transition: all var(--gg-transition);
+
+  padding: 12px 14px;
+
+  border-radius: 14px;
+
+  background: rgba(255,255,255,.25);
+
+  backdrop-filter: blur(10px);
+
+  border: 1px solid rgba(255,255,255,.25);
+
+  transition: .3s ease;
+}
+
+.gg-lb-row:hover {
+  transform: translateX(4px);
+
+  background: rgba(255,255,255,.4);
 }
 
 .gg-lb-row--current {
-  background: var(--gg-gold-dim);
-  border-color: var(--gg-border-gold);
-  box-shadow: var(--gg-gold-glow);
+  background:
+    linear-gradient(
+      135deg,
+      rgba(212,175,55,.25),
+      rgba(212,175,55,.15)
+    );
+
+  border:
+    1px solid rgba(212,175,55,.4);
+
+  box-shadow:
+    0 0 20px rgba(212,175,55,.25);
+}
+
+.gg-lb-score {
+  font-size: 1.1rem;
+
+  font-weight: 900;
 }
 
 .gg-lb-rank {
@@ -1031,11 +1144,6 @@
   white-space: nowrap;
 }
 
-.gg-lb-score {
-  font-size: 1rem;
-  font-weight: 800;
-  color: var(--gg-gold);
-}
 
 .gg-sidebar-meta {
   display: flex;
@@ -1257,7 +1365,10 @@
 
   .gg-game-body {
     flex-direction: column-reverse;
+    height:calc(100vh - 70px);
+    overflow:hidden;
   }
+
 
   .gg-sidebar {
     width: 100%;
@@ -1287,29 +1398,56 @@
   }
 
   .gg-topbar {
-    padding: 12px 16px;
+    padding: 8px 20px;
     gap: 10px;
   }
 
-  .gg-main-panel {
-    padding: 20px 16px;
-    gap: 16px;
-  }
+  .gg-main-panel{
+  flex:1;
+
+  display:flex;
+  flex-direction:column;
+
+  align-items:center;
+  justify-content:center;
+
+  gap:12px;
+
+  padding:10px 20px 20px;
+  overflow:   hidden;
+}
 
   .gg-stage-title {
     font-size: 1.3rem;
   }
 
-  .gg-card {
-    width: 200px;
-    height: 280px;
-  }
-
+  .gg-card{
+  width:180px;
+  height:252px;
+}
   .gg-guess-btn {
-    min-width: 100px;
-    padding: 13px 16px;
-    font-size: 0.9rem;
-  }
+  flex: 1;
+
+  min-width: 220px;
+
+  height: 76px;
+
+  border-radius: 18px;
+
+  font-size: 1.15rem;
+
+  font-weight: 700;
+
+  transition: all .25s ease;
+}
+
+.gg-guess-btn:hover {
+  transform: translateY(-4px);
+}
+
+.gg-guess-btn:active {
+  transform: translateY(0);
+}
 
   .gg-countdown-number {
     font-size: 5rem;

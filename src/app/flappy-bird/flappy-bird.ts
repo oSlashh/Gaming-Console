@@ -1,6 +1,7 @@
 import { Component, AfterViewInit, OnDestroy, ViewChild, ElementRef, HostListener, ChangeDetectorRef, NgZone } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ScoreService } from '../services/score.service';
 
 @Component({
   selector: 'app-flappy-bird',
@@ -63,7 +64,8 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   constructor(
     private router: Router,
     private cdr: ChangeDetectorRef,
-    private zone: NgZone
+    private zone: NgZone,
+    private scoreService: ScoreService,
   ) {}
 
   ngAfterViewInit(): void {
@@ -134,7 +136,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.remaining = this.totalSeconds;
 
     this.tenMinTimer = setInterval(() => {
-      this.zone.run(() => {
+      this.zone.run(async() => {
         const elapsed = Math.floor((Date.now() - this.timerStart) / 1000);
         this.remaining = Math.max(0, this.totalSeconds - elapsed);
 
@@ -159,7 +161,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
 
   startTimeWarningCountdown() {
     const warningInterval = setInterval(() => {
-      this.zone.run(() => {
+      this.zone.run(async() => {
         this.timeWarningCountdown -= 1;
 
         if (this.timeWarningCountdown < 0) {
@@ -247,7 +249,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     this.draw();
 
     this.countdownInterval = setInterval(() => {
-      this.zone.run(() => {
+      this.zone.run(async() => {
         this.countdownValue -= 1;
 
         if (this.countdownValue < 0) {
@@ -523,11 +525,20 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
     }
   }
 
-  onDeath() {
+  async onDeath() {
     this.stopLoop();
 
-    this.zone.run(() => {
-      this.gameOverScore = this.score;
+        this.zone.run(async() => {
+          this.gameOverScore = this.score;
+          const user = JSON.parse(localStorage.getItem('loggedInUser') || 'null');
+
+    if (user) {
+        await this.scoreService.saveScore(
+        user.uid,
+        'flappy',
+        this.score
+      );
+    }
 
       if (this.score > this.bestScore) {
         this.bestScore = this.score;
@@ -628,7 +639,7 @@ export class FlappyBird implements AfterViewInit, OnDestroy {
   drawSoftCloud(ctx: CanvasRenderingContext2D, x: number, y: number, scale: number) {
     ctx.save();
     ctx.translate(x, y);
-    ctx.scale(scale, scale);
+    ctx.scale(scale,scale);
 
     ctx.fillStyle = 'rgba(36, 67, 92, 0.12)';
     ctx.beginPath();
