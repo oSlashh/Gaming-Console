@@ -790,3 +790,36 @@ body {
     height: 115%;
   }
 }
+/* ===========================
+   Forgot Password
+=========================== */
+
+.forgot-password {
+  display: block;
+  width: fit-content;
+  margin: 1px 0 2px;
+  padding: 0;
+
+  background: transparent;
+  border: none;
+  outline: none;
+
+  color: #f4f1dd;
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.4px;
+  text-align: left;
+
+  cursor: pointer;
+  transition: color 0.25s ease, text-shadow 0.25s ease;
+}
+
+.forgot-password:hover {
+  color: #7ef3ff;
+  text-shadow: 0 0 8px rgba(126, 243, 255, 0.8);
+}
+
+.forgot-password:focus-visible {
+  color: #7ef3ff;
+  text-shadow: 0 0 8px rgba(126, 243, 255, 0.8);
+}

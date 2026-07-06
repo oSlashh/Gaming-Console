@@ -302,14 +302,14 @@ export class GamePreviewComponent implements OnInit, OnDestroy {
     });
   }
 
-  playGame(): void {
-    if (this.isLoggedIn()) {
-      this.router.navigateByUrl(this.activeGame.route);
-      return;
-    }
+playGame(): void {
+  console.log('Logged in:', this.isLoggedIn());
+  console.log('Navigating to:', this.activeGame.route);
 
-    this.router.navigateByUrl('/login');
-  }
+  this.router.navigateByUrl(this.activeGame.route).then(result => {
+    console.log('Navigation result:', result);
+  });
+}
 
   goBack(): void {
     this.router.navigateByUrl('/game-hub-phaser');
