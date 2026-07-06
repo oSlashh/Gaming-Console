@@ -15,6 +15,8 @@ import { FirestoreService } from '../services/firestore.service';
 import { auth } from '../firebase.config';
 import { isPlatformBrowser } from '@angular/common';
 import { PLATFORM_ID, Inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { sendPasswordResetEmail } from 'firebase/auth';
 type Particle = {
   x: number;
   y: number;
@@ -50,6 +52,7 @@ export class Login implements AfterViewInit, OnDestroy {
   private authService: AuthService,
   private firestoreService: FirestoreService,
   private zone: NgZone,
+  private route: ActivatedRoute,
   @Inject(PLATFORM_ID) private platformId: Object
 ) {
   this.loginForm = this.fb.group({
@@ -72,6 +75,22 @@ export class Login implements AfterViewInit, OnDestroy {
     this.pointer.y = event.clientY - rect.top;
     this.pointer.active = true;
   }
+
+  async forgotPassword() {
+  const email = this.loginForm.get('email')?.value;
+
+  if (!email) {
+    alert('Please enter your email first.');
+    return;
+  }
+
+  try {
+    await sendPasswordResetEmail(auth, email);
+    alert('Password reset email sent. Please check your inbox.');
+  } catch (error: any) {
+    alert(error.message);
+  }
+}
 
   releasePointer(): void {
     this.pointer.active = false;
@@ -286,8 +305,11 @@ export class Login implements AfterViewInit, OnDestroy {
       })
     );
 
+    const returnUrl =
+  this.route.snapshot.queryParamMap.get('returnUrl');
+
     setTimeout(() => {
-      this.router.navigate(['/game-page']);
+      this.router.navigateByUrl(returnUrl || '/game-hub-phaser');
     }, 2800);
 
   } catch (error: any) {
